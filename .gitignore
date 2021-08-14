@@ -1,6 +1,7 @@
 /EmptyProject/*.iml
 /EmptyProject/.gradle
 /EmptyProject/local.properties
+/EmptyProject/.idea/vcs.xml
 /EmptyProject/.idea/caches
 /EmptyProject/.idea/libraries
 /EmptyProject/.idea/modules.xml
