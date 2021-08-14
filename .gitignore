@@ -1,0 +1,15 @@
+/EmptyProject/*.iml
+/EmptyProject/.gradle
+/EmptyProject/local.properties
+/EmptyProject/.idea/caches
+/EmptyProject/.idea/libraries
+/EmptyProject/.idea/modules.xml
+/EmptyProject/.idea/workspace.xml
+/EmptyProject/.idea/navEditor.xml
+/EmptyProject/.idea/assetWizardSettings.xml
+/EmptyProject/.DS_Store
+/EmptyProject/build
+/EmptyProject/captures
+/EmptyProject/.externalNativeBuild
+/EmptyProject/.cxx
+/EmptyProject/local.properties
