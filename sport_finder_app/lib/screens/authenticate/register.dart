@@ -1,7 +1,10 @@
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sport_finder_app/services/auth.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -22,6 +25,8 @@ class _RegisterState extends State<Register> {
   late bool confirmPasswordVis;
   late bool checkbox;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final AuthService _auth = AuthService();
+  late FToast fToast;
 
   @override
   void initState() {
@@ -32,10 +37,74 @@ class _RegisterState extends State<Register> {
     confirmPassword = TextEditingController();
     confirmPasswordVis = false;
     checkbox = false;
+    fToast = FToast();
+    fToast.init(context);
 
     super.initState();
   }
+  _showToastVerify() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.orangeAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.error_outline),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Please verify your email!"),
+        ],
+      ),
+    );
 
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+    _showToastError() {
+      Widget toast = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Colors.redAccent,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.highlight_off),
+            SizedBox(
+              width: 12.0,
+            ),
+            Text("An error occurred during sign up!"),
+          ],
+        ),
+      );
+  }
+    _showToastShort() {
+      Widget toast = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Colors.orangeAccent,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline),
+            SizedBox(
+              width: 12.0,
+            ),
+            Text("Your password is too short, Please enter a new password with more than 8 characters"),
+          ],
+        ),
+      );
+    }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -409,6 +478,22 @@ class _RegisterState extends State<Register> {
                                     ),
                                     onTap: (startLoading, stopLoading, btnState) async {
                                       //awie kt sini gak eh function signup tngok turoaial
+                                      final bool isEmailValid = EmailValidator.validate(email.text);
+                                      if(isEmailValid){
+                                        if(password.text.length<8){
+                                          _showToastShort();
+                                        }else {
+                                          dynamic result = await _auth
+                                              .registerWithEmailAndPassword(
+                                              email.text, password.text);
+                                          if (result != null) {
+                                            _showToastVerify();
+                                            widget.toggleView(2);
+                                          } else {
+                                            _showToastError();
+                                          }
+                                        }
+                                      }
                                     },
                                   ),
                                 )
@@ -465,3 +550,4 @@ class _RegisterState extends State<Register> {
     );
   }
 }
+

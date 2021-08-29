@@ -1,6 +1,9 @@
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sport_finder_app/services/auth.dart';
 
 class ForgotPassword extends StatefulWidget {
   final Function toggleView;
@@ -15,11 +18,40 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPassword extends State<ForgotPassword> {
   late TextEditingController email;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final AuthService _auth = AuthService();
+  late FToast fToast;
 
   @override
   void initState() {
     super.initState();
     email = TextEditingController();
+    fToast = FToast();
+    fToast.init(context);
+  }
+  _showToastSuccess() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.greenAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check_circle_outline),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Password Reset Email have been sent,\n please check your email to reset your password"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
   }
 
   @override
@@ -165,8 +197,15 @@ class _ForgotPassword extends State<ForgotPassword> {
                                   ///size: ,
                                 ),
                               ),
-                              onTap: (startLoading, stopLoading, btnState) {
+                              onTap: (startLoading, stopLoading, btnState) async {
                                 //dlm ni eh sume function tuk tkn tu. refer tutorial
+                                final bool isEmailValid = EmailValidator.validate(email.text);
+                                if(isEmailValid){
+                                  dynamic result = await _auth.forgotPassword(email.text);
+                                  if (result != null){
+                                    _showToastSuccess();
+                                  }
+                                }
                               },
                             )
                         )

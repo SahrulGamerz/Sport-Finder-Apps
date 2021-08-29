@@ -49,8 +49,27 @@ class AuthService{
   }
 
   //register with email & password (awie wat sini eh)
+  Future registerWithEmailAndPassword(String email, String password) async{
+    try{
+    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+     User? user = userCredential.user;
+    return _user(user);
+    } catch(e){
+    print(e.toString());
+    return null;
+    }
+  }
 
-
+  //Forgot Password (awie wat sini eh)
+  Future forgotPassword(email) async{
+    try{
+      await _auth.sendPasswordResetEmail(email: email);
+      return true;
+    }catch(e){
+      print(e.toString());
+      return null;
+    }
+  }
   //verification
   Future verification() async{
     try{
