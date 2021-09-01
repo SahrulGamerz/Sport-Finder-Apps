@@ -2,9 +2,11 @@ import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sport_finder_app/services/auth.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -17,7 +19,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  late TextEditingController name;
+  late TextEditingController username;
   late TextEditingController email;
   late TextEditingController password;
   late bool passwordVis;
@@ -27,10 +29,11 @@ class _RegisterState extends State<Register> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final AuthService _auth = AuthService();
   late FToast fToast;
+  bool buttonEnable = true;
 
   @override
   void initState() {
-    name = TextEditingController();
+    username = TextEditingController();
     email = TextEditingController();
     password = TextEditingController();
     passwordVis = false;
@@ -67,44 +70,221 @@ class _RegisterState extends State<Register> {
       toastDuration: Duration(seconds: 2),
     );
   }
-    _showToastError() {
-      Widget toast = Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          color: Colors.redAccent,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.highlight_off),
-            SizedBox(
-              width: 12.0,
-            ),
-            Text("An error occurred during sign up!"),
-          ],
-        ),
-      );
+  _showToastError() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.highlight_off),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("An error occurred during sign up!"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
   }
-    _showToastShort() {
-      Widget toast = Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          color: Colors.orangeAccent,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.error_outline),
-            SizedBox(
-              width: 12.0,
-            ),
-            Text("Your password is too short, Please enter a new password with more than 8 characters"),
-          ],
-        ),
-      );
+  _showToastMeet() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.orangeAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.error_outline),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Password doesn't meet the requirement,\nPlease enter a new password!"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+  _showToastEmail() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.highlight_off),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Incorrect Email!"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+  _showToastNotMatch() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.highlight_off),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Password doesn't match!"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+  _showToastUsername() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.highlight_off),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Username must be within 1-15 characters!"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+  _showToastCheckbox() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.highlight_off),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("You must agree to T&C!"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+  _showToastRate() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.orangeAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.error_outline),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("You have been rate limited due\ntoo many request has been sent!\nTry again later!"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+  _showToastExist() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.highlight_off),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Account already exist!"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+
+  bool isPasswordCompliant(String password, [int minLength = 8]) {
+    if (password == null || password.isEmpty) {
+      return false;
     }
+
+    bool hasUppercase = password.contains(new RegExp(r'[A-Z]'));
+    bool hasDigits = password.contains(new RegExp(r'[0-9]'));
+    bool hasLowercase = password.contains(new RegExp(r'[a-z]'));
+    bool hasSpecialCharacters = password.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+    bool hasMinLength = password.length > minLength;
+
+    return hasDigits & hasUppercase & hasLowercase & hasSpecialCharacters & hasMinLength;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -180,10 +360,15 @@ class _RegisterState extends State<Register> {
                                   child: Padding(
                                     padding: EdgeInsets.fromLTRB(50, 10, 50, 0),
                                     child: TextFormField(
-                                      controller: name,
+                                      controller: username,
                                       obscureText: false,
+                                      maxLength: 16,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z/\d/g]')),
+                                        FilteringTextInputFormatter.deny(' '),
+                                      ],
                                       decoration: InputDecoration(
-                                        hintText: 'Name', // bukn username eh, ni display name limit length die dlm 15 chara
+                                        hintText: 'Username',
                                         hintStyle:
                                         TextStyle(
                                           fontFamily: 'Montserrat',
@@ -236,6 +421,9 @@ class _RegisterState extends State<Register> {
                                     child: TextFormField(
                                       controller: email,
                                       obscureText: false,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.deny(' '),
+                                      ],
                                       decoration: InputDecoration(
                                         hintText: 'Email Address',
                                         hintStyle:
@@ -345,7 +533,7 @@ class _RegisterState extends State<Register> {
                                       keyboardType: TextInputType.name,
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             Row(
@@ -354,6 +542,26 @@ class _RegisterState extends State<Register> {
                                 Expanded(
                                   child: Padding(
                                     padding: EdgeInsets.fromLTRB(50, 10, 50, 0),
+                                    child: new FlutterPwValidator(
+                                      controller: password,
+                                      minLength: 8,
+                                      uppercaseCharCount: 1,
+                                      numericCharCount: 1,
+                                      specialCharCount: 1,
+                                      width: 400,
+                                      height: 50,
+                                      onSuccess: () {},
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(50, 20, 50, 0),
                                     child: TextFormField(
                                       controller: confirmPassword,
                                       obscureText: !confirmPasswordVis,
@@ -478,20 +686,49 @@ class _RegisterState extends State<Register> {
                                     ),
                                     onTap: (startLoading, stopLoading, btnState) async {
                                       //awie kt sini gak eh function signup tngok turoaial
-                                      final bool isEmailValid = EmailValidator.validate(email.text);
-                                      if(isEmailValid){
-                                        if(password.text.length<8){
-                                          _showToastShort();
-                                        }else {
-                                          dynamic result = await _auth
-                                              .registerWithEmailAndPassword(
-                                              email.text, password.text);
-                                          if (result != null) {
-                                            _showToastVerify();
-                                            widget.toggleView(2);
-                                          } else {
-                                            _showToastError();
+                                      if(buttonEnable){
+                                        final bool isEmailValid = EmailValidator.validate(email.text);
+                                        if(isEmailValid){
+                                          startLoading();
+                                          buttonEnable = false;
+                                          if(!isPasswordCompliant(password.text)){
+                                            stopLoading();
+                                            buttonEnable = true;
+                                            _showToastMeet();
+                                          }else if(password.text != confirmPassword.text){
+                                            stopLoading();
+                                            buttonEnable = true;
+                                            _showToastNotMatch();
+                                          }else if(!checkbox){
+                                            stopLoading();
+                                            buttonEnable = true;
+                                            _showToastCheckbox();
+                                          }else if(username.text.length > 16 || username.text.length == 0){
+                                            stopLoading();
+                                            buttonEnable = true;
+                                            _showToastUsername();
+                                          }else{
+                                            dynamic result = await _auth.registerWithEmailAndPassword(username.text, email.text, password.text);
+                                            if(result == "RateLimited"){
+                                              stopLoading();
+                                              buttonEnable = true;
+                                              _showToastRate();
+                                            }else if(result == "AccountExist"){
+                                              stopLoading();
+                                              buttonEnable = true;
+                                              _showToastExist();
+                                            }else if (result == null) {
+                                              stopLoading();
+                                              buttonEnable = true;
+                                              _showToastError();
+                                            } else {
+                                              stopLoading();
+                                              _showToastVerify();
+                                              widget.toggleView(2);
+                                            }
                                           }
+                                        }else{
+                                          _showToastEmail();
                                         }
                                       }
                                     },

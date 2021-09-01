@@ -22,6 +22,8 @@ class _Verify extends State<Verify> {
   late bool _once;
   late int _timer;
   late FToast fToast;
+  String username = "N/A";
+  late Map<String, dynamic> data;
 
   @override
   void initState() {
@@ -30,6 +32,71 @@ class _Verify extends State<Verify> {
     fToast = FToast();
     fToast.init(context);
     super.initState();
+  }
+
+  Future getUserData() async {
+    data = await _auth.getUserData();
+    username = data['username'];
+    return true;
+  }
+
+  Widget _heyUsername(context) {
+    return new FutureBuilder(
+        future: getUserData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Padding(
+              padding: EdgeInsets.fromLTRB(40, 0, 40, 10),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'Hey '+username+',',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                ],
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return new Padding(
+              padding: EdgeInsets.fromLTRB(40, 0, 40, 10),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'Hey Error,',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                ],
+              ),
+            );
+          }
+          return new Padding(
+            padding: EdgeInsets.fromLTRB(40, 0, 40, 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  'Hey loading,',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              ],
+            ),
+          );
+        }
+    );
   }
 
   _showToastVerify() {
@@ -199,22 +266,7 @@ class _Verify extends State<Verify> {
                       )
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(40, 0, 40, 10),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(
-                          'Hey Username,',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                  _heyUsername(context),
                   Padding(
                     padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
                     child: Row(
@@ -274,7 +326,7 @@ class _Verify extends State<Verify> {
                           onTap: (startLoading, stopLoading, btnState) async {
                             if(_timer == 0){
                               startLoading();
-                              dynamic result = await _auth.verification();
+                              await _auth.verification();
                               _showToastVerify();
 
                               Timer.periodic(new Duration(seconds: 1), (timer) {

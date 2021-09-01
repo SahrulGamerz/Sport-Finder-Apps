@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -52,7 +54,7 @@ class _AppState extends State<App> {
               )
           );
         }
-        return MaterialApp(home: Loading());
+        return MaterialApp(home: Loading()); //splash screen/loading screen
           /*MediaQuery(
             data: new MediaQueryData(),
             child: )

@@ -19,6 +19,7 @@ class _ForgotPassword extends State<ForgotPassword> {
   late TextEditingController email;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final AuthService _auth = AuthService();
+  bool buttonEnable = true;
   late FToast fToast;
 
   @override
@@ -43,6 +44,110 @@ class _ForgotPassword extends State<ForgotPassword> {
             width: 12.0,
           ),
           Text("Password Reset Email have been sent,\n please check your email to reset your password"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+
+  _showToastEmail() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.highlight_off),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Incorrect Email!"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+
+  _showToastError() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.highlight_off),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("An error occurred during sending email!"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+
+  _showToastRate() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.orangeAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.error_outline),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("You have been rate limited due\ntoo many request has been sent!\nTry again later!"),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+
+  _showToastNotExist() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.highlight_off),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Account doesn't exist!"),
         ],
       ),
     );
@@ -199,11 +304,30 @@ class _ForgotPassword extends State<ForgotPassword> {
                               ),
                               onTap: (startLoading, stopLoading, btnState) async {
                                 //dlm ni eh sume function tuk tkn tu. refer tutorial
-                                final bool isEmailValid = EmailValidator.validate(email.text);
-                                if(isEmailValid){
-                                  dynamic result = await _auth.forgotPassword(email.text);
-                                  if (result != null){
-                                    _showToastSuccess();
+                                if(buttonEnable){
+                                  final bool isEmailValid = EmailValidator.validate(email.text);
+                                  if(isEmailValid){
+                                    startLoading();
+                                    buttonEnable = false;
+                                    dynamic result = await _auth.forgotPassword(email.text);
+                                    if(result == "NotFound"){
+                                      stopLoading();
+                                      buttonEnable = true;
+                                      _showToastNotExist();
+                                    }else if(result == "RateLimited"){
+                                      stopLoading();
+                                      buttonEnable = true;
+                                      _showToastRate();
+                                    }else if (result == null){
+                                      stopLoading();
+                                      buttonEnable = true;
+                                      _showToastError();
+                                    }else{
+                                      stopLoading();
+                                      _showToastSuccess();
+                                    }
+                                  }else{
+                                    _showToastEmail();
                                   }
                                 }
                               },

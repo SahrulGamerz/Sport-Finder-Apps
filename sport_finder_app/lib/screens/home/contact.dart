@@ -1,23 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sport_finder_app/services/auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sport_finder_app/widgets/drawer.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
-  static const String routeName = '/home';
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  late FToast fToast;
-  @override
-  void initState() {
-    fToast = FToast();
-    fToast.init(context);
-    super.initState();
-  }
+class Contact extends StatelessWidget {
+  //const Contact({Key? key}) : super(key: key);
+  static const String routeName = '/contact';
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +37,10 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
+      drawer: AppDrawer(),
       body: const Center(
         child: Text('Home Page!'),
       ),
-      drawer: AppDrawer(),
     );
   }
 }
-

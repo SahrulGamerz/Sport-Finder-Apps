@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Loading extends StatelessWidget {
   const Loading({Key? key}) : super(key: key);
+  static const String routeName = '/';
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class Loading extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Image.asset(
-              'assets/images/error.png',
+              'assets/images/Wau.png',
               width: 100,
               height: MediaQuery.of(context).size.height * 0.2,
               fit: BoxFit.scaleDown,

@@ -23,6 +23,7 @@ class _SignInState extends State<SignIn> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
   late FToast fToast;
+  bool buttonEnable = true;
 
   @override
   void initState() {
@@ -368,31 +369,38 @@ class _SignInState extends State<SignIn> {
                             ),
                           ),
                           onTap: (startLoading, stopLoading, btnState) async {
-                            final bool isEmailValid = EmailValidator.validate(email.text);
-                            if(isEmailValid){
-                              startLoading();
-                              dynamic result = await _auth.signInEmailPass(email.text, password.text);
-                              if(result == "NotFound"){
-                                stopLoading();
-                                _showToastNotExist();
-                              }else if(result == "WrongPassword"){
-                                stopLoading();
-                                _showToastPassword();
-                              }else if(result == "RateLimited"){
-                                stopLoading();
-                                _showToastRate();
-                              }else if(result == null){
-                                stopLoading();
-                                _showToastError();
-                              }else if(!result.emailVerified){
-                                _showToastVerify();
-                                widget.toggleView(2);
+                            if(buttonEnable){
+                              final bool isEmailValid = EmailValidator.validate(email.text);
+                              if(isEmailValid){
+                                startLoading();
+                                buttonEnable = false;
+                                dynamic result = await _auth.signInEmailPass(email.text, password.text);
+                                if(result == "NotFound"){
+                                  stopLoading();
+                                  buttonEnable = true;
+                                  _showToastNotExist();
+                                }else if(result == "WrongPassword"){
+                                  stopLoading();
+                                  buttonEnable = true;
+                                  _showToastPassword();
+                                }else if(result == "RateLimited"){
+                                  stopLoading();
+                                  buttonEnable = true;
+                                  _showToastRate();
+                                }else if(result == null){
+                                  stopLoading();
+                                  buttonEnable = true;
+                                  _showToastError();
+                                }else if(!result.emailVerified){
+                                  _showToastVerify();
+                                  widget.toggleView(2);
+                                }else{
+                                  print(result.uid);
+                                  _showToastSuccess();
+                                }
                               }else{
-                                print(result.uid);
-                                _showToastSuccess();
+                                _showToastEmail();
                               }
-                            }else{
-                              _showToastEmail();
                             }
                           },
                         ),
