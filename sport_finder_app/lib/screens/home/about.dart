@@ -38,8 +38,52 @@ class About extends StatelessWidget {
         ],
       ),
       drawer: AppDrawer(currentView: 'About'),
-      body: const Center(
-        child: Text('About Page!'),
+      body:  SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'About Us',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Colors.black,
+                      fontSize: 40,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Our goals is to get an A+ in software \ndevelopment and this app has been \ndeveloped by students from UTMKL',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Color(0xFF484848),
+                      fontSize: 17,
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
