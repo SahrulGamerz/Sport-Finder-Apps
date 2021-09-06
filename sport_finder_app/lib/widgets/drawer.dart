@@ -4,7 +4,10 @@ import 'package:sport_finder_app/routes/routes.dart';
 import 'package:sport_finder_app/services/auth.dart';
 
 class AppDrawer extends StatefulWidget {
-  const AppDrawer({Key? key}) : super(key: key);
+  //const AppDrawer({Key? key}) : super(key: key);
+  final String currentView;
+
+  AppDrawer({required this.currentView});
 
   @override
   _AppDrawerState createState() => _AppDrawerState();
@@ -14,10 +17,10 @@ class _AppDrawerState extends State<AppDrawer> {
   //const AppDrawer({Key? key}) : super(key: key);
   final AuthService _auth = AuthService();
   late FToast fToast;
-  String username = "N/A";
-  String email = "N/A";
-  String profilePicture = "https://picsum.photos/seed/298/600";
-  String backgroundImage = "https://picsum.photos/seed/857/600";
+  late String username;
+  late String email;
+  late String profilePicture;
+  late String backgroundImage;
   late Map<String, dynamic> data;
 
   Future getUserData() async {
@@ -38,62 +41,111 @@ class _AppDrawerState extends State<AppDrawer> {
 
   Widget _createHeader(context) {
     return new FutureBuilder(
-      future: getUserData(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.black,
-              image: DecorationImage(
-                image: NetworkImage(backgroundImage),
-                fit: BoxFit.cover,
+        future: getUserData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.black,
+                image: DecorationImage(
+                  image: NetworkImage(backgroundImage),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0,0,0,10),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.20,
-                    height: MediaQuery.of(context).size.width * 0.20,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: NetworkImage(profilePicture),
-                        fit: BoxFit.cover,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.20,
+                      height: MediaQuery.of(context).size.width * 0.20,
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: NetworkImage(profilePicture),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Text(
-                  username,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Colors.white,
-                    fontSize: 22,
+                  Text(
+                    username,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Colors.white,
+                      fontSize: 22,
+                    ),
                   ),
-                ),
-                Text(
-                  email,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Color(0xFF8B97A2),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
+                  Text(
+                    email,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Color(0xFF8B97A2),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
                   ),
+                ],
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return new DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.black,
+                image: DecorationImage(
+                  image: NetworkImage("https://picsum.photos/seed/857/600"),
+                  fit: BoxFit.cover,
                 ),
-              ],
-            ),
-          );
-        } else if (snapshot.hasError) {
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.20,
+                      height: MediaQuery.of(context).size.width * 0.20,
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: NetworkImage(
+                              "https://picsum.photos/seed/298/600"),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "Error",
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Colors.white,
+                      fontSize: 22,
+                    ),
+                  ),
+                  Text(
+                    "Error",
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Color(0xFF8B97A2),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
           return new DrawerHeader(
             decoration: BoxDecoration(
               color: Colors.black,
               image: DecorationImage(
-                image: NetworkImage("https://picsum.photos/seed/857/600"),
+                image: AssetImage("assets/images/9io4feu.gif"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -102,7 +154,7 @@ class _AppDrawerState extends State<AppDrawer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0,0,0,10),
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.20,
                     height: MediaQuery.of(context).size.width * 0.20,
@@ -110,14 +162,14 @@ class _AppDrawerState extends State<AppDrawer> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: NetworkImage("https://picsum.photos/seed/298/600"),
+                        image: AssetImage("assets/images/9io4feu.gif"),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
                 ),
                 Text(
-                  "Error",
+                  "Loading...",
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
@@ -125,7 +177,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   ),
                 ),
                 Text(
-                  "Error",
+                  "Loading...",
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     color: Color(0xFF8B97A2),
@@ -136,59 +188,13 @@ class _AppDrawerState extends State<AppDrawer> {
               ],
             ),
           );
-        }
-        return new DrawerHeader(
-          decoration: BoxDecoration(
-            color: Colors.black,
-            image: DecorationImage(
-              image: NetworkImage("https://i.imgur.com/9io4feu.gif"),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.fromLTRB(0,0,0,10),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.20,
-                  height: MediaQuery.of(context).size.width * 0.20,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: NetworkImage("https://i.imgur.com/9io4feu.gif"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              Text(
-                "Loading...",
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  color: Colors.white,
-                  fontSize: 22,
-                ),
-              ),
-              Text(
-                "Loading...",
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  color: Color(0xFF8B97A2),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        );
-      }
-    );
+        });
   }
 
-  Widget _createDrawerItem({required IconData icon, required String text, required GestureTapCallback onTap}){
+  Widget _createDrawerItem(
+      {required IconData icon,
+      required String text,
+      required GestureTapCallback onTap}) {
     return ListTile(
       leading: Icon(
         icon,
@@ -205,7 +211,7 @@ class _AppDrawerState extends State<AppDrawer> {
     );
   }
 
-  void _showToast(String msg, Color backgroundColor, Color textColor){
+  void _showToast(String msg, Color backgroundColor, Color textColor) {
     Fluttertoast.showToast(
         msg: msg,
         toastLength: Toast.LENGTH_SHORT,
@@ -213,10 +219,10 @@ class _AppDrawerState extends State<AppDrawer> {
         timeInSecForIosWeb: 3,
         backgroundColor: backgroundColor,
         textColor: textColor,
-        fontSize: 16.0
-    );
+        fontSize: 16.0);
   }
 
+/*
   _showToastSignout() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -242,7 +248,7 @@ class _AppDrawerState extends State<AppDrawer> {
       toastDuration: Duration(seconds: 2),
     );
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -250,34 +256,75 @@ class _AppDrawerState extends State<AppDrawer> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           _createHeader(context),
-          _createDrawerItem(icon:Icons.home_outlined,text:"Home", onTap: () => { Navigator.of(context).pop(), Navigator.pushNamed(context, Routes.home)}),
-          _createDrawerItem(icon:Icons.location_city,text:"Booking Venue", onTap: () =>  { Navigator.of(context).pop(),},),
-          _createDrawerItem(icon:Icons.person_outline,text:"Profile", onTap: () =>  { Navigator.of(context).pop(),  },),
+          _createDrawerItem(
+              icon: Icons.home_outlined,
+              text: "Home",
+              onTap: () => {
+                    Navigator.of(context).pop(),
+                    if (widget.currentView != "Home")
+                      {Navigator.pushNamed(context, Routes.home)}
+                  }),
+          _createDrawerItem(
+              icon: Icons.location_city,
+              text: "Booking Venue",
+              onTap: () => {
+                    Navigator.of(context).pop(),
+                  }),
+          _createDrawerItem(
+              icon: Icons.person_outline,
+              text: "Profile",
+              onTap: () => {
+                    Navigator.of(context).pop(),
+                    if (widget.currentView != "editProfile")
+                      {Navigator.pushNamed(context, Routes.editProfile)}
+                  }),
           Divider(
             color: Colors.grey,
           ),
-          _createDrawerItem(icon:Icons.people_outline,text:"About Us", onTap: () => { Navigator.of(context).pop(), Navigator.pushNamed(context, Routes.about) }),
-          _createDrawerItem(icon:Icons.call_outlined,text:"Contact Us", onTap: () => { Navigator.of(context).pop(), Navigator.pushNamed(context, Routes.contact) }),
+          _createDrawerItem(
+              icon: Icons.people_outline,
+              text: "About Us",
+              onTap: () => {
+                    Navigator.of(context).pop(),
+                    if (widget.currentView != "About")
+                      {Navigator.pushNamed(context, Routes.about)}
+                  }),
+          _createDrawerItem(
+              icon: Icons.call_outlined,
+              text: "Contact Us",
+              onTap: () => {
+                    Navigator.of(context).pop(),
+                    if (widget.currentView != "Contact")
+                      {Navigator.pushNamed(context, Routes.contact)}
+                  }),
           Divider(
             color: Colors.grey,
           ),
-          _createDrawerItem(icon:Icons.settings_outlined,text:"Settings", onTap: () =>  { Navigator.of(context).pop(), },),
-          _createDrawerItem(icon:Icons.logout,text:"Log Out", onTap: () async {
-            Navigator.of(context).pop();
-            //_showToastSignout();
-            await _auth.signOut();
-            _showToast("Logged Out!", Colors.greenAccent, Colors.black);
-          }),
+          _createDrawerItem(
+            icon: Icons.settings_outlined,
+            text: "Settings",
+            onTap: () => {
+              Navigator.of(context).pop(),
+            },
+          ),
+          _createDrawerItem(
+              icon: Icons.logout,
+              text: "Log Out",
+              onTap: () async {
+                Navigator.of(context).pop();
+                //_showToastSignout();
+                await _auth.signOut();
+                _showToast("Logged Out!", Colors.greenAccent, Colors.black);
+              }),
           Divider(
             color: Colors.grey,
           ),
           ListTile(
             title: Text('App Ver: 1.0.0'),
-            onTap: () { },
+            onTap: () {},
           ),
         ],
       ),
     );
   }
 }
-

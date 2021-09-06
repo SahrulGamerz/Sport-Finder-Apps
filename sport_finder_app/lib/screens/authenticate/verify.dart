@@ -8,6 +8,7 @@ import 'package:sport_finder_app/services/auth.dart';
 
 class Verify extends StatefulWidget {
   final Function toggleView;
+
   Verify({required this.toggleView});
 
   //const Register({Key? key, this.toggleView}) : super(key: key);
@@ -51,7 +52,7 @@ class _Verify extends State<Verify> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Text(
-                    'Hey '+username+',',
+                    'Hey ' + username + ',',
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 20,
@@ -95,8 +96,7 @@ class _Verify extends State<Verify> {
               ],
             ),
           );
-        }
-    );
+        });
   }
 
   _showToastVerify() {
@@ -124,6 +124,7 @@ class _Verify extends State<Verify> {
       toastDuration: Duration(seconds: 3),
     );
   }
+/*
   _showToastError() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -149,6 +150,7 @@ class _Verify extends State<Verify> {
       toastDuration: Duration(seconds: 2),
     );
   }
+*/
   _showToastVerifyWait() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -174,6 +176,7 @@ class _Verify extends State<Verify> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastVerified() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -204,13 +207,14 @@ class _Verify extends State<Verify> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-      print('Backbutton pressed (device or appbar button), do whatever you want.');
+        print(
+            'Backbutton pressed (device or appbar button), do whatever you want.');
 
-      //trigger leaving and use own data
-      widget.toggleView(0);
+        //trigger leaving and use own data
+        widget.toggleView(0);
 
-      //we need to return a future
-      return Future.value(false);
+        //we need to return a future
+        return Future.value(false);
       },
       child: Scaffold(
         key: scaffoldKey,
@@ -324,28 +328,29 @@ class _Verify extends State<Verify> {
                             ),
                           ),
                           onTap: (startLoading, stopLoading, btnState) async {
-                            if(_timer == 0){
+                            if (_timer == 0) {
                               startLoading();
                               await _auth.verification();
                               _showToastVerify();
 
                               Timer.periodic(new Duration(seconds: 1), (timer) {
-                                if(timer.tick.toInt() == 10) {
+                                if (timer.tick.toInt() == 10) {
                                   timer.cancel();
                                   _timer = 0;
                                   stopLoading();
-                                }else{
+                                } else {
                                   _timer = timer.tick.toInt();
                                 }
                               });
-                            }else{
+                            } else {
                               _showToastVerifyWait();
                             }
-                            if(!_once){
+                            if (!_once) {
                               _once = true;
-                              Timer.periodic(new Duration(seconds: 1), (timer) async {
+                              Timer.periodic(new Duration(seconds: 1),
+                                  (timer) async {
                                 dynamic user = await _auth.refreshUser();
-                                if(user != null && user.emailVerified){
+                                if (user != null && user.emailVerified) {
                                   timer.cancel();
                                   _showToastVerified();
                                   await _auth.signOut();

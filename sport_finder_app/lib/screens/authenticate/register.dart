@@ -10,6 +10,7 @@ import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
+
   Register({required this.toggleView});
 
   //const Register({Key? key, this.toggleView}) : super(key: key);
@@ -22,8 +23,8 @@ class _RegisterState extends State<Register> {
   late TextEditingController username;
   late TextEditingController email;
   late TextEditingController password;
-  late bool passwordVis;
   late TextEditingController confirmPassword;
+  late bool passwordVis;
   late bool confirmPasswordVis;
   late bool checkbox;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -45,6 +46,7 @@ class _RegisterState extends State<Register> {
 
     super.initState();
   }
+
   _showToastVerify() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -70,6 +72,7 @@ class _RegisterState extends State<Register> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastError() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -95,6 +98,7 @@ class _RegisterState extends State<Register> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastMeet() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -109,7 +113,8 @@ class _RegisterState extends State<Register> {
           SizedBox(
             width: 12.0,
           ),
-          Text("Password doesn't meet the requirement,\nPlease enter a new password!"),
+          Text(
+              "Password doesn't meet the requirement,\nPlease enter a new password!"),
         ],
       ),
     );
@@ -120,6 +125,7 @@ class _RegisterState extends State<Register> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastEmail() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -145,6 +151,7 @@ class _RegisterState extends State<Register> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastNotMatch() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -170,6 +177,7 @@ class _RegisterState extends State<Register> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastUsername() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -195,6 +203,7 @@ class _RegisterState extends State<Register> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastCheckbox() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -220,6 +229,7 @@ class _RegisterState extends State<Register> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastRate() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -234,7 +244,8 @@ class _RegisterState extends State<Register> {
           SizedBox(
             width: 12.0,
           ),
-          Text("You have been rate limited due\ntoo many request has been sent!\nTry again later!"),
+          Text(
+              "You have been rate limited due\ntoo many request has been sent!\nTry again later!"),
         ],
       ),
     );
@@ -245,6 +256,7 @@ class _RegisterState extends State<Register> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastExist() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -279,17 +291,23 @@ class _RegisterState extends State<Register> {
     bool hasUppercase = password.contains(new RegExp(r'[A-Z]'));
     bool hasDigits = password.contains(new RegExp(r'[0-9]'));
     bool hasLowercase = password.contains(new RegExp(r'[a-z]'));
-    bool hasSpecialCharacters = password.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+    bool hasSpecialCharacters =
+        password.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
     bool hasMinLength = password.length > minLength;
 
-    return hasDigits & hasUppercase & hasLowercase & hasSpecialCharacters & hasMinLength;
+    return hasDigits &
+        hasUppercase &
+        hasLowercase &
+        hasSpecialCharacters &
+        hasMinLength;
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        print('Backbutton pressed (device or appbar button), do whatever you want.');
+        print(
+            'Backbutton pressed (device or appbar button), do whatever you want.');
 
         //trigger leaving and use own data
         widget.toggleView(0);
@@ -364,13 +382,13 @@ class _RegisterState extends State<Register> {
                                       obscureText: false,
                                       maxLength: 16,
                                       inputFormatters: [
-                                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z/\d/g]')),
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[a-zA-Z/\d/g]')),
                                         FilteringTextInputFormatter.deny(' '),
                                       ],
                                       decoration: InputDecoration(
                                         hintText: 'Username',
-                                        hintStyle:
-                                        TextStyle(
+                                        hintStyle: TextStyle(
                                           fontFamily: 'Montserrat',
                                           color: Colors.black,
                                           fontWeight: FontWeight.normal,
@@ -381,7 +399,7 @@ class _RegisterState extends State<Register> {
                                             width: 1,
                                           ),
                                           borderRadius:
-                                          BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -389,18 +407,17 @@ class _RegisterState extends State<Register> {
                                             width: 1,
                                           ),
                                           borderRadius:
-                                          BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                         ),
                                         filled: true,
                                         fillColor: Colors.transparent,
                                         contentPadding:
-                                        EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                            EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         prefixIcon: Icon(
                                           Icons.account_circle_outlined,
                                         ),
                                       ),
-                                      style:
-                                      TextStyle(
+                                      style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
@@ -426,8 +443,7 @@ class _RegisterState extends State<Register> {
                                       ],
                                       decoration: InputDecoration(
                                         hintText: 'Email Address',
-                                        hintStyle:
-                                        TextStyle(
+                                        hintStyle: TextStyle(
                                           fontFamily: 'Montserrat',
                                           color: Colors.black,
                                           fontWeight: FontWeight.normal,
@@ -438,7 +454,7 @@ class _RegisterState extends State<Register> {
                                             width: 1,
                                           ),
                                           borderRadius:
-                                          BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -446,18 +462,17 @@ class _RegisterState extends State<Register> {
                                             width: 1,
                                           ),
                                           borderRadius:
-                                          BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                         ),
                                         filled: true,
                                         fillColor: Colors.transparent,
                                         contentPadding:
-                                        EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                            EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         prefixIcon: Icon(
                                           Icons.email_outlined,
                                         ),
                                       ),
-                                      style:
-                                      TextStyle(
+                                      style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
@@ -480,8 +495,7 @@ class _RegisterState extends State<Register> {
                                       obscureText: !passwordVis,
                                       decoration: InputDecoration(
                                         hintText: 'Password',
-                                        hintStyle:
-                                        TextStyle(
+                                        hintStyle: TextStyle(
                                           fontFamily: 'Montserrat',
                                           color: Colors.black,
                                           fontWeight: FontWeight.normal,
@@ -492,7 +506,7 @@ class _RegisterState extends State<Register> {
                                             width: 1,
                                           ),
                                           borderRadius:
-                                          BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -500,19 +514,18 @@ class _RegisterState extends State<Register> {
                                             width: 1,
                                           ),
                                           borderRadius:
-                                          BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                         ),
                                         filled: true,
                                         fillColor: Colors.transparent,
                                         contentPadding:
-                                        EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                            EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         prefixIcon: Icon(
                                           Icons.lock_outline,
                                         ),
                                         suffixIcon: InkWell(
                                           onTap: () => setState(
-                                                () => passwordVis =
-                                            !passwordVis,
+                                            () => passwordVis = !passwordVis,
                                           ),
                                           child: Icon(
                                             passwordVis
@@ -523,8 +536,7 @@ class _RegisterState extends State<Register> {
                                           ),
                                         ),
                                       ),
-                                      style:
-                                      TextStyle(
+                                      style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
@@ -567,8 +579,7 @@ class _RegisterState extends State<Register> {
                                       obscureText: !confirmPasswordVis,
                                       decoration: InputDecoration(
                                         hintText: 'Confirm Password',
-                                        hintStyle:
-                                        TextStyle(
+                                        hintStyle: TextStyle(
                                           fontFamily: 'Montserrat',
                                           color: Colors.black,
                                           fontWeight: FontWeight.normal,
@@ -579,7 +590,7 @@ class _RegisterState extends State<Register> {
                                             width: 1,
                                           ),
                                           borderRadius:
-                                          BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -587,19 +598,19 @@ class _RegisterState extends State<Register> {
                                             width: 1,
                                           ),
                                           borderRadius:
-                                          BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                         ),
                                         filled: true,
                                         fillColor: Colors.transparent,
                                         contentPadding:
-                                        EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                            EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         prefixIcon: Icon(
                                           Icons.lock_open_sharp,
                                         ),
                                         suffixIcon: InkWell(
                                           onTap: () => setState(
-                                                () => confirmPasswordVis =
-                                            !confirmPasswordVis,
+                                            () => confirmPasswordVis =
+                                                !confirmPasswordVis,
                                           ),
                                           child: Icon(
                                             confirmPasswordVis
@@ -610,8 +621,7 @@ class _RegisterState extends State<Register> {
                                           ),
                                         ),
                                       ),
-                                      style:
-                                      TextStyle(
+                                      style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
@@ -632,11 +642,11 @@ class _RegisterState extends State<Register> {
                                     alignment: Alignment(0, 0),
                                     child: Padding(
                                       padding:
-                                      EdgeInsets.fromLTRB(50, 0, 50, 0),
+                                          EdgeInsets.fromLTRB(50, 0, 50, 0),
                                       child: CheckboxListTile(
                                         value: checkbox,
-                                        onChanged: (newValue) => setState(() =>
-                                        checkbox = !checkbox),
+                                        onChanged: (newValue) => setState(
+                                            () => checkbox = !checkbox),
                                         title: Text(
                                           'I read and agree to Terms & Conditions',
                                           textAlign: TextAlign.start,
@@ -650,7 +660,7 @@ class _RegisterState extends State<Register> {
                                         activeColor: Colors.black,
                                         dense: true,
                                         controlAffinity:
-                                        ListTileControlAffinity.leading,
+                                            ListTileControlAffinity.leading,
                                       ),
                                     ),
                                   ),
@@ -684,40 +694,51 @@ class _RegisterState extends State<Register> {
                                         color: Colors.white,
                                       ),
                                     ),
-                                    onTap: (startLoading, stopLoading, btnState) async {
+                                    onTap: (startLoading, stopLoading,
+                                        btnState) async {
                                       //awie kt sini gak eh function signup tngok turoaial
-                                      if(buttonEnable){
-                                        final bool isEmailValid = EmailValidator.validate(email.text);
-                                        if(isEmailValid){
+                                      if (buttonEnable) {
+                                        final bool isEmailValid =
+                                            EmailValidator.validate(email.text);
+                                        if (isEmailValid) {
                                           startLoading();
                                           buttonEnable = false;
-                                          if(!isPasswordCompliant(password.text)){
+                                          if (!isPasswordCompliant(
+                                              password.text)) {
                                             stopLoading();
                                             buttonEnable = true;
                                             _showToastMeet();
-                                          }else if(password.text != confirmPassword.text){
+                                          } else if (password.text !=
+                                              confirmPassword.text) {
                                             stopLoading();
                                             buttonEnable = true;
                                             _showToastNotMatch();
-                                          }else if(!checkbox){
+                                          } else if (!checkbox) {
                                             stopLoading();
                                             buttonEnable = true;
                                             _showToastCheckbox();
-                                          }else if(username.text.length > 16 || username.text.length == 0){
+                                          } else if (username.text.length >
+                                                  16 ||
+                                              username.text.length == 0) {
                                             stopLoading();
                                             buttonEnable = true;
                                             _showToastUsername();
-                                          }else{
-                                            dynamic result = await _auth.registerWithEmailAndPassword(username.text, email.text, password.text);
-                                            if(result == "RateLimited"){
+                                          } else {
+                                            dynamic result = await _auth
+                                                .registerWithEmailAndPassword(
+                                                    username.text,
+                                                    email.text,
+                                                    password.text);
+                                            if (result == "RateLimited") {
                                               stopLoading();
                                               buttonEnable = true;
                                               _showToastRate();
-                                            }else if(result == "AccountExist"){
+                                            } else if (result ==
+                                                "AccountExist") {
                                               stopLoading();
                                               buttonEnable = true;
                                               _showToastExist();
-                                            }else if (result == null) {
+                                            } else if (result == null) {
                                               stopLoading();
                                               buttonEnable = true;
                                               _showToastError();
@@ -727,7 +748,7 @@ class _RegisterState extends State<Register> {
                                               widget.toggleView(2);
                                             }
                                           }
-                                        }else{
+                                        } else {
                                           _showToastEmail();
                                         }
                                       }
@@ -743,33 +764,34 @@ class _RegisterState extends State<Register> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                    child: RichText(
-                                      textAlign: TextAlign.center,
-                                      text: TextSpan(
-                                        style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          color: Colors.black,
-                                          fontSize: 12,
+                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                      child: RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text:
+                                                    'Already have an account?\n'),
+                                            TextSpan(
+                                                text: 'Sign In',
+                                                style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  color: Color(0xFF002A97),
+                                                  fontSize: 12,
+                                                ),
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () {
+                                                        widget.toggleView(0);
+                                                      }),
+                                          ],
                                         ),
-                                        children: <TextSpan>[
-                                          TextSpan(text: 'Already have an account?\n'),
-                                          TextSpan(
-                                            text: 'Sign In',
-                                            style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              color: Color(0xFF002A97),
-                                              fontSize: 12,
-                                            ),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () {
-                                                widget.toggleView(0);
-                                              }
-                                            ),
-                                        ],
-                                      ),
-                                    )
-                                  )
+                                      ))
                                 ],
                               ),
                             )
@@ -787,4 +809,3 @@ class _RegisterState extends State<Register> {
     );
   }
 }
-

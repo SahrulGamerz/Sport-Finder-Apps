@@ -51,11 +51,10 @@ class _AppState extends State<App> {
               initialData: null,
               child: MaterialApp(
                 home: Wrapper(),
-              )
-          );
+              ));
         }
         return MaterialApp(home: Loading()); //splash screen/loading screen
-          /*MediaQuery(
+        /*MediaQuery(
             data: new MediaQueryData(),
             child: )
         );*/

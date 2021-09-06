@@ -7,17 +7,18 @@ import 'package:sport_finder_app/screens/authenticate/verify.dart';
 class Authenticate extends StatefulWidget {
   //const Authenticate({Key? key}) : super(key: key);
   final int toggleView;
+
   Authenticate({required this.toggleView});
+
   @override
   _AuthenticateState createState() => _AuthenticateState();
 }
 
 class _AuthenticateState extends State<Authenticate> {
-
   int showAuthScreen = 0;
   bool _once = true;
 
-  void toggleView(int screen){
+  void toggleView(int screen) {
     setState(() {
       showAuthScreen = screen;
     });
@@ -25,20 +26,19 @@ class _AuthenticateState extends State<Authenticate> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.toggleView == 2 && _once){
+    if (widget.toggleView == 2 && _once) {
       _once = false;
       return Verify(toggleView: toggleView);
     }
 
-    if(showAuthScreen == 0){
+    if (showAuthScreen == 0) {
       return SignIn(toggleView: toggleView);
-    }else if(showAuthScreen == 1){
+    } else if (showAuthScreen == 1) {
       return Register(toggleView: toggleView);
-    }else if(showAuthScreen == 2){
+    } else if (showAuthScreen == 2) {
       return Verify(toggleView: toggleView);
-    }else{
+    } else {
       return ForgotPassword(toggleView: toggleView);
     }
   }
 }
-

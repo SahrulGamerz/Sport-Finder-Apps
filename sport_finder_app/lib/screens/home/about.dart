@@ -7,39 +7,42 @@ class About extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
-        centerTitle: true,
-        title: Text(
-          'SPORTS FINDER',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontFamily: 'Ubuntu',
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-            child: IconButton(
-              onPressed: () {
-                print('IconButton pressed ...');
-              },
-              icon: Icon(
-                Icons.message,
-                color: Colors.white,
-                size: 25,
-              ),
-              iconSize: 25,
+    return MaterialApp(
+      title: 'Sport Finder App',
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          iconTheme: IconThemeData(color: Colors.white),
+          centerTitle: true,
+          title: Text(
+            'SPORTS FINDER',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Ubuntu',
+              fontWeight: FontWeight.bold,
             ),
-          )
-        ],
-      ),
-      drawer: AppDrawer(),
-      body: const Center(
-        child: Text('About Page!'),
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              child: IconButton(
+                onPressed: () {
+                  print('IconButton pressed ...');
+                },
+                icon: Icon(
+                  Icons.chat_bubble_outline_rounded,
+                  color: Colors.white,
+                  size: 25,
+                ),
+                iconSize: 25,
+              ),
+            )
+          ],
+        ),
+        drawer: AppDrawer(currentView: 'About'),
+        body: const Center(
+          child: Text('About Page!'),
+        ),
       ),
     );
   }

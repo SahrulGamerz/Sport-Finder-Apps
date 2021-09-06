@@ -9,6 +9,7 @@ import 'package:sport_finder_app/services/auth.dart';
 class SignIn extends StatefulWidget {
   //const SignIn({Key? key}) : super(key: key);
   final Function toggleView;
+
   SignIn({required this.toggleView});
 
   @override
@@ -21,7 +22,8 @@ class _SignInState extends State<SignIn> {
   late TextEditingController password;
   late bool passwordVisibility;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+  final ButtonStyle style =
+      ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
   late FToast fToast;
   bool buttonEnable = true;
 
@@ -60,6 +62,7 @@ class _SignInState extends State<SignIn> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastNotExist() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -85,6 +88,7 @@ class _SignInState extends State<SignIn> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastSuccess() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -110,6 +114,7 @@ class _SignInState extends State<SignIn> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastError() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -135,6 +140,7 @@ class _SignInState extends State<SignIn> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastEmail() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -160,6 +166,7 @@ class _SignInState extends State<SignIn> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastPassword() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -185,6 +192,7 @@ class _SignInState extends State<SignIn> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastRate() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -199,7 +207,8 @@ class _SignInState extends State<SignIn> {
           SizedBox(
             width: 12.0,
           ),
-          Text("You have been rate limited due\ntoo many request has been sent!\nTry again later!"),
+          Text(
+              "You have been rate limited due\ntoo many request has been sent!\nTry again later!"),
         ],
       ),
     );
@@ -326,7 +335,7 @@ class _SignInState extends State<SignIn> {
                             ),
                             suffixIcon: InkWell(
                               onTap: () => setState(
-                                    () => passwordVisibility = !passwordVisibility,
+                                () => passwordVisibility = !passwordVisibility,
                               ),
                               child: Icon(
                                 passwordVisibility
@@ -369,36 +378,38 @@ class _SignInState extends State<SignIn> {
                             ),
                           ),
                           onTap: (startLoading, stopLoading, btnState) async {
-                            if(buttonEnable){
-                              final bool isEmailValid = EmailValidator.validate(email.text);
-                              if(isEmailValid){
+                            if (buttonEnable) {
+                              final bool isEmailValid =
+                                  EmailValidator.validate(email.text);
+                              if (isEmailValid) {
                                 startLoading();
                                 buttonEnable = false;
-                                dynamic result = await _auth.signInEmailPass(email.text, password.text);
-                                if(result == "NotFound"){
+                                dynamic result = await _auth.signInEmailPass(
+                                    email.text, password.text);
+                                if (result == "NotFound") {
                                   stopLoading();
                                   buttonEnable = true;
                                   _showToastNotExist();
-                                }else if(result == "WrongPassword"){
+                                } else if (result == "WrongPassword") {
                                   stopLoading();
                                   buttonEnable = true;
                                   _showToastPassword();
-                                }else if(result == "RateLimited"){
+                                } else if (result == "RateLimited") {
                                   stopLoading();
                                   buttonEnable = true;
                                   _showToastRate();
-                                }else if(result == null){
+                                } else if (result == null) {
                                   stopLoading();
                                   buttonEnable = true;
                                   _showToastError();
-                                }else if(!result.emailVerified){
+                                } else if (!result.emailVerified) {
                                   _showToastVerify();
                                   widget.toggleView(2);
-                                }else{
+                                } else {
                                   print(result.uid);
                                   _showToastSuccess();
                                 }
-                              }else{
+                              } else {
                                 _showToastEmail();
                               }
                             }
@@ -428,8 +439,7 @@ class _SignInState extends State<SignIn> {
                                         ..onTap = () {
                                           //_showToastError();
                                           widget.toggleView(3);
-                                        }
-                                  ),
+                                        }),
                                 ],
                               ),
                             ),
@@ -453,8 +463,7 @@ class _SignInState extends State<SignIn> {
                                         ..onTap = () {
                                           //_showToastError();
                                           widget.toggleView(1);
-                                        }
-                                  ),
+                                        }),
                                 ],
                               ),
                             ),
