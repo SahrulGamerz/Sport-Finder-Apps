@@ -476,43 +476,40 @@ class _ViewProfileState extends State<ViewProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sport Finder App',
-      home: Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          iconTheme: IconThemeData(color: Colors.white),
-          centerTitle: true,
-          title: Text(
-            'SPORTS FINDER',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Ubuntu',
-              fontWeight: FontWeight.bold,
-            ),
+    return Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        iconTheme: IconThemeData(color: Colors.white),
+        centerTitle: true,
+        title: Text(
+          'SPORTS FINDER',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: 'Ubuntu',
+            fontWeight: FontWeight.bold,
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-              child: IconButton(
-                onPressed: () {
-                  print('IconButton pressed ...');
-                },
-                icon: Icon(
-                  Icons.chat_bubble_outline_rounded,
-                  color: Colors.white,
-                  size: 25,
-                ),
-                iconSize: 25,
-              ),
-            )
-          ],
         ),
-        backgroundColor: Colors.white,
-        drawer: AppDrawer(currentView: 'viewProfile'),
-        body: _viewProfileStuff(context),
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            child: IconButton(
+              onPressed: () {
+                print('IconButton pressed ...');
+              },
+              icon: Icon(
+                Icons.chat_bubble_outline_rounded,
+                color: Colors.white,
+                size: 25,
+              ),
+              iconSize: 25,
+            ),
+          )
+        ],
       ),
+      backgroundColor: Colors.white,
+      drawer: AppDrawer(currentView: 'viewProfile'),
+      body: _viewProfileStuff(context),
     );
   }
 }

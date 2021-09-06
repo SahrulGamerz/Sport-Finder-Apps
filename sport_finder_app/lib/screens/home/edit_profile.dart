@@ -48,6 +48,10 @@ class _EditProfileState extends State<EditProfile> {
     playerType = TextEditingController();
     bio = TextEditingController();
     phoneNumber = TextEditingController();
+    password = TextEditingController();
+    passwordVis = false;
+    confirmPassword = TextEditingController();
+    confirmPasswordVis = false;
     fToast = FToast();
     fToast.init(context);
   }
@@ -182,6 +186,135 @@ class _EditProfileState extends State<EditProfile> {
     playerType.text = data['playerType'];
     uid = data['uid'];
     return true;
+  }
+
+  Future<void> _showReLogDialog(BuildContext context) {
+    TextEditingController emailR = TextEditingController();
+    TextEditingController passwordR = TextEditingController();
+    bool passwordRVisibility = false;
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Please enter your credential",
+              style: TextStyle(color: Colors.blue),
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  Divider(
+                    height: 1,
+                    color: Colors.blue,
+                  ),
+                  TextFormField(
+                    controller: emailR,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      hintText: 'Email Address',
+                      hintStyle: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.black,
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      filled: true,
+                      fillColor: Color(0x00FFFFFF),
+                      contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      prefixIcon: Icon(
+                        Icons.email_outlined,
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.start,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.blue,
+                  ),
+                  TextFormField(
+                    controller: passwordR,
+                    obscureText: !passwordRVisibility,
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      hintStyle: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.black,
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      filled: true,
+                      fillColor: Color(0x00FFFFFF),
+                      contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      prefixIcon: Icon(
+                        Icons.https_outlined,
+                      ),
+                      suffixIcon: InkWell(
+                        onTap: () => setState(
+                              () => passwordRVisibility = !passwordRVisibility,
+                        ),
+                        child: Icon(
+                          passwordRVisibility
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                          color: Color(0xFF757575),
+                          size: 22,
+                        ),
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.start,
+                    keyboardType: TextInputType.visiblePassword,
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.blue,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      dynamic result = await _auth.reAuthenticateUser(emailR.text, passwordR.text);
+                      if(result){
+                        Navigator.of(context).pop(false);
+                      }
+                    },
+                    child: Text('ReLog'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   _showToastSuccess(String text) {
@@ -757,25 +890,7 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Change Password',
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+                          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -790,137 +905,143 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                               ),
                               Expanded(
-                                child: TextFormField(
-                                  controller: password,
-                                  obscureText: !passwordVis,
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    labelStyle: TextStyle(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                  child: TextFormField(
+                                    controller: password,
+                                    obscureText: !passwordVis,
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0x00000000),
+                                          width: 1,
+                                        ),
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(4.0),
+                                          topRight: Radius.circular(4.0),
+                                        ),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0x00000000),
+                                          width: 1,
+                                        ),
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(4.0),
+                                          topRight: Radius.circular(4.0),
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      suffixIcon: InkWell(
+                                        onTap: () => setState(
+                                          () => passwordVis = !passwordVis,
+                                        ),
+                                        child: Icon(
+                                          passwordVis
+                                              ? Icons.visibility_outlined
+                                              : Icons.visibility_off_outlined,
+                                          color: Color(0xFF757575),
+                                          size: 17,
+                                        ),
+                                      ),
+                                    ),
+                                    style: TextStyle(
                                       fontFamily: 'Montserrat',
                                       color: Colors.black,
                                       fontSize: 17,
                                     ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    suffixIcon: InkWell(
-                                      onTap: () => setState(
-                                        () => passwordVis = !passwordVis,
-                                      ),
-                                      child: Icon(
-                                        passwordVis
-                                            ? Icons.visibility_outlined
-                                            : Icons.visibility_off_outlined,
-                                        color: Color(0xFF757575),
-                                        size: 22,
-                                      ),
-                                    ),
+                                    keyboardType: TextInputType.emailAddress,
                                   ),
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Colors.black,
-                                    fontSize: 17,
-                                  ),
-                                  keyboardType: TextInputType.emailAddress,
                                 ),
                               ),
                             ],
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(
-                                'Confirm Password    :',
+                                'Confirm Password :',
                                 style: TextStyle(
                                   fontFamily: 'Montserrat',
                                   color: Colors.black,
-                                  fontSize: 18,
+                                  fontSize: 17,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                               Expanded(
-                                child: TextFormField(
-                                  controller: confirmPassword,
-                                  obscureText: !confirmPasswordVis,
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    labelStyle: TextStyle(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                  child: TextFormField(
+                                    controller: confirmPassword,
+                                    obscureText: !confirmPasswordVis,
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0x00000000),
+                                          width: 1,
+                                        ),
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(4.0),
+                                          topRight: Radius.circular(4.0),
+                                        ),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0x00000000),
+                                          width: 1,
+                                        ),
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(4.0),
+                                          topRight: Radius.circular(4.0),
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      suffixIcon: InkWell(
+                                        onTap: () => setState(
+                                          () => confirmPasswordVis =
+                                              !confirmPasswordVis,
+                                        ),
+                                        child: Icon(
+                                          confirmPasswordVis
+                                              ? Icons.visibility_outlined
+                                              : Icons.visibility_off_outlined,
+                                          color: Color(0xFF757575),
+                                          size: 17,
+                                        ),
+                                      ),
+                                    ),
+                                    style: TextStyle(
                                       fontFamily: 'Montserrat',
                                       color: Colors.black,
                                       fontSize: 17,
                                     ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    suffixIcon: InkWell(
-                                      onTap: () => setState(
-                                        () => confirmPasswordVis =
-                                            !confirmPasswordVis,
-                                      ),
-                                      child: Icon(
-                                        confirmPasswordVis
-                                            ? Icons.visibility_outlined
-                                            : Icons.visibility_off_outlined,
-                                        color: Color(0xFF757575),
-                                        size: 22,
-                                      ),
-                                    ),
+                                    keyboardType: TextInputType.emailAddress,
                                   ),
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Colors.black,
-                                    fontSize: 17,
-                                  ),
-                                  keyboardType: TextInputType.emailAddress,
                                 ),
                               ),
                             ],
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -957,7 +1078,7 @@ class _EditProfileState extends State<EditProfile> {
                                         stopLoading();
                                         _buttonEnabled = true;
                                         _showToastWarning(
-                                            "Password does not meet the requirements.\nUpper & Lower case,Special characters, Numbers");
+                                            "Password does not meet the requirements.\nUpper & Lower case,\nSpecial characters,\nNumbers");
                                       } else if (password.text !=
                                           confirmPassword.text) {
                                         stopLoading();
@@ -972,10 +1093,15 @@ class _EditProfileState extends State<EditProfile> {
                                             _buttonEnabled = true;
                                           }
                                         });
-                                        bool result = await _auth
+                                        dynamic result = await _auth
                                             .changePassword(password.text);
                                         //print(result);
-                                        if (result) {
+                                        if(result == "ReLog"){
+                                          _showToastWarning(
+                                              "Please enter your credential and try again!");
+                                          stopLoading();
+                                          _showReLogDialog(context);
+                                        }else if (result) {
                                           _showToastSuccess(
                                               "Password changed successfully!");
                                           stopLoading();
@@ -1010,43 +1136,40 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sport Finder App',
-      home: Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          iconTheme: IconThemeData(color: Colors.white),
-          centerTitle: true,
-          title: Text(
-            'SPORTS FINDER',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Ubuntu',
-              fontWeight: FontWeight.bold,
-            ),
+    return Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        iconTheme: IconThemeData(color: Colors.white),
+        centerTitle: true,
+        title: Text(
+          'SPORTS FINDER',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: 'Ubuntu',
+            fontWeight: FontWeight.bold,
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-              child: IconButton(
-                onPressed: () {
-                  print('IconButton pressed ...');
-                },
-                icon: Icon(
-                  Icons.chat_bubble_outline_rounded,
-                  color: Colors.white,
-                  size: 25,
-                ),
-                iconSize: 25,
-              ),
-            )
-          ],
         ),
-        backgroundColor: Colors.white,
-        drawer: AppDrawer(currentView: 'editProfile'),
-        body: _editProfileStuff(context),
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+            child: IconButton(
+              onPressed: () {
+                print('IconButton pressed ...');
+              },
+              icon: Icon(
+                Icons.chat_bubble_outline_rounded,
+                color: Colors.white,
+                size: 25,
+              ),
+              iconSize: 25,
+            ),
+          )
+        ],
       ),
+      backgroundColor: Colors.white,
+      drawer: AppDrawer(currentView: 'editProfile'),
+      body: _editProfileStuff(context),
     );
   }
 }

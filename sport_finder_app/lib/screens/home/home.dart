@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sport_finder_app/services/auth.dart';
 import 'package:sport_finder_app/widgets/drawer.dart';
 
 class Home extends StatefulWidget {
@@ -12,12 +14,19 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late FToast fToast;
+  final AuthService _auth = AuthService();
 
   @override
   void initState() {
     fToast = FToast();
     fToast.init(context);
+    refreshUser();
     super.initState();
+  }
+
+  Future refreshUser() async{
+    //refresh user
+    await _auth.refreshUser();
   }
 
   @override
@@ -37,7 +46,10 @@ class _HomeState extends State<Home> {
                   child: Text('No'),
                 ),
                 ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(true),
+                  onPressed: (){
+                    Navigator.of(context).pop(true);
+                    SystemNavigator.pop();
+                  },
                   //return true when click on "Yes"
                   child: Text('Yes'),
                 ),
@@ -47,45 +59,42 @@ class _HomeState extends State<Home> {
           false; //if showDialouge had returned null, then return false
     }
 
-    return MaterialApp(
-      title: 'Sport Finder App',
-      home: WillPopScope(
-        onWillPop: showExitPopup, //call function on back button press
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.black,
-            iconTheme: IconThemeData(color: Colors.white),
-            centerTitle: true,
-            title: Text(
-              'SPORTS FINDER',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Ubuntu',
-                fontWeight: FontWeight.bold,
-              ),
+    return WillPopScope(
+      onWillPop: showExitPopup, //call function on back button press
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          iconTheme: IconThemeData(color: Colors.white),
+          centerTitle: true,
+          title: Text(
+            'SPORTS FINDER',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Ubuntu',
+              fontWeight: FontWeight.bold,
             ),
-            actions: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                child: IconButton(
-                  onPressed: () {
-                    print('IconButton pressed ...');
-                  },
-                  icon: Icon(
-                    Icons.chat_bubble_outline_rounded,
-                    color: Colors.white,
-                    size: 25,
-                  ),
-                  iconSize: 25,
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              child: IconButton(
+                onPressed: () {
+                  print('IconButton pressed ...');
+                },
+                icon: Icon(
+                  Icons.chat_bubble_outline_rounded,
+                  color: Colors.white,
+                  size: 25,
                 ),
-              )
-            ],
-          ),
-          body: const Center(
-            child: Text('Home Page!'),
-          ),
-          drawer: AppDrawer(currentView: 'Home'),
+                iconSize: 25,
+              ),
+            )
+          ],
         ),
+        body: const Center(
+          child: Text('Home Page!'),
+        ),
+        drawer: AppDrawer(currentView: 'Home'),
       ),
     );
   }

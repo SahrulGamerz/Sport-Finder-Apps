@@ -210,11 +210,31 @@ class AuthService {
     try {
       User? user = _auth.currentUser;
       if (user != null) {
+        await user.reload();
+        //user.reauthenticateWithCredential(credential);
         await user.updatePassword(password);
         return true;
       }
       return false;
     } catch (e) {
+      print(e.toString());
+      if(e.toString() == "[firebase_auth/requires-recent-login] This operation is sensitive and requires recent authentication. Log in again before retrying this request.")
+        return "ReLog";
+      return null;
+    }
+  }
+
+  //reauthenticateWithCredential
+  Future reAuthenticateUser(String email, String password) async {
+    try{
+      User? user = _auth.currentUser;
+      if(user != null){
+        AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+        await user.reauthenticateWithCredential(credential);
+        return true;
+      }
+      return false;
+    }catch (e) {
       print(e.toString());
       return null;
     }
