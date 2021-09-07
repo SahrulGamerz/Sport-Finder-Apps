@@ -279,7 +279,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                       suffixIcon: InkWell(
                         onTap: () => setState(
-                              () => passwordRVisibility = !passwordRVisibility,
+                          () => passwordRVisibility = !passwordRVisibility,
                         ),
                         child: Icon(
                           passwordRVisibility
@@ -303,8 +303,9 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      dynamic result = await _auth.reAuthenticateUser(emailR.text, passwordR.text);
-                      if(result){
+                      dynamic result = await _auth.reAuthenticateUser(
+                          emailR.text, passwordR.text);
+                      if (result) {
                         Navigator.of(context).pop(false);
                       }
                     },
@@ -419,673 +420,444 @@ class _EditProfileState extends State<EditProfile> {
         future: getUserData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            child: Stack(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    _showChoiceDialog(context, "BG");
-                                  },
-                                  child: Image.network(
-                                    backgroundImage,
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.2,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment(0, 1),
-                                  child: Icon(
-                                    Icons.circle,
-                                    color: Colors.white,
-                                    size: 145,
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment(0, 0.7),
-                                  child: Container(
-                                    width: 110,
-                                    height: 110,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Image.network(
-                                      profilePicture,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          RichText(
-                            text: TextSpan(
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                color: Color(0xFF002A97),
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: 'Edit profile picture',
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.lightBlueAccent,
-                                      fontSize: 12,
-                                    ),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        _showChoiceDialog(context, "PP");
-                                      }),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment(0, 0),
-                    child: Column(
+            return Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Username :',
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              child: Stack(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      _showChoiceDialog(context, "BG");
+                                    },
+                                    child: Image.network(
+                                      backgroundImage,
+                                      width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.2,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment(0, 1),
+                                    child: Icon(
+                                      Icons.circle,
+                                      color: Colors.white,
+                                      size: 145,
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment(0, 0.7),
+                                    child: Container(
+                                      width: 110,
+                                      height: 110,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Image.network(
+                                        profilePicture,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
                                 style: TextStyle(
                                   fontFamily: 'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF002A97),
                                 ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Edit profile picture',
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.lightBlueAccent,
+                                        fontSize: 12,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          _showChoiceDialog(context, "PP");
+                                        }),
+                                ],
                               ),
-                              Expanded(
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment(0, 0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Username :',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Expanded(
+                                    child: Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                  child: TextFormField(
+                                    controller: username,
+                                    obscureText: false,
+                                    maxLength: 16,
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0x00000000),
+                                          width: 1,
+                                        ),
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(4.0),
+                                          topRight: Radius.circular(4.0),
+                                        ),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0x00000000),
+                                          width: 1,
+                                        ),
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(4.0),
+                                          topRight: Radius.circular(4.0),
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                    ),
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      color: Colors.black,
+                                      fontSize: 17,
+                                    ),
+                                    keyboardType: TextInputType.name,
+                                  ),
+                                )),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Email          :',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: email,
+                                    obscureText: false,
+                                    enabled: false,
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0x00000000),
+                                          width: 1,
+                                        ),
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(4.0),
+                                          topRight: Radius.circular(4.0),
+                                        ),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0x00000000),
+                                          width: 1,
+                                        ),
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(4.0),
+                                          topRight: Radius.circular(4.0),
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                    ),
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      color: Colors.black,
+                                      fontSize: 17,
+                                    ),
+                                    keyboardType: TextInputType.emailAddress,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Player         :',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Expanded(
                                   child: Padding(
-                                padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
-                                child: TextFormField(
-                                  controller: username,
-                                  obscureText: false,
-                                  maxLength: 16,
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    labelStyle: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.black,
-                                      fontSize: 17,
+                                    padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                    child: TextFormField(
+                                      controller: playerType,
+                                      obscureText: false,
+                                      maxLength: 16,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        labelStyle: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.black,
+                                          fontSize: 17,
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1,
+                                          ),
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
+                                          ),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1,
+                                          ),
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                      ),
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
                                     ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white,
                                   ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Bio               :',
                                   style: TextStyle(
                                     fontFamily: 'Montserrat',
                                     color: Colors.black,
-                                    fontSize: 17,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  keyboardType: TextInputType.name,
                                 ),
-                              )),
-                            ],
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                    child: TextFormField(
+                                      controller: bio,
+                                      obscureText: false,
+                                      maxLength: 30,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        labelStyle: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.black,
+                                          fontSize: 17,
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1,
+                                          ),
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
+                                          ),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1,
+                                          ),
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                      ),
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Email          :',
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Expanded(
-                                child: TextFormField(
-                                  controller: email,
-                                  obscureText: false,
-                                  enabled: false,
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    labelStyle: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                    ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                  ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Contact      :',
                                   style: TextStyle(
                                     fontFamily: 'Montserrat',
                                     color: Colors.black,
-                                    fontSize: 17,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  keyboardType: TextInputType.emailAddress,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Player         :',
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
-                                  child: TextFormField(
-                                    controller: playerType,
-                                    obscureText: false,
-                                    maxLength: 16,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      labelStyle: TextStyle(
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                    child: TextFormField(
+                                      controller: phoneNumber,
+                                      obscureText: false,
+                                      maxLength: 16,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        labelStyle: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.black,
+                                          fontSize: 17,
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1,
+                                          ),
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
+                                          ),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1,
+                                          ),
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                      ),
+                                      style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: Colors.black,
                                         fontSize: 17,
                                       ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    ),
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.black,
-                                      fontSize: 17,
+                                      keyboardType: TextInputType.phone,
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Bio               :',
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
-                                  child: TextFormField(
-                                    controller: bio,
-                                    obscureText: false,
-                                    maxLength: 30,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      labelStyle: TextStyle(
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(50, 10, 50, 0),
+                                  child: ArgonButton(
+                                    height: 40,
+                                    width: 130,
+                                    borderRadius: 12.0,
+                                    roundLoadingShape: true,
+                                    color: Colors.black,
+                                    child: Text(
+                                      "Update",
+                                      style: TextStyle(
                                         fontFamily: 'Montserrat',
-                                        color: Colors.black,
-                                        fontSize: 17,
-                                      ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    ),
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Contact      :',
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
-                                  child: TextFormField(
-                                    controller: phoneNumber,
-                                    obscureText: false,
-                                    maxLength: 16,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      labelStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.black,
-                                        fontSize: 17,
-                                      ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    ),
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                    ),
-                                    keyboardType: TextInputType.phone,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(50, 10, 50, 0),
-                                child: ArgonButton(
-                                  height: 40,
-                                  width: 130,
-                                  borderRadius: 12.0,
-                                  roundLoadingShape: true,
-                                  color: Colors.black,
-                                  child: Text(
-                                    "Update",
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.white,
-                                      //fontSize: 18,
-                                      //fontWeight: FontWeight.w700
-                                    ),
-                                  ),
-                                  loader: Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: SpinKitDoubleBounce(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  onTap: (startLoading, stopLoading,
-                                      btnState) async {
-                                    if (_buttonEnabled) {
-                                      _buttonEnabled = false;
-                                      Timer.periodic(new Duration(seconds: 1),
-                                          (timer) {
-                                        if (timer.tick.toInt() == 10) {
-                                          timer.cancel();
-                                          _buttonEnabled = true;
-                                        }
-                                      });
-                                      startLoading();
-                                      bool result = await _auth.updateUserData(
-                                          username.text,
-                                          bio.text,
-                                          phoneNumber.text,
-                                          playerType.text,
-                                          profilePicture,
-                                          backgroundImage);
-                                      print(result);
-                                      if (result) {
-                                        _showToastSuccess(
-                                            "Profile updated successfully!");
-                                        stopLoading();
-                                      } else {
-                                        _showToastError(
-                                            "Profile update failed!");
-                                        stopLoading();
-                                      }
-                                    } else {
-                                      _showToastWarning(
-                                          "Please wait 10 seconds before trying!");
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'New Password     :',
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
-                                  child: TextFormField(
-                                    controller: password,
-                                    obscureText: !passwordVis,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      labelStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.black,
-                                        fontSize: 17,
-                                      ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      suffixIcon: InkWell(
-                                        onTap: () => setState(
-                                          () => passwordVis = !passwordVis,
-                                        ),
-                                        child: Icon(
-                                          passwordVis
-                                              ? Icons.visibility_outlined
-                                              : Icons.visibility_off_outlined,
-                                          color: Color(0xFF757575),
-                                          size: 17,
-                                        ),
+                                        color: Colors.white,
+                                        //fontSize: 18,
+                                        //fontWeight: FontWeight.w700
                                       ),
                                     ),
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                    ),
-                                    keyboardType: TextInputType.emailAddress,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Confirm Password :',
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
-                                  child: TextFormField(
-                                    controller: confirmPassword,
-                                    obscureText: !confirmPasswordVis,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      labelStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.black,
-                                        fontSize: 17,
-                                      ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      suffixIcon: InkWell(
-                                        onTap: () => setState(
-                                          () => confirmPasswordVis =
-                                              !confirmPasswordVis,
-                                        ),
-                                        child: Icon(
-                                          confirmPasswordVis
-                                              ? Icons.visibility_outlined
-                                              : Icons.visibility_off_outlined,
-                                          color: Color(0xFF757575),
-                                          size: 17,
-                                        ),
+                                    loader: Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: SpinKitDoubleBounce(
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                    ),
-                                    keyboardType: TextInputType.emailAddress,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(50, 10, 50, 0),
-                                child: ArgonButton(
-                                  height: 40,
-                                  width: 130,
-                                  borderRadius: 12.0,
-                                  roundLoadingShape: true,
-                                  color: Colors.black,
-                                  child: Text(
-                                    "Change Password",
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.white,
-                                      //fontSize: 18,
-                                      //fontWeight: FontWeight.w700
-                                    ),
-                                  ),
-                                  loader: Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: SpinKitDoubleBounce(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  onTap: (startLoading, stopLoading,
-                                      btnState) async {
-                                    if (_buttonEnabled) {
-                                      _buttonEnabled = false;
-                                      startLoading();
-                                      if (!isPasswordCompliant(password.text)) {
-                                        stopLoading();
-                                        _buttonEnabled = true;
-                                        _showToastWarning(
-                                            "Password does not meet the requirements.\nUpper & Lower case,\nSpecial characters,\nNumbers");
-                                      } else if (password.text !=
-                                          confirmPassword.text) {
-                                        stopLoading();
-                                        _buttonEnabled = true;
-                                        _showToastWarning(
-                                            "Password does not match!");
-                                      } else {
+                                    onTap: (startLoading, stopLoading,
+                                        btnState) async {
+                                      if (_buttonEnabled) {
+                                        _buttonEnabled = false;
                                         Timer.periodic(new Duration(seconds: 1),
                                             (timer) {
                                           if (timer.tick.toInt() == 10) {
@@ -1093,38 +865,274 @@ class _EditProfileState extends State<EditProfile> {
                                             _buttonEnabled = true;
                                           }
                                         });
-                                        dynamic result = await _auth
-                                            .changePassword(password.text);
-                                        //print(result);
-                                        if(result == "ReLog"){
-                                          _showToastWarning(
-                                              "Please enter your credential and try again!");
-                                          stopLoading();
-                                          _showReLogDialog(context);
-                                        }else if (result) {
+                                        startLoading();
+                                        bool result =
+                                            await _auth.updateUserData(
+                                                username.text,
+                                                bio.text,
+                                                phoneNumber.text,
+                                                playerType.text,
+                                                profilePicture,
+                                                backgroundImage);
+                                        print(result);
+                                        if (result) {
                                           _showToastSuccess(
-                                              "Password changed successfully!");
+                                              "Profile updated successfully!");
                                           stopLoading();
                                         } else {
                                           _showToastError(
-                                              "Password changed failed");
+                                              "Profile update failed!");
                                           stopLoading();
                                         }
+                                      } else {
+                                        _showToastWarning(
+                                            "Please wait 10 seconds before trying!");
                                       }
-                                    } else {
-                                      _showToastWarning(
-                                          "Please wait 10 seconds before trying!");
-                                    }
-                                  },
+                                    },
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'New Password     :',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                    child: TextFormField(
+                                      controller: password,
+                                      obscureText: !passwordVis,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        labelStyle: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.black,
+                                          fontSize: 17,
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1,
+                                          ),
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
+                                          ),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1,
+                                          ),
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        suffixIcon: InkWell(
+                                          onTap: () => setState(
+                                            () => passwordVis = !passwordVis,
+                                          ),
+                                          child: Icon(
+                                            passwordVis
+                                                ? Icons.visibility_outlined
+                                                : Icons.visibility_off_outlined,
+                                            color: Color(0xFF757575),
+                                            size: 17,
+                                          ),
+                                        ),
+                                      ),
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                      keyboardType: TextInputType.emailAddress,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Confirm Password :',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.black,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                    child: TextFormField(
+                                      controller: confirmPassword,
+                                      obscureText: !confirmPasswordVis,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        labelStyle: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.black,
+                                          fontSize: 17,
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1,
+                                          ),
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
+                                          ),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1,
+                                          ),
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(4.0),
+                                            topRight: Radius.circular(4.0),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        suffixIcon: InkWell(
+                                          onTap: () => setState(
+                                            () => confirmPasswordVis =
+                                                !confirmPasswordVis,
+                                          ),
+                                          child: Icon(
+                                            confirmPasswordVis
+                                                ? Icons.visibility_outlined
+                                                : Icons.visibility_off_outlined,
+                                            color: Color(0xFF757575),
+                                            size: 17,
+                                          ),
+                                        ),
+                                      ),
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                      keyboardType: TextInputType.emailAddress,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(50, 10, 50, 0),
+                                  child: ArgonButton(
+                                    height: 40,
+                                    width: 130,
+                                    borderRadius: 12.0,
+                                    roundLoadingShape: true,
+                                    color: Colors.black,
+                                    child: Text(
+                                      "Change Password",
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.white,
+                                        //fontSize: 18,
+                                        //fontWeight: FontWeight.w700
+                                      ),
+                                    ),
+                                    loader: Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: SpinKitDoubleBounce(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onTap: (startLoading, stopLoading,
+                                        btnState) async {
+                                      if (_buttonEnabled) {
+                                        _buttonEnabled = false;
+                                        startLoading();
+                                        if (!isPasswordCompliant(
+                                            password.text)) {
+                                          stopLoading();
+                                          _buttonEnabled = true;
+                                          _showToastWarning(
+                                              "Password does not meet the requirements.\nUpper & Lower case,\nSpecial characters,\nNumbers");
+                                        } else if (password.text !=
+                                            confirmPassword.text) {
+                                          stopLoading();
+                                          _buttonEnabled = true;
+                                          _showToastWarning(
+                                              "Password does not match!");
+                                        } else {
+                                          Timer.periodic(
+                                              new Duration(seconds: 1),
+                                              (timer) {
+                                            if (timer.tick.toInt() == 10) {
+                                              timer.cancel();
+                                              _buttonEnabled = true;
+                                            }
+                                          });
+                                          dynamic result = await _auth
+                                              .changePassword(password.text);
+                                          //print(result);
+                                          if (result == "ReLog") {
+                                            _showToastWarning(
+                                                "Please enter your credential and try again!");
+                                            stopLoading();
+                                            _showReLogDialog(context);
+                                          } else if (result) {
+                                            _showToastSuccess(
+                                                "Password changed successfully!");
+                                            stopLoading();
+                                          } else {
+                                            _showToastError(
+                                                "Password changed failed");
+                                            stopLoading();
+                                          }
+                                        }
+                                      } else {
+                                        _showToastWarning(
+                                            "Please wait 10 seconds before trying!");
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
           } else if (snapshot.hasError) {

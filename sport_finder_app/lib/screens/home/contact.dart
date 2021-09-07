@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,6 +23,7 @@ class _ContactState extends State<Contact> {
   late TextEditingController textController3;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late FToast fToast;
+  bool _buttonEnabled = true;
 
   @override
   void initState() {
@@ -58,6 +61,32 @@ class _ContactState extends State<Contact> {
     );
   }
 
+  _showToastWarning(String text) {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.orangeAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.error_outline),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text(text),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+
   Future sendEmail({
     required String name,
     required String email,
@@ -66,7 +95,6 @@ class _ContactState extends State<Contact> {
     final serviceID = 'service_4n5f5yz';
     final templateID = 'template_dnem1rq';
     final userID = 'user_Arp3PlPUizE2qXveHa3lp';
-
 
     final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
     final response = await http.post(
@@ -82,7 +110,6 @@ class _ContactState extends State<Contact> {
           'user_name': name,
           'user_email': email,
           'user_message': message,
-
         },
         'accessToken': "ebb3ab2a2bf6ace755de6e963c39410f"
       }),
@@ -338,14 +365,36 @@ class _ContactState extends State<Contact> {
                             ),
                           ),
                           onTap: (startLoading, stopLoading, btnState) async {
-                            startLoading();
-                            await sendEmail(
-                              name: textController1.text,
-                              email: textController2.text,
-                              message: textController3.text,
-                            );
-                            stopLoading();
-                            _showToastSuccess("Message successfully sent");
+                            if (_buttonEnabled) {
+                              if (textController1.text == "" ||
+                                  textController2.text == "" ||
+                                  textController3.text == "") {
+                                _showToastWarning("Please fill in all fields!");
+                              } else {
+                                if(EmailValidator.validate(textController2.text)){
+                                  Timer.periodic(new Duration(seconds: 1),
+                                          (timer) {
+                                        if (timer.tick.toInt() == 10) {
+                                          timer.cancel();
+                                          _buttonEnabled = true;
+                                        }
+                                      });
+                                  startLoading();
+                                  await sendEmail(
+                                    name: textController1.text,
+                                    email: textController2.text,
+                                    message: textController3.text,
+                                  );
+                                  stopLoading();
+                                  _showToastSuccess("Message successfully sent");
+                                }else{
+                                  _showToastWarning("Invalid email address!");
+                                }
+                              }
+                            } else {
+                              _showToastWarning(
+                                  "Please wait 10 seconds before trying!");
+                            }
                           },
                         ),
                       )

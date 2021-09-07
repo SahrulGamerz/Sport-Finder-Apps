@@ -15,18 +15,21 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late FToast fToast;
   final AuthService _auth = AuthService();
+  late TextEditingController searchFieldController;
 
   @override
   void initState() {
     fToast = FToast();
     fToast.init(context);
+    searchFieldController = TextEditingController();
     refreshUser();
     super.initState();
   }
 
-  Future refreshUser() async{
+  Future refreshUser() async {
     //refresh user
     await _auth.refreshUser();
+    print("User refresh success");
   }
 
   @override
@@ -46,7 +49,7 @@ class _HomeState extends State<Home> {
                   child: Text('No'),
                 ),
                 ElevatedButton(
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.of(context).pop(true);
                     SystemNavigator.pop();
                   },
@@ -91,8 +94,439 @@ class _HomeState extends State<Home> {
             )
           ],
         ),
-        body: const Center(
-          child: Text('Home Page!'),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          mini: true,
+          onPressed: () {
+            // Respond to button press
+          },
+          child: Icon(Icons.add),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      child: TextFormField(
+                        onChanged: (_) => setState(() {}),
+                        controller: searchFieldController,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          labelText: 'Search ',
+                          labelStyle: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Color(0xFF8B97A2),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          hintText: 'Search by name, location etc...',
+                          hintStyle: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Color(0xFF8B97A2),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search_rounded,
+                            color: Color(0xFF8B97A2),
+                            size: 20,
+                          ),
+                          suffixIcon: searchFieldController.text.isNotEmpty
+                              ? InkWell(
+                                  onTap: () => setState(
+                                    () => searchFieldController.clear(),
+                                  ),
+                                  child: Icon(
+                                    Icons.clear,
+                                    color: Color(0xFF8B97A2),
+                                    size: 22,
+                                  ),
+                                )
+                              : null,
+                        ),
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Color(0xFF8B97A2),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 16, 0, 0),
+                    child: Text(
+                      'Your Game',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Color(0xFF8B97A2),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                child: Container(
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    color: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment(-0.1, -0.5),
+                                child: Text(
+                                  'BADMINTON',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Color(0xFF15212B),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment(2.64, 0.55),
+                                child: Text(
+                                  '2 Players, Proshuttle Balakong',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Color(0xFF8B97A2),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Align(
+                            alignment: Alignment(1, 0),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: Image.network(
+                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/f-s-apps-6ujzey/assets/siptqqdx2za0/panda.jpg',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: Text(
+                            '1 / 2 ',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Color(0xFF8B97A2),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 16, 0, 0),
+                    child: Text(
+                      'Available',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Color(0xFF8B97A2),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                child: Container(
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    color: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment(-0.1, -0.5),
+                                child: Text(
+                                  'BADMINTON',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Color(0xFF15212B),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment(2.64, 0.55),
+                                child: Text(
+                                  '4 Players, Proshuttle Balakong',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Color(0xFF8B97A2),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Align(
+                            alignment: Alignment(1, 0),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: Image.network(
+                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/f-s-apps-6ujzey/assets/i67lgzl41vmt/IMG-20170702-WA0001.jpg',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: Text(
+                            '2 / 4',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Color(0xFF8B97A2),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                child: Container(
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    color: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment(-0.1, -0.5),
+                                child: Text(
+                                  'BADMINTON',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Color(0xFF15212B),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment(2.64, 0.55),
+                                child: Text(
+                                  '4 Players, Proshuttle Balakong',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Color(0xFF8B97A2),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Align(
+                            alignment: Alignment(1, 0),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: Image.network(
+                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/f-s-apps-6ujzey/assets/sg9sbdackagq/kenma%203.jpg',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: Text(
+                            '1 / 4',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Color(0xFF8B97A2),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                child: Container(
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    color: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment(-0.1, -0.5),
+                                child: Text(
+                                  'BADMINTON',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Color(0xFF15212B),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment(2.64, 0.55),
+                                child: Text(
+                                  '2 Players, Proshuttle Balakong',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Color(0xFF8B97A2),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Align(
+                            alignment: Alignment(1, 0),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: Image.network(
+                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/f-s-apps-6ujzey/assets/bpkm54ijlp9n/assassin-ninja-mascot-logo-illustration_115476-104.jpg',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: Text(
+                            '1 / 2',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Color(0xFF8B97A2),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
         drawer: AppDrawer(currentView: 'Home'),
       ),
