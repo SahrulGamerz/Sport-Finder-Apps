@@ -29,7 +29,7 @@ class _EditProfileState extends State<EditProfile> {
   late TextEditingController confirmPassword;
   late bool passwordVis;
   late bool confirmPasswordVis;
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final AuthService _auth = AuthService();
   late FToast fToast;
   late String profilePicture;
@@ -39,6 +39,7 @@ class _EditProfileState extends State<EditProfile> {
   XFile? _imageFile;
   late Map<String, dynamic> data;
   bool _buttonEnabled = true;
+  late String type1;
 
   @override
   void initState() {
@@ -61,12 +62,8 @@ class _EditProfileState extends State<EditProfile> {
       source: ImageSource.camera,
     );
     setState(() {
-      _imageFile = pickedFile!;
-      if (type == "BG") {
-        uploadImageToFirebase(context, "BG");
-      } else {
-        uploadImageToFirebase(context, "PP");
-      }
+      _imageFile = pickedFile;
+      type1 = type;
     });
     Navigator.pop(context);
   }
@@ -76,12 +73,8 @@ class _EditProfileState extends State<EditProfile> {
       source: ImageSource.gallery,
     );
     setState(() {
-      _imageFile = pickedFile!;
-      if (type == "BG") {
-        uploadImageToFirebase(context, "BG");
-      } else {
-        uploadImageToFirebase(context, "PP");
-      }
+      _imageFile = pickedFile;
+      type1 = type;
     });
 
     Navigator.pop(context);
@@ -135,9 +128,11 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future uploadImageToFirebase(BuildContext context, type) async {
+    _buttonEnabled = false;
     String fileName = path.basename(_imageFile!.path);
     String extension = path.extension(fileName);
     String newName = uid + "_" + type + extension;
+    print(_imageFile!.path);
     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
         .ref()
         .child('users')
@@ -151,27 +146,26 @@ class _EditProfileState extends State<EditProfile> {
     uploadTask = ref.putFile(io.File(_imageFile!.path), metadata);
 
     //firebase_storage.UploadTask task = await Future.value(uploadTask);
-    Future.value(uploadTask).then((value) async {
+    await Future.value(uploadTask).then((value) async {
       if (type == "BG") {
         String downloadURL = await firebase_storage.FirebaseStorage.instance
             .ref(value.ref.fullPath)
             .getDownloadURL();
         backgroundImage = downloadURL;
-        _showToastSuccess(
-            "Upload success! Please click update to save changes!");
         timestamp = DateTime.now().millisecondsSinceEpoch;
       } else {
         String downloadURL = await firebase_storage.FirebaseStorage.instance
             .ref(value.ref.fullPath)
             .getDownloadURL();
         profilePicture = downloadURL;
-        _showToastSuccess(
-            "Upload success!\nPlease click update to save changes!");
         timestamp = DateTime.now().millisecondsSinceEpoch;
       }
       print("Upload file path ${value.ref.fullPath}");
     }).onError((error, stackTrace) {
       print("Upload file path error ${error.toString()} ");
+      _showToastError(context,
+          "Upload failed!\nPlease try again!");
+      _buttonEnabled = true;
     });
   }
 
@@ -318,7 +312,8 @@ class _EditProfileState extends State<EditProfile> {
         });
   }
 
-  _showToastSuccess(String text) {
+  _showToastSuccess(BuildContext context, String text) {
+    fToast.init(context);
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
@@ -344,7 +339,8 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  _showToastWarning(String text) {
+  _showToastWarning(BuildContext context, String text) {
+    fToast.init(context);
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
@@ -370,7 +366,8 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  _showToastError(String text) {
+  _showToastError(BuildContext context, String text) {
+    fToast.init(context);
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
@@ -415,7 +412,7 @@ class _EditProfileState extends State<EditProfile> {
         hasMinLength;
   }
 
-  Widget _editProfileStuff(context) {
+  Widget _editProfileStuff(BuildContext context) {
     return new FutureBuilder(
         future: getUserData(),
         builder: (context, snapshot) {
@@ -858,14 +855,21 @@ class _EditProfileState extends State<EditProfile> {
                                         btnState) async {
                                       if (_buttonEnabled) {
                                         _buttonEnabled = false;
-                                        Timer.periodic(new Duration(seconds: 1),
-                                            (timer) {
-                                          if (timer.tick.toInt() == 10) {
-                                            timer.cancel();
-                                            _buttonEnabled = true;
-                                          }
-                                        });
                                         startLoading();
+                                        if(_imageFile != null){
+                                          if(type1 == "BG"){
+                                            await uploadImageToFirebase(context, "BG");
+                                          }else{
+                                            await uploadImageToFirebase(context, "PP");
+                                          }
+                                        }
+                                        Timer.periodic(new Duration(seconds: 1),
+                                                (timer) {
+                                              if (timer.tick.toInt() == 10) {
+                                                timer.cancel();
+                                                _buttonEnabled = true;
+                                              }
+                                            });
                                         bool result =
                                             await _auth.updateUserData(
                                                 username.text,
@@ -876,16 +880,16 @@ class _EditProfileState extends State<EditProfile> {
                                                 backgroundImage);
                                         print(result);
                                         if (result) {
-                                          _showToastSuccess(
+                                          _showToastSuccess(context,
                                               "Profile updated successfully!");
                                           stopLoading();
                                         } else {
-                                          _showToastError(
+                                          _showToastError(context,
                                               "Profile update failed!");
                                           stopLoading();
                                         }
                                       } else {
-                                        _showToastWarning(
+                                        _showToastWarning(context,
                                             "Please wait 10 seconds before trying!");
                                       }
                                     },
@@ -1083,13 +1087,13 @@ class _EditProfileState extends State<EditProfile> {
                                             password.text)) {
                                           stopLoading();
                                           _buttonEnabled = true;
-                                          _showToastWarning(
+                                          _showToastWarning(context,
                                               "Password does not meet the requirements.\nUpper & Lower case,\nSpecial characters,\nNumbers");
                                         } else if (password.text !=
                                             confirmPassword.text) {
                                           stopLoading();
                                           _buttonEnabled = true;
-                                          _showToastWarning(
+                                          _showToastWarning(context,
                                               "Password does not match!");
                                         } else {
                                           Timer.periodic(
@@ -1104,22 +1108,22 @@ class _EditProfileState extends State<EditProfile> {
                                               .changePassword(password.text);
                                           //print(result);
                                           if (result == "ReLog") {
-                                            _showToastWarning(
+                                            _showToastWarning(context,
                                                 "Please enter your credential and try again!");
                                             stopLoading();
                                             _showReLogDialog(context);
                                           } else if (result) {
-                                            _showToastSuccess(
+                                            _showToastSuccess(context,
                                                 "Password changed successfully!");
                                             stopLoading();
                                           } else {
-                                            _showToastError(
+                                            _showToastError(context,
                                                 "Password changed failed");
                                             stopLoading();
                                           }
                                         }
                                       } else {
-                                        _showToastWarning(
+                                        _showToastWarning(context,
                                             "Please wait 10 seconds before trying!");
                                       }
                                     },

@@ -35,7 +35,8 @@ class _ContactState extends State<Contact> {
     fToast.init(context);
   }
 
-  _showToastSuccess(String text) {
+  _showToastSuccess(BuildContext context, String text) {
+    fToast.init(context);
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
@@ -61,7 +62,8 @@ class _ContactState extends State<Contact> {
     );
   }
 
-  _showToastWarning(String text) {
+  _showToastWarning(BuildContext context, String text){
+    fToast.init(context);
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
@@ -369,7 +371,7 @@ class _ContactState extends State<Contact> {
                               if (textController1.text == "" ||
                                   textController2.text == "" ||
                                   textController3.text == "") {
-                                _showToastWarning("Please fill in all fields!");
+                                _showToastWarning(context,"Please fill in all fields!");
                               } else {
                                 if(EmailValidator.validate(textController2.text)){
                                   Timer.periodic(new Duration(seconds: 1),
@@ -386,13 +388,13 @@ class _ContactState extends State<Contact> {
                                     message: textController3.text,
                                   );
                                   stopLoading();
-                                  _showToastSuccess("Message successfully sent");
+                                  _showToastSuccess(context,"Message successfully sent");
                                 }else{
-                                  _showToastWarning("Invalid email address!");
+                                  _showToastWarning(context,"Invalid email address!");
                                 }
                               }
                             } else {
-                              _showToastWarning(
+                              _showToastWarning(context,
                                   "Please wait 10 seconds before trying!");
                             }
                           },
