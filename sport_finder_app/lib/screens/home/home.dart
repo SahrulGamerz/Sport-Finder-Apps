@@ -272,9 +272,13 @@ class _HomeState extends State<Home> {
                           ),
                           suffixIcon: searchFieldController.text.isNotEmpty
                               ? InkWell(
-                                  onTap: () => setState(
-                                    () => searchFieldController.clear(),
-                                  ),
+                                  onTap: () {
+                                    searchFieldController.clear();
+                                    key = "empty";
+                                    query = firestore
+                                        .collection("games")
+                                        .orderBy("date");
+                                  },
                                   child: Icon(
                                     Icons.clear,
                                     color: Color(0xFF8B97A2),
