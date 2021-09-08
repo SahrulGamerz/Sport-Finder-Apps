@@ -37,7 +37,6 @@ class _EditProfileState extends State<EditProfile> {
   late String uid;
   int timestamp = DateTime.now().millisecondsSinceEpoch;
   XFile? _imageFile;
-  late Map<String, dynamic> data;
   bool _buttonEnabled = true;
   late String type1;
 
@@ -170,7 +169,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future getUserData() async {
-    data = await _auth.getUserData();
+    Map<String, dynamic> data = await _auth.getUserData();
     backgroundImage = data['background_image'];
     profilePicture = data['profile_picture'];
     username.text = data['username'];

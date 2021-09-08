@@ -39,6 +39,17 @@ class AuthService {
           email: email, password: password);
       User? user = userCredential.user;
       print(user);
+      if(user != null){
+        CollectionReference users =
+        firestore.collection('users');
+        await users
+            .doc(user.uid)
+            .update({
+          'last_login_at': DateTime.now(),
+        })
+            .then((value) => print("success"))
+            .catchError((error) => print("Failed to update user: $error"));
+      }
       return _user(user);
     } catch (e) {
       print(e.toString());
@@ -66,7 +77,7 @@ class AuthService {
       User? user = userCredential.user;
       if (user != null) {
         CollectionReference users =
-            FirebaseFirestore.instance.collection('users');
+            firestore.collection('users');
         await users.doc(user.uid).set({
           'uid': user.uid,
           'username': username,
@@ -152,7 +163,7 @@ class AuthService {
       if (user != null) {
         try {
           CollectionReference users =
-              FirebaseFirestore.instance.collection('users');
+              firestore.collection('users');
           DocumentSnapshot userData = await users.doc(user.uid).get();
           if (userData == null) {
             return null;
@@ -179,7 +190,7 @@ class AuthService {
         try {
           bool result = false;
           CollectionReference users =
-              FirebaseFirestore.instance.collection('users');
+              firestore.collection('users');
           await users
               .doc(user.uid)
               .update({

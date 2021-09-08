@@ -22,7 +22,7 @@ class Wrapper extends StatelessWidget {
     } else if (!user.emailVerified) {
       return Authenticate(toggleView: 2);
     } else {
-      return MaterialApp(title: 'Sport Finder App', initialRoute: Routes.home, routes: {
+      return MaterialApp(title: 'Sport Finder App', theme: ThemeData(primaryColor: Colors.black, accentColor: Colors.white), initialRoute: Routes.home, routes: {
         Routes.home: (context) => Home(),
         Routes.editProfile: (context) => EditProfile(),
         Routes.viewProfile: (context) => ViewProfile(),

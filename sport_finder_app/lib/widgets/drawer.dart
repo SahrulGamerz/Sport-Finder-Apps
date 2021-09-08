@@ -141,53 +141,7 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
             );
           }
-          return new DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.black,
-              image: DecorationImage(
-                image: AssetImage("assets/images/9io4feu.gif"),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.20,
-                    height: MediaQuery.of(context).size.width * 0.20,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/9io4feu.gif"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                Text(
-                  "Loading...",
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Colors.white,
-                    fontSize: 22,
-                  ),
-                ),
-                Text(
-                  "Loading...",
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Color(0xFF8B97A2),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          );
+          return new LinearProgressIndicator();
         });
   }
 
@@ -320,7 +274,7 @@ class _AppDrawerState extends State<AppDrawer> {
             color: Colors.grey,
           ),
           ListTile(
-            title: Text('App Ver: 1.0.0'),
+            title: Text('App Ver: 1.2.0'),
             onTap: () {},
           ),
         ],

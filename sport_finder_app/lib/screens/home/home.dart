@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:paginate_firestore/paginate_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:sport_finder_app/models/user.dart';
 import 'package:sport_finder_app/services/auth.dart';
 import 'package:sport_finder_app/widgets/drawer.dart';
 
@@ -16,6 +20,10 @@ class _HomeState extends State<Home> {
   late FToast fToast;
   final AuthService _auth = AuthService();
   late TextEditingController searchFieldController;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  late String uid;
+  late Query query;
+  late String key;
 
   @override
   void initState() {
@@ -23,6 +31,9 @@ class _HomeState extends State<Home> {
     fToast.init(context);
     searchFieldController = TextEditingController();
     refreshUser();
+    key = "";
+    query = firestore.collection("games")
+        .orderBy("date");
     super.initState();
   }
 
@@ -32,8 +43,103 @@ class _HomeState extends State<Home> {
     print("User refresh success");
   }
 
+  Widget _buildGame(
+      {required BuildContext context, required Map data, required String id}) {
+    Map<String, dynamic> creator = data['creator_details'];
+    return Padding(
+      padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+      child: InkWell(
+        // When the user taps the button, show a snackbar.
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(id),
+          ));
+        },
+        child: Container(
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Card(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            color: Colors.white,
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment(-0.1, -0.5),
+                        child: Text(
+                          data["type"].toUpperCase(),
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Color(0xFF15212B),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment(2.64, 0.55),
+                        child: Text(
+                          '${data["slot"]} Players, ${data["location"]}',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Color(0xFF8B97A2),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Align(
+                    alignment: Alignment(1, 0),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.network(
+                        '${creator["profile_picture"]}',
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                  child: Text(
+                    '${data["joined"].length} / ${data["slot"]} ',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Color(0xFF8B97A2),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserInfoRetrieve?>(context);
+    uid = user!.uid;
     Future<bool> showExitPopup() async {
       return await showDialog(
             //show confirm dialogue
@@ -63,7 +169,8 @@ class _HomeState extends State<Home> {
     }
 
     return WillPopScope(
-      onWillPop: showExitPopup, //call function on back button press
+      onWillPop: showExitPopup,
+      //call function on back button press
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
@@ -106,7 +213,7 @@ class _HomeState extends State<Home> {
         body: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
+            children: <Widget>[
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -114,7 +221,20 @@ class _HomeState extends State<Home> {
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: TextFormField(
-                        onChanged: (_) => setState(() {}),
+                        onChanged: (_) => setState(() {
+                          if(searchFieldController.text.isEmpty){
+                            key = searchFieldController.text;
+                            query = firestore
+                                .collection("games")
+                                .orderBy("date");
+                          }else{
+                            key = searchFieldController.text;
+                            query = firestore
+                                .collection("games")
+                                .where("search_param", arrayContains: searchFieldController.text.toLowerCase())
+                                .orderBy("date");
+                          }
+                        }),
                         controller: searchFieldController,
                         obscureText: false,
                         decoration: InputDecoration(
@@ -189,84 +309,46 @@ class _HomeState extends State<Home> {
                   )
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                child: Container(
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    color: Colors.white,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment(-0.1, -0.5),
-                                child: Text(
-                                  'BADMINTON',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Color(0xFF15212B),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment(2.64, 0.55),
-                                child: Text(
-                                  '2 Players, Proshuttle Balakong',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Color(0xFF8B97A2),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
+              Flexible(
+                child: PaginateFirestore(
+                  //item builder type is compulsory.
+                  itemBuilder: (index, context, documentSnapshot) {
+                    final data = documentSnapshot.data() as Map?;
+                    if (data != null) {
+                      return _buildGame(
+                          context: context,
+                          data: data,
+                          id: documentSnapshot.id);
+                    } else {
+                      return Text(
+                        "You didn't join any game(s)",
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Color(0xFF8B97A2),
+                          fontWeight: FontWeight.w500,
                         ),
-                        Expanded(
-                          flex: 2,
-                          child: Align(
-                            alignment: Alignment(1, 0),
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.network(
-                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/f-s-apps-6ujzey/assets/siptqqdx2za0/panda.jpg',
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                          child: Text(
-                            '1 / 2 ',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              color: Color(0xFF8B97A2),
-                            ),
-                          ),
-                        )
-                      ],
+                      );
+                    }
+                  },
+                  // orderBy is compulsory to enable pagination
+                  query: firestore
+                      .collection("games")
+                      .where("joined", arrayContains: uid)
+                      .orderBy("date"),
+                  //Change types accordingly
+                  itemBuilderType: PaginateBuilderType.listView,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  emptyDisplay: Text(
+                    "You didn't join any game(s)",
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Color(0xFF8B97A2),
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
+                  // to fetch real-time data
+                  isLive: true,
                 ),
               ),
               Row(
@@ -285,246 +367,46 @@ class _HomeState extends State<Home> {
                   )
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                child: Container(
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    color: Colors.white,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment(-0.1, -0.5),
-                                child: Text(
-                                  'BADMINTON',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Color(0xFF15212B),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment(2.64, 0.55),
-                                child: Text(
-                                  '4 Players, Proshuttle Balakong',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Color(0xFF8B97A2),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
+              Flexible(
+                child: PaginateFirestore(
+                  //item builder type is compulsory.
+                  itemBuilder: (index, context, documentSnapshot) {
+                    final data = documentSnapshot.data() as Map?;
+                    if (data != null) {
+                      return _buildGame(
+                          context: context,
+                          data: data,
+                          id: documentSnapshot.id);
+                    } else {
+                      return Text(
+                        "No game(s) available",
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Color(0xFF8B97A2),
+                          fontWeight: FontWeight.w500,
                         ),
-                        Expanded(
-                          flex: 2,
-                          child: Align(
-                            alignment: Alignment(1, 0),
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.network(
-                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/f-s-apps-6ujzey/assets/i67lgzl41vmt/IMG-20170702-WA0001.jpg',
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                          child: Text(
-                            '2 / 4',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              color: Color(0xFF8B97A2),
-                            ),
-                          ),
-                        )
-                      ],
+                      );
+                    }
+                  },
+                  key:ValueKey<String>(key),
+                  // orderBy is compulsory to enable pagination
+                  query: query,
+                  //Change types accordingly
+                  itemBuilderType: PaginateBuilderType.listView,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  emptyDisplay: Text(
+                    "No game(s) available",
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Color(0xFF8B97A2),
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
+                  // to fetch real-time data
+                  isLive: true,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                child: Container(
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    color: Colors.white,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment(-0.1, -0.5),
-                                child: Text(
-                                  'BADMINTON',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Color(0xFF15212B),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment(2.64, 0.55),
-                                child: Text(
-                                  '4 Players, Proshuttle Balakong',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Color(0xFF8B97A2),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Align(
-                            alignment: Alignment(1, 0),
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.network(
-                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/f-s-apps-6ujzey/assets/sg9sbdackagq/kenma%203.jpg',
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                          child: Text(
-                            '1 / 4',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              color: Color(0xFF8B97A2),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-                child: Container(
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    color: Colors.white,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment(-0.1, -0.5),
-                                child: Text(
-                                  'BADMINTON',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Color(0xFF15212B),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment(2.64, 0.55),
-                                child: Text(
-                                  '2 Players, Proshuttle Balakong',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Color(0xFF8B97A2),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Align(
-                            alignment: Alignment(1, 0),
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.network(
-                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/f-s-apps-6ujzey/assets/bpkm54ijlp9n/assassin-ninja-mascot-logo-illustration_115476-104.jpg',
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                          child: Text(
-                            '1 / 2',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              color: Color(0xFF8B97A2),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              )
             ],
           ),
         ),
