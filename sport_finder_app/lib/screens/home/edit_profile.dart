@@ -35,7 +35,8 @@ class _EditProfileState extends State<EditProfile> {
   late String profilePicture;
   late String backgroundImage;
   late String uid;
-  int timestamp = DateTime.now().millisecondsSinceEpoch;
+  int timestampBG = DateTime.now().millisecondsSinceEpoch;
+  int timestampPP = DateTime.now().millisecondsSinceEpoch;
   XFile? _imageFile;
   bool _buttonEnabled = true;
   late String type1;
@@ -150,20 +151,23 @@ class _EditProfileState extends State<EditProfile> {
         String downloadURL = await firebase_storage.FirebaseStorage.instance
             .ref(value.ref.fullPath)
             .getDownloadURL();
-        backgroundImage = downloadURL;
-        timestamp = DateTime.now().millisecondsSinceEpoch;
+        setState(() {
+          backgroundImage = downloadURL;
+          timestampBG = DateTime.now().millisecondsSinceEpoch;
+        });
       } else {
         String downloadURL = await firebase_storage.FirebaseStorage.instance
             .ref(value.ref.fullPath)
             .getDownloadURL();
-        profilePicture = downloadURL;
-        timestamp = DateTime.now().millisecondsSinceEpoch;
+        setState(() {
+          profilePicture = downloadURL;
+          timestampPP = DateTime.now().millisecondsSinceEpoch;
+        });
       }
       print("Upload file path ${value.ref.fullPath}");
     }).onError((error, stackTrace) {
       print("Upload file path error ${error.toString()} ");
-      _showToastError(context,
-          "Upload failed!\nPlease try again!");
+      _showToastError(context, "Upload failed!\nPlease try again!");
       _buttonEnabled = true;
     });
   }
@@ -443,6 +447,7 @@ class _EditProfileState extends State<EditProfile> {
                                     },
                                     child: Image.network(
                                       backgroundImage,
+                                      key: ValueKey(timestampBG),
                                       width: MediaQuery.of(context).size.width,
                                       height:
                                           MediaQuery.of(context).size.height *
@@ -469,6 +474,7 @@ class _EditProfileState extends State<EditProfile> {
                                       ),
                                       child: Image.network(
                                         profilePicture,
+                                        key: ValueKey(timestampPP),
                                       ),
                                     ),
                                   )
@@ -855,20 +861,22 @@ class _EditProfileState extends State<EditProfile> {
                                       if (_buttonEnabled) {
                                         _buttonEnabled = false;
                                         startLoading();
-                                        if(_imageFile != null){
-                                          if(type1 == "BG"){
-                                            await uploadImageToFirebase(context, "BG");
-                                          }else{
-                                            await uploadImageToFirebase(context, "PP");
+                                        if (_imageFile != null) {
+                                          if (type1 == "BG") {
+                                            await uploadImageToFirebase(
+                                                context, "BG");
+                                          } else {
+                                            await uploadImageToFirebase(
+                                                context, "PP");
                                           }
                                         }
                                         Timer.periodic(new Duration(seconds: 1),
-                                                (timer) {
-                                              if (timer.tick.toInt() == 10) {
-                                                timer.cancel();
-                                                _buttonEnabled = true;
-                                              }
-                                            });
+                                            (timer) {
+                                          if (timer.tick.toInt() == 10) {
+                                            timer.cancel();
+                                            _buttonEnabled = true;
+                                          }
+                                        });
                                         bool result =
                                             await _auth.updateUserData(
                                                 username.text,
@@ -1151,6 +1159,7 @@ class _EditProfileState extends State<EditProfile> {
       key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        brightness: Brightness.dark,
         iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
         title: Text(

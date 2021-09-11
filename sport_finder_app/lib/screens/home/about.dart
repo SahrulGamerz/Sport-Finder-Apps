@@ -10,6 +10,7 @@ class About extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
+        brightness: Brightness.dark,
         iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
         title: Text(

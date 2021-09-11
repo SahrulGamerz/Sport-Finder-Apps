@@ -32,8 +32,11 @@ class _HomeState extends State<Home> {
     searchFieldController = TextEditingController();
     refreshUser();
     key = "";
-    query = firestore.collection("games")
-        .orderBy("date");
+    query = firestore
+        .collection("games")
+        .where("game_full", isEqualTo: "false")
+        .where("game_finish", isEqualTo: "false")
+        .orderBy("gameDetails.date");
     super.initState();
   }
 
@@ -45,14 +48,15 @@ class _HomeState extends State<Home> {
 
   Widget _buildGame(
       {required BuildContext context, required Map data, required String id}) {
-    Map<String, dynamic> creator = data['creator_details'];
+    Map<String, dynamic> creator = data['creator'];
+    Map<String, dynamic> gameDetails = data['gameDetails'];
     return Padding(
       padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: InkWell(
         // When the user taps the button, show a snackbar.
         onTap: () {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(id),
+            content: Text("Game ID: "+id),
           ));
         },
         child: Container(
@@ -78,7 +82,7 @@ class _HomeState extends State<Home> {
                       Align(
                         alignment: Alignment(-0.1, -0.5),
                         child: Text(
-                          data["type"].toUpperCase(),
+                          gameDetails["location"].toUpperCase(),
                           style: TextStyle(
                             fontFamily: 'Montserrat',
                             color: Color(0xFF15212B),
@@ -90,7 +94,7 @@ class _HomeState extends State<Home> {
                       Align(
                         alignment: Alignment(2.64, 0.55),
                         child: Text(
-                          '${data["slot"]} Players, ${data["location"]}',
+                          '${gameDetails["slots"]} Players, ${gameDetails["location"]}',
                           style: TextStyle(
                             fontFamily: 'Montserrat',
                             color: Color(0xFF8B97A2),
@@ -121,7 +125,7 @@ class _HomeState extends State<Home> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                   child: Text(
-                    '${data["joined"].length} / ${data["slot"]} ',
+                    '${data["joined"].length} / ${gameDetails["slots"]}',
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       color: Color(0xFF8B97A2),
@@ -136,6 +140,15 @@ class _HomeState extends State<Home> {
     );
   }
 
+  /* todo in add game
+  List searchQueryMaker(text){
+    List<String> query = [];
+    for(var i = 1; i < text.length+1; i++){
+      query.add(text.substring(0,i));
+    }
+    return query;
+  }
+  */
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserInfoRetrieve?>(context);
@@ -174,6 +187,7 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
+          brightness: Brightness.dark,
           iconTheme: IconThemeData(color: Colors.white),
           centerTitle: true,
           title: Text(
@@ -189,7 +203,9 @@ class _HomeState extends State<Home> {
               padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
               child: IconButton(
                 onPressed: () {
-                  print('IconButton pressed ...');
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("Add button pressed"),
+                  ));
                 },
                 icon: Icon(
                   Icons.chat_bubble_outline_rounded,
@@ -222,17 +238,23 @@ class _HomeState extends State<Home> {
                       padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: TextFormField(
                         onChanged: (_) => setState(() {
-                          if(searchFieldController.text.isEmpty){
+                          if (searchFieldController.text.isEmpty) {
                             key = searchFieldController.text;
                             query = firestore
                                 .collection("games")
-                                .orderBy("date");
-                          }else{
+                                .where("game_full", isEqualTo: "false")
+                                .where("game_finish", isEqualTo: "false")
+                                .orderBy("gameDetails.date");
+                          } else {
                             key = searchFieldController.text;
                             query = firestore
                                 .collection("games")
-                                .where("search_param", arrayContains: searchFieldController.text.toLowerCase())
-                                .orderBy("date");
+                                .where("search_param",
+                                    arrayContains: searchFieldController.text
+                                        .toLowerCase())
+                                .where("game_full", isEqualTo: "false")
+                                .where("game_finish", isEqualTo: "false")
+                                .orderBy("gameDetails.date");
                           }
                         }),
                         controller: searchFieldController,
@@ -273,11 +295,17 @@ class _HomeState extends State<Home> {
                           suffixIcon: searchFieldController.text.isNotEmpty
                               ? InkWell(
                                   onTap: () {
-                                    searchFieldController.clear();
-                                    key = "empty";
-                                    query = firestore
-                                        .collection("games")
-                                        .orderBy("date");
+                                    setState(() {
+                                      searchFieldController.clear();
+                                      key = searchFieldController.text;
+                                      query = firestore
+                                          .collection("games")
+                                          .where("game_full",
+                                              isEqualTo: "false")
+                                          .where("game_finish",
+                                              isEqualTo: "false")
+                                          .orderBy("gameDetails.date");
+                                    });
                                   },
                                   child: Icon(
                                     Icons.clear,
@@ -324,6 +352,7 @@ class _HomeState extends State<Home> {
                           data: data,
                           id: documentSnapshot.id);
                     } else {
+                      print(data);
                       return Text(
                         "You didn't join any game(s)",
                         style: TextStyle(
@@ -338,7 +367,8 @@ class _HomeState extends State<Home> {
                   query: firestore
                       .collection("games")
                       .where("joined", arrayContains: uid)
-                      .orderBy("date"),
+                      .where("game_finish", isEqualTo: "false")
+                      .orderBy("gameDetails.date"),
                   //Change types accordingly
                   itemBuilderType: PaginateBuilderType.listView,
                   shrinkWrap: true,
@@ -392,7 +422,7 @@ class _HomeState extends State<Home> {
                       );
                     }
                   },
-                  key:ValueKey<String>(key),
+                  key: ValueKey<String>(key),
                   // orderBy is compulsory to enable pagination
                   query: query,
                   //Change types accordingly
