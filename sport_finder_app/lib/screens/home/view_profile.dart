@@ -166,7 +166,7 @@ class _ViewProfileState extends State<ViewProfile> {
                               ),
                               Expanded(
                                   child: Padding(
-                                padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                 child: TextFormField(
                                   controller: username,
                                   obscureText: false,
@@ -290,7 +290,7 @@ class _ViewProfileState extends State<ViewProfile> {
                               ),
                               Expanded(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                   child: TextFormField(
                                     controller: playerType,
                                     obscureText: false,
@@ -353,7 +353,7 @@ class _ViewProfileState extends State<ViewProfile> {
                               ),
                               Expanded(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                   child: TextFormField(
                                     controller: bio,
                                     obscureText: false,
@@ -416,7 +416,7 @@ class _ViewProfileState extends State<ViewProfile> {
                               ),
                               Expanded(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                   child: TextFormField(
                                     controller: phoneNumber,
                                     obscureText: false,

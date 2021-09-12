@@ -82,7 +82,7 @@ class _HomeState extends State<Home> {
                       Align(
                         alignment: Alignment(-0.1, -0.5),
                         child: Text(
-                          gameDetails["location"].toUpperCase(),
+                          gameDetails["gameType"].toUpperCase(),
                           style: TextStyle(
                             fontFamily: 'Montserrat',
                             color: Color(0xFF15212B),
@@ -94,7 +94,7 @@ class _HomeState extends State<Home> {
                       Align(
                         alignment: Alignment(2.64, 0.55),
                         child: Text(
-                          '${gameDetails["slots"]} Players, ${gameDetails["location"]}',
+                          '${gameDetails["slots"]} Players, ${gameDetails["court_name"]}',
                           style: TextStyle(
                             fontFamily: 'Montserrat',
                             color: Color(0xFF8B97A2),
