@@ -153,7 +153,19 @@ class AuthService {
   //get other user userData
   //todo
   Future getOtherUserData(String uid) async {
-    try {} catch (e) {}
+    try {
+      CollectionReference users =
+      firestore.collection('users');
+      DocumentSnapshot userData = await users.doc(uid).get();
+      if (userData == null) {
+        return null;
+      }
+      Map<String, dynamic> data = userData.data() as Map<String, dynamic>;
+      return data;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
   }
 
   //get user data

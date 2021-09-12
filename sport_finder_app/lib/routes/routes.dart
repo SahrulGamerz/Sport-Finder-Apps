@@ -9,7 +9,6 @@ class Routes {
   static const String loading = Loading.routeName;
   static const String home = Home.routeName;
   static const String editProfile = EditProfile.routeName;
-  static const String viewProfile = ViewProfile.routeName;
   static const String about = About.routeName;
   static const String contact = Contact.routeName;
 }

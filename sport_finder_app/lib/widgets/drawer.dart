@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sport_finder_app/routes/routes.dart';
+import 'package:sport_finder_app/screens/home/view_profile.dart';
 import 'package:sport_finder_app/services/auth.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -230,7 +231,15 @@ class _AppDrawerState extends State<AppDrawer> {
               onTap: () => {
                     Navigator.of(context).pop(),
                     if (widget.currentView != "editProfile")
-                      {Navigator.pushNamed(context, Routes.editProfile)}
+                      //{Navigator.pushNamed(context, Routes.editProfile)}
+                      {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewProfile(uid: "Rk7oKJd07vdXrOn4Y2Um0xnyaLF3"),
+                          ),
+                        )
+                      }
                   }),
           Divider(
             color: Colors.grey,

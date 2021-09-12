@@ -25,7 +25,6 @@ class Wrapper extends StatelessWidget {
       return MaterialApp(title: 'Sports Finder App', theme: ThemeData(primaryColor: Colors.grey, accentColor: Colors.white), initialRoute: Routes.home, routes: {
         Routes.home: (context) => Home(),
         Routes.editProfile: (context) => EditProfile(),
-        Routes.viewProfile: (context) => ViewProfile(),
         Routes.about: (context) => About(),
         Routes.contact: (context) => Contact(),
       });

@@ -8,8 +8,10 @@ import 'package:sport_finder_app/widgets/drawer.dart';
 
 class ViewProfile extends StatefulWidget {
   //need to pass user id here
-  const ViewProfile({Key? key}) : super(key: key);
+  //const ViewProfile({Key? key}) : super(key: key);
   static const String routeName = '/profile';
+  final String uid;
+  ViewProfile({required this.uid});
 
   @override
   _ViewProfileState createState() => _ViewProfileState();
@@ -43,7 +45,7 @@ class _ViewProfileState extends State<ViewProfile> {
 
   //modify this to accept user id and get their profile
   Future getUserData() async {
-    data = await _auth.getUserData();
+    data = await _auth.getOtherUserData(widget.uid);
     backgroundImage = data['background_image'];
     profilePicture = data['profile_picture'];
     username.text = data['username'];
@@ -491,25 +493,8 @@ class _ViewProfileState extends State<ViewProfile> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-            child: IconButton(
-              onPressed: () {
-                print('IconButton pressed ...');
-              },
-              icon: Icon(
-                Icons.chat_bubble_outline_rounded,
-                color: Colors.white,
-                size: 25,
-              ),
-              iconSize: 25,
-            ),
-          )
-        ],
       ),
       backgroundColor: Colors.white,
-      drawer: AppDrawer(currentView: 'viewProfile'),
       body: _viewProfileStuff(context),
     );
   }
