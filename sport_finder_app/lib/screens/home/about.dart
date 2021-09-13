@@ -14,9 +14,10 @@ class About extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
         title: Text(
-          'SPORTS FINDER',
+          'ABOUT US',
           textAlign: TextAlign.center,
           style: TextStyle(
+            color: Colors.white,
             fontFamily: 'Ubuntu',
             fontWeight: FontWeight.bold,
           ),

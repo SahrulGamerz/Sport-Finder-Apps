@@ -1163,9 +1163,10 @@ class _EditProfileState extends State<EditProfile> {
         iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
         title: Text(
-          'SPORTS FINDER',
+          'EDIT PROFILE',
           textAlign: TextAlign.center,
           style: TextStyle(
+            color: Colors.white,
             fontFamily: 'Ubuntu',
             fontWeight: FontWeight.bold,
           ),

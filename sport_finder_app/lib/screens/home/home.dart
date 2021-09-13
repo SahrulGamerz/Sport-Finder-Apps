@@ -194,6 +194,7 @@ class _HomeState extends State<Home> {
             'SPORTS FINDER',
             textAlign: TextAlign.center,
             style: TextStyle(
+              color: Colors.white,
               fontFamily: 'Ubuntu',
               fontWeight: FontWeight.bold,
             ),

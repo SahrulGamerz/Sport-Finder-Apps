@@ -486,9 +486,10 @@ class _ViewProfileState extends State<ViewProfile> {
         iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
         title: Text(
-          'SPORTS FINDER',
+          'PROFILE',
           textAlign: TextAlign.center,
           style: TextStyle(
+            color: Colors.white,
             fontFamily: 'Ubuntu',
             fontWeight: FontWeight.bold,
           ),

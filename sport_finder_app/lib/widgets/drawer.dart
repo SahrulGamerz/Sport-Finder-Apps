@@ -224,6 +224,8 @@ class _AppDrawerState extends State<AppDrawer> {
               text: "Booking Venue",
               onTap: () => {
                     Navigator.of(context).pop(),
+                    if (widget.currentView != "BookingVenue")
+                      {Navigator.pushNamed(context, Routes.bookingVenue)}
                   }),
           _createDrawerItem(
               icon: Icons.person_outline,
@@ -236,7 +238,8 @@ class _AppDrawerState extends State<AppDrawer> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ViewProfile(uid: "Rk7oKJd07vdXrOn4Y2Um0xnyaLF3"),
+                            builder: (context) => ViewProfile(
+                                uid: "Rk7oKJd07vdXrOn4Y2Um0xnyaLF3"),
                           ),
                         )
                       }
@@ -283,7 +286,7 @@ class _AppDrawerState extends State<AppDrawer> {
             color: Colors.grey,
           ),
           ListTile(
-            title: Text('App Ver: 1.2.0'),
+            title: Text('Current Sprint: 1'),
             onTap: () {},
           ),
         ],

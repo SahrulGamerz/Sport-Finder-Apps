@@ -50,6 +50,7 @@ dependencies:
   http: ^0.13.3
   paginate_firestore:
     path: ./paginate_firestore-1.0.2
+  map: any
 
 dev_dependencies:
   flutter_native_splash: ^1.2.1

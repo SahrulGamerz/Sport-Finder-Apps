@@ -129,9 +129,10 @@ class _ContactState extends State<Contact> {
         iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
         title: Text(
-          'SPORTS FINDER',
+          'CONTACT',
           textAlign: TextAlign.center,
           style: TextStyle(
+            color: Colors.white,
             fontFamily: 'Ubuntu',
             fontWeight: FontWeight.bold,
           ),

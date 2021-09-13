@@ -6,6 +6,7 @@ import 'package:sport_finder_app/screens/authenticate/authenticate.dart';
 import 'package:sport_finder_app/screens/home/home.dart';
 
 import 'home/about.dart';
+import 'home/booking_venue.dart';
 import 'home/contact.dart';
 import 'home/edit_profile.dart';
 import 'home/view_profile.dart';
@@ -24,6 +25,7 @@ class Wrapper extends StatelessWidget {
     } else {
       return MaterialApp(title: 'Sports Finder App', theme: ThemeData(primaryColor: Colors.grey, accentColor: Colors.white), initialRoute: Routes.home, routes: {
         Routes.home: (context) => Home(),
+        Routes.bookingVenue: (context) => BookingVenue(),
         Routes.editProfile: (context) => EditProfile(),
         Routes.about: (context) => About(),
         Routes.contact: (context) => Contact(),
