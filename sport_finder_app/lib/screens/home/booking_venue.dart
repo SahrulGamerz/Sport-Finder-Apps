@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:latlng/latlng.dart';
 import 'package:map/map.dart';
+import 'package:sport_finder_app/screens/home/venue.dart';
 import 'package:sport_finder_app/widgets/drawer.dart';
 
 class BookingVenue extends StatefulWidget {
@@ -67,7 +68,7 @@ class _BookingVenueState extends State<BookingVenue> {
     }
   }
 
-  Widget _buildMarkerWidget(Offset pos, LatLng pos2, String id, Color color,
+  Widget _buildMarkerWidget(BuildContext context, Offset pos, LatLng pos2, String id, Color color,
       [IconData icon = Icons.location_on]) {
     return Positioned(
       left: pos.dx - 24,
@@ -81,15 +82,11 @@ class _BookingVenueState extends State<BookingVenue> {
           size: 48,
         ),
         onTap: () {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              content: Text('You have clicked a marker!\nPos ' +
-                  (pos2.latitude.toString()) +
-                  ' , ' +
-                  pos2.longitude.toString() +
-                  "\nLocation ID: " +
-                  id),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VenueWidget(
+                  cid: id),
             ),
           );
         },
@@ -124,6 +121,7 @@ class _BookingVenueState extends State<BookingVenue> {
                     markerWidgets = markerPositions.map((pos) {
                       count++;
                       return _buildMarkerWidget(
+                          context,
                           pos,
                           transformer.fromXYCoordsToLatLng(pos),
                           dataId[count-1],
