@@ -2,7 +2,6 @@ import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:sport_finder_app/screens/home/view_court.dart';
 
 class VenueWidget extends StatefulWidget {
@@ -83,13 +82,13 @@ class _VenueWidgetState extends State<VenueWidget> {
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
-                                                Padding(
+                                                Flexible(
+                                                    child: Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
                                                             .fromSTEB(
                                                                 0, 4, 0, 0),
-                                                    child: Flexible(
-                                                        child: Text(
+                                                    child: Text(
                                                       data['court_name'],
                                                       style: TextStyle(
                                                         fontFamily:
@@ -165,27 +164,23 @@ class _VenueWidgetState extends State<VenueWidget> {
                                                     size: 20,
                                                   ),
                                                 ),
-                                                Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                4, 0, 0, 0),
-                                                    child: Flexible(
-                                                        child: Text(
-                                                        data['address'],
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                          fontFamily:
-                                                              'Lexend Deca',
-                                                          color:
-                                                              Color(0xFF4B39EF),
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                      ),
-                                                    ))
+                                                Flexible(
+                                                    child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(4, 0, 0, 0),
+                                                  child: Text(
+                                                    data['address'],
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Lexend Deca',
+                                                      color: Color(0xFF4B39EF),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ))
                                               ],
                                             ),
                                           ),
@@ -231,8 +226,10 @@ class _VenueWidgetState extends State<VenueWidget> {
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                          builder: (context) => ViewCourtWidget(
-                                                              cid: widget.cid),
+                                                          builder: (context) =>
+                                                              ViewCourtWidget(
+                                                                  cid: widget
+                                                                      .cid),
                                                         ),
                                                       );
                                                     },

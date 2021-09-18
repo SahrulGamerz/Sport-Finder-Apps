@@ -2,7 +2,7 @@ import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:time_picker_widget/time_picker_widget.dart';
 
 class ViewCourtWidget extends StatefulWidget {
@@ -21,10 +21,7 @@ class _ViewCourtWidgetState extends State<ViewCourtWidget> {
   late TextEditingController textController3;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   DateTime now = new DateTime.now();
-  String selectedTime1 = '';
-  String selectedTime2 = '';
-
-
+  late FToast fToast;
 
   @override
   void initState() {
@@ -32,6 +29,35 @@ class _ViewCourtWidgetState extends State<ViewCourtWidget> {
     textController1 = TextEditingController();
     textController2 = TextEditingController();
     textController3 = TextEditingController();
+    fToast = FToast();
+    fToast.init(context);
+  }
+
+  _showToastWarning(BuildContext context, String text) {
+    fToast.init(context);
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.orangeAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.error_outline),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text(text),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
   }
 
   @override
@@ -158,9 +184,45 @@ class _ViewCourtWidgetState extends State<ViewCourtWidget> {
                       initialValue:now.toString(),
                       type: DateTimePickerType.date,
                       dateMask: 'd MMM, yyyy',
-                      firstDate: DateTime(now.year),
-                      lastDate: DateTime(now.year),
-                      dateLabelText: 'Date',
+                      firstDate: DateTime(now.year, now.month, now.day),
+                      initialDate: now,
+                      lastDate: DateTime(now.year, now.month, now.day+3),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        hintText: 'Set Time ',
+                        hintStyle: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.black,
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                            width: 1,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        contentPadding: EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
+                        prefixIcon: Icon(
+                          Icons.keyboard_arrow_down,
+                        ),
+                      ),
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.black,
+                      ),
                       onChanged: (val) => print(val),
                       validator: (val) {
                         print(val);
@@ -196,56 +258,121 @@ class _ViewCourtWidgetState extends State<ViewCourtWidget> {
               children: [
                 Expanded(
                   child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(10, 0, 13, 0),
-                      child:InkWell(
+                      padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                      child: InkWell(
                         onTap: () =>
-                        // DEMO --------------
                         showCustomTimePicker(
                             context: context,
-                            // It is a must if you provide selectableTimePredicate
-                            onFailValidation: (context) {},
+                            onFailValidation: (context) {_showToastWarning(context, "Unavailable Time");},
                             initialTime: TimeOfDay(
                                 hour: 10,
                                 minute: 0),
-                            selectableTimePredicate: (time) => time!.hour >= 10 && time!.hour <= 20 && time!.minute % 30 == 0).then(
+                            selectableTimePredicate: (time) => time!.hour >= 10 && time.hour <= 20 && time.minute % 30 == 0).then(
                                 (time) =>
-                                setState(() => selectedTime1 = time!.format(context))),
-                        // --------------
-
-                        child: Text(
-                          selectedTime1 ?? 'Select Time',
+                                setState(() => textController2.text = time!.format(context))),
+                        child: TextFormField(
+                          controller: textController2,
+                          readOnly: true,
+                          enabled: false,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            hintText: 'Set Time ',
+                            hintStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Colors.black,
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
+                            contentPadding: EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
+                            prefixIcon: Icon(
+                              Icons.keyboard_arrow_down,
+                            ),
+                          ),
                           style: TextStyle(
                             fontFamily: 'Montserrat',
                             color: Colors.black,
                           ),
+                          keyboardType: TextInputType.datetime,
                         ),
                       ),
                   ),
                 ),
+                Text('-'),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 0, 13, 0),
                     child: InkWell(
                       onTap: () =>
-                      // DEMO --------------
                       showCustomTimePicker(
                           context: context,
-                          // It is a must if you provide selectableTimePredicate
-                          onFailValidation: (context) {},
+                          onFailValidation: (context) {_showToastWarning(context, "Unavailable Time");},
                           initialTime: TimeOfDay(
                               hour: 10,
                               minute: 0),
-                          selectableTimePredicate: (time) => time!.hour >= 10 && time!.hour <= 20 && time!.minute % 30 == 0).then(
+                          selectableTimePredicate: (time) => time!.hour >= 10 && time.hour <= 20 && time.minute % 30 == 0).then(
                               (time) =>
-                              setState(() => selectedTime1 = time!.format(context))),
-                      // --------------
-
-                      child: Text(
-                        selectedTime1 ?? 'Select Time',
+                              setState(() => textController3.text = time!.format(context))),
+                      child: TextFormField(
+                        controller: textController3,
+                        readOnly: true,
+                        enabled: false,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          hintText: 'Set Time ',
+                          hintStyle: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Colors.black,
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          contentPadding: EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
+                          prefixIcon: Icon(
+                            Icons.keyboard_arrow_down,
+                          ),
+                        ),
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           color: Colors.black,
                         ),
+                        keyboardType: TextInputType.datetime,
                       ),
                     ),
                   ),
