@@ -228,8 +228,9 @@ class _VenueWidgetState extends State<VenueWidget> {
                                                         MaterialPageRoute(
                                                           builder: (context) =>
                                                               ViewCourtWidget(
-                                                                  cid: widget
-                                                                      .cid),
+                                                                  cid: widget.cid, pph: int.parse(data['price_per_hour']),
+                                                                  cc: int.parse(data['court_num']),
+                                                                  img: data['image']),
                                                         ),
                                                       );
                                                     },
