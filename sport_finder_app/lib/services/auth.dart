@@ -39,14 +39,13 @@ class AuthService {
           email: email, password: password);
       User? user = userCredential.user;
       print(user);
-      if(user != null){
-        CollectionReference users =
-        firestore.collection('users');
+      if (user != null) {
+        CollectionReference users = firestore.collection('users');
         await users
             .doc(user.uid)
             .update({
-          'last_login_at': DateTime.now(),
-        })
+              'last_login_at': DateTime.now(),
+            })
             .then((value) => print("success"))
             .catchError((error) => print("Failed to update user: $error"));
       }
@@ -76,8 +75,7 @@ class AuthService {
           .createUserWithEmailAndPassword(email: email, password: password);
       User? user = userCredential.user;
       if (user != null) {
-        CollectionReference users =
-            firestore.collection('users');
+        CollectionReference users = firestore.collection('users');
         await users.doc(user.uid).set({
           'uid': user.uid,
           'username': username,
@@ -154,8 +152,7 @@ class AuthService {
   //todo
   Future getOtherUserData(String uid) async {
     try {
-      CollectionReference users =
-      firestore.collection('users');
+      CollectionReference users = firestore.collection('users');
       DocumentSnapshot userData = await users.doc(uid).get();
       if (userData == null) {
         return null;
@@ -174,8 +171,7 @@ class AuthService {
       User? user = _auth.currentUser;
       if (user != null) {
         try {
-          CollectionReference users =
-              firestore.collection('users');
+          CollectionReference users = firestore.collection('users');
           DocumentSnapshot userData = await users.doc(user.uid).get();
           if (userData == null) {
             return null;
@@ -201,8 +197,7 @@ class AuthService {
       if (user != null) {
         try {
           bool result = false;
-          CollectionReference users =
-              firestore.collection('users');
+          CollectionReference users = firestore.collection('users');
           await users
               .doc(user.uid)
               .update({
@@ -241,7 +236,8 @@ class AuthService {
       return false;
     } catch (e) {
       print(e.toString());
-      if(e.toString() == "[firebase_auth/requires-recent-login] This operation is sensitive and requires recent authentication. Log in again before retrying this request.")
+      if (e.toString() ==
+          "[firebase_auth/requires-recent-login] This operation is sensitive and requires recent authentication. Log in again before retrying this request.")
         return "ReLog";
       return null;
     }
@@ -249,15 +245,16 @@ class AuthService {
 
   //reauthenticateWithCredential
   Future reAuthenticateUser(String email, String password) async {
-    try{
+    try {
       User? user = _auth.currentUser;
-      if(user != null){
-        AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+      if (user != null) {
+        AuthCredential credential =
+            EmailAuthProvider.credential(email: email, password: password);
         await user.reauthenticateWithCredential(credential);
         return true;
       }
       return false;
-    }catch (e) {
+    } catch (e) {
       print(e.toString());
       return null;
     }

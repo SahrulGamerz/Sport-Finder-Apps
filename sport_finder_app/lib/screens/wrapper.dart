@@ -9,7 +9,6 @@ import 'home/about.dart';
 import 'home/booking_venue.dart';
 import 'home/contact.dart';
 import 'home/edit_profile.dart';
-import 'home/view_profile.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({Key? key}) : super(key: key);

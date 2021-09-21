@@ -284,7 +284,7 @@ class _RegisterState extends State<Register> {
   }
 
   bool isPasswordCompliant(String password, [int minLength = 8]) {
-    if (password == null || password.isEmpty) {
+    if (password.isEmpty) {
       return false;
     }
 
@@ -306,9 +306,6 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        print(
-            'Backbutton pressed (device or appbar button), do whatever you want.');
-
         //trigger leaving and use own data
         widget.toggleView(0);
 

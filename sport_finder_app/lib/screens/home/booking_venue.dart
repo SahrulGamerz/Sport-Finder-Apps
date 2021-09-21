@@ -316,7 +316,7 @@ class _BookingVenueState extends State<BookingVenue> {
                                               .collection('locations')
                                               .where("search_param",
                                                   arrayContains:
-                                                  search.text.toLowerCase())
+                                                      search.text.toLowerCase())
                                               .get();
                                         }
                                       }),

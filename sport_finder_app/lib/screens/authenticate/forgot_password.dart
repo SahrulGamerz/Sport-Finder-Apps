@@ -167,9 +167,6 @@ class _ForgotPassword extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () {
-          print(
-              'Backbutton pressed (device or appbar button), do whatever you want.');
-
           //trigger leaving and use own data
           widget.toggleView(0);
 

@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
         // When the user taps the button, show a snackbar.
         onTap: () {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Game ID: "+id),
+            content: Text("Game ID: " + id),
           ));
         },
         child: Container(

@@ -40,7 +40,7 @@ class About extends StatelessWidget {
         ],
       ),
       drawer: AppDrawer(currentView: 'About'),
-      body:  SafeArea(
+      body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,

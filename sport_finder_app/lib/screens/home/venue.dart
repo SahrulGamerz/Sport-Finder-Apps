@@ -84,22 +84,22 @@ class _VenueWidgetState extends State<VenueWidget> {
                                               children: [
                                                 Flexible(
                                                     child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                0, 4, 0, 0),
-                                                    child: Text(
-                                                      data['court_name'],
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        color:
-                                                            Color(0xFF151B1E),
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    )))
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0, 4, 0, 0),
+                                                        child: Text(
+                                                          data['court_name'],
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            color: Color(
+                                                                0xFF151B1E),
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        )))
                                               ],
                                             ),
                                           ),
@@ -228,9 +228,16 @@ class _VenueWidgetState extends State<VenueWidget> {
                                                         MaterialPageRoute(
                                                           builder: (context) =>
                                                               ViewCourtWidget(
-                                                                  cid: widget.cid, pph: int.parse(data['price_per_hour']),
-                                                                  cc: int.parse(data['court_num']),
-                                                                  img: data['image']),
+                                                                  cid: widget
+                                                                      .cid,
+                                                                  pph: int.parse(
+                                                                      data[
+                                                                          'price_per_hour']),
+                                                                  cc: int.parse(
+                                                                      data[
+                                                                          'court_num']),
+                                                                  img: data[
+                                                                      'image']),
                                                         ),
                                                       );
                                                     },

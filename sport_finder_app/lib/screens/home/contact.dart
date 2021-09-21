@@ -62,7 +62,7 @@ class _ContactState extends State<Contact> {
     );
   }
 
-  _showToastWarning(BuildContext context, String text){
+  _showToastWarning(BuildContext context, String text) {
     fToast.init(context);
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -373,16 +373,18 @@ class _ContactState extends State<Contact> {
                               if (textController1.text == "" ||
                                   textController2.text == "" ||
                                   textController3.text == "") {
-                                _showToastWarning(context,"Please fill in all fields!");
+                                _showToastWarning(
+                                    context, "Please fill in all fields!");
                               } else {
-                                if(EmailValidator.validate(textController2.text)){
+                                if (EmailValidator.validate(
+                                    textController2.text)) {
                                   Timer.periodic(new Duration(seconds: 1),
-                                          (timer) {
-                                        if (timer.tick.toInt() == 10) {
-                                          timer.cancel();
-                                          _buttonEnabled = true;
-                                        }
-                                      });
+                                      (timer) {
+                                    if (timer.tick.toInt() == 10) {
+                                      timer.cancel();
+                                      _buttonEnabled = true;
+                                    }
+                                  });
                                   startLoading();
                                   await sendEmail(
                                     name: textController1.text,
@@ -390,9 +392,11 @@ class _ContactState extends State<Contact> {
                                     message: textController3.text,
                                   );
                                   stopLoading();
-                                  _showToastSuccess(context,"Message successfully sent");
-                                }else{
-                                  _showToastWarning(context,"Invalid email address!");
+                                  _showToastSuccess(
+                                      context, "Message successfully sent");
+                                } else {
+                                  _showToastWarning(
+                                      context, "Invalid email address!");
                                 }
                               }
                             } else {

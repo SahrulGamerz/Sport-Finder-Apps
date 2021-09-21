@@ -124,6 +124,7 @@ class _Verify extends State<Verify> {
       toastDuration: Duration(seconds: 3),
     );
   }
+
 /*
   _showToastError() {
     Widget toast = Container(
@@ -207,9 +208,6 @@ class _Verify extends State<Verify> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        print(
-            'Backbutton pressed (device or appbar button), do whatever you want.');
-
         //trigger leaving and use own data
         widget.toggleView(0);
 
