@@ -68,7 +68,8 @@ class _BookingVenueState extends State<BookingVenue> {
     }
   }
 
-  Widget _buildMarkerWidget(BuildContext context, Offset pos, LatLng pos2, String id, Color color,
+  Widget _buildMarkerWidget(
+      BuildContext context, Offset pos, LatLng pos2, String id, Color color,
       [IconData icon = Icons.location_on]) {
     return Positioned(
       left: pos.dx - 24,
@@ -85,8 +86,7 @@ class _BookingVenueState extends State<BookingVenue> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => VenueWidget(
-                  cid: id),
+              builder: (context) => VenueWidget(cid: id),
             ),
           );
         },
@@ -100,73 +100,120 @@ class _BookingVenueState extends State<BookingVenue> {
         future: query,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Container(
-              height: MediaQuery.of(context).size.height * 1,
-              decoration: BoxDecoration(),
-              child: MapLayoutBuilder(
-                controller: controller,
-                builder: (context, transformer) {
-                  int count = 0;
-                  markers = [];
-                  List dataId = [];
-                  QuerySnapshot documents = snapshot.data as QuerySnapshot;
-                  List<DocumentSnapshot> docs = documents.docs;
-                  docs.forEach((data) {
-                    LatLng latLng = new LatLng(
-                        data["latlong"].latitude, data["latlong"].longitude);
-                    markers.add(latLng);
-                    dataId.add(data.id);
-                    final markerPositions =
-                        markers.map(transformer.fromLatLngToXYCoords).toList();
-                    markerWidgets = markerPositions.map((pos) {
-                      count++;
-                      return _buildMarkerWidget(
-                          context,
-                          pos,
-                          transformer.fromXYCoordsToLatLng(pos),
-                          dataId[count-1],
-                          Colors.red);
+            int count = 0;
+            markers = [];
+            List dataId = [];
+            QuerySnapshot documents = snapshot.data as QuerySnapshot;
+            List<DocumentSnapshot> docs = documents.docs;
+            if (docs.length > 0) {
+              return Container(
+                height: MediaQuery.of(context).size.height * 1,
+                decoration: BoxDecoration(),
+                child: MapLayoutBuilder(
+                  controller: controller,
+                  builder: (context, transformer) {
+                    docs.forEach((data) {
+                      LatLng latLng = new LatLng(
+                          data["latlong"].latitude, data["latlong"].longitude);
+                      markers.add(latLng);
+                      dataId.add(data.id);
+                      final markerPositions = markers
+                          .map(transformer.fromLatLngToXYCoords)
+                          .toList();
+                      markerWidgets = markerPositions.map((pos) {
+                        count++;
+                        return _buildMarkerWidget(
+                            context,
+                            pos,
+                            transformer.fromXYCoordsToLatLng(pos),
+                            dataId[count - 1],
+                            Colors.red);
+                      });
                     });
-                  });
 
-                  return GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onDoubleTap: _onDoubleTap,
-                    onScaleStart: _onScaleStart,
-                    onScaleUpdate: _onScaleUpdate,
-                    child: Listener(
+                    return GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onPointerSignal: (event) {
-                        if (event is PointerScrollEvent) {
-                          final delta = event.scrollDelta;
+                      onDoubleTap: _onDoubleTap,
+                      onScaleStart: _onScaleStart,
+                      onScaleUpdate: _onScaleUpdate,
+                      child: Listener(
+                        behavior: HitTestBehavior.opaque,
+                        onPointerSignal: (event) {
+                          if (event is PointerScrollEvent) {
+                            final delta = event.scrollDelta;
 
-                          controller.zoom -= delta.dy / 1000.0;
-                          setState(() {});
-                        }
-                      },
-                      child: Stack(
-                        children: [
-                          Map(
-                            controller: controller,
-                            builder: (context, x, y, z) {
-                              //Legal notice: This url is only used for demo and educational purposes. You need a license key for production use.
-                              //Google Maps
-                              final url =
-                                  'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/$z/$x/$y?access_token=pk.eyJ1Ijoic2FocnVsMDEyIiwiYSI6ImNrbGFrMmdqYjBpOWMycHRrYnpjYnAxb3UifQ.D3EotTV9rjSdahySy3FeBg';
-                              return CachedNetworkImage(
-                                imageUrl: url,
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          ),
-                          ...markerWidgets,
-                        ],
+                            controller.zoom -= delta.dy / 1000.0;
+                            setState(() {});
+                          }
+                        },
+                        child: Stack(
+                          children: [
+                            Map(
+                              controller: controller,
+                              builder: (context, x, y, z) {
+                                //Legal notice: This url is only used for demo and educational purposes. You need a license key for production use.
+                                //Google Maps
+                                final url =
+                                    'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/$z/$x/$y?access_token=pk.eyJ1Ijoic2FocnVsMDEyIiwiYSI6ImNrbGFrMmdqYjBpOWMycHRrYnpjYnAxb3UifQ.D3EotTV9rjSdahySy3FeBg';
+                                return CachedNetworkImage(
+                                  imageUrl: url,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                            ...markerWidgets,
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            );
+                    );
+                  },
+                ),
+              );
+            } else {
+              return Container(
+                height: MediaQuery.of(context).size.height * 1,
+                decoration: BoxDecoration(),
+                child: MapLayoutBuilder(
+                  controller: controller,
+                  builder: (context, transformer) {
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onDoubleTap: _onDoubleTap,
+                      onScaleStart: _onScaleStart,
+                      onScaleUpdate: _onScaleUpdate,
+                      child: Listener(
+                        behavior: HitTestBehavior.opaque,
+                        onPointerSignal: (event) {
+                          if (event is PointerScrollEvent) {
+                            final delta = event.scrollDelta;
+
+                            controller.zoom -= delta.dy / 1000.0;
+                            setState(() {});
+                          }
+                        },
+                        child: Stack(
+                          children: [
+                            Map(
+                              controller: controller,
+                              builder: (context, x, y, z) {
+                                //Legal notice: This url is only used for demo and educational purposes. You need a license key for production use.
+                                //Google Maps
+                                final url =
+                                    'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/$z/$x/$y?access_token=pk.eyJ1Ijoic2FocnVsMDEyIiwiYSI6ImNrbGFrMmdqYjBpOWMycHRrYnpjYnAxb3UifQ.D3EotTV9rjSdahySy3FeBg';
+                                return CachedNetworkImage(
+                                  imageUrl: url,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
           } else if (snapshot.hasError) {
             return new Text("An error occurred, Please try again!");
           }
@@ -267,6 +314,9 @@ class _BookingVenueState extends State<BookingVenue> {
                                           key = search.text;
                                           query = FirebaseFirestore.instance
                                               .collection('locations')
+                                              .where("search_param",
+                                                  arrayContains:
+                                                  search.text.toLowerCase())
                                               .get();
                                         }
                                       }),

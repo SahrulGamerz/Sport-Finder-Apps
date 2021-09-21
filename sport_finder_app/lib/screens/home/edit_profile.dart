@@ -397,7 +397,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   bool isPasswordCompliant(String password, [int minLength = 8]) {
-    if (password == null || password.isEmpty) {
+    if (password.isEmpty) {
       return false;
     }
 

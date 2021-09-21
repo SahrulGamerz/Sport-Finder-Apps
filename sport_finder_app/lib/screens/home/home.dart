@@ -205,7 +205,7 @@ class _HomeState extends State<Home> {
               child: IconButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text("Add button pressed"),
+                    content: Text("Message button pressed"),
                   ));
                 },
                 icon: Icon(
@@ -223,7 +223,9 @@ class _HomeState extends State<Home> {
           foregroundColor: Colors.white,
           mini: true,
           onPressed: () {
-            // Respond to button press
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Add button pressed"),
+            ));
           },
           child: Icon(Icons.add),
         ),

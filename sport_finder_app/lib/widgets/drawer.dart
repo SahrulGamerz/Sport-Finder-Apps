@@ -231,19 +231,29 @@ class _AppDrawerState extends State<AppDrawer> {
               icon: Icons.person_outline,
               text: "Profile",
               onTap: () => {
-                    Navigator.of(context).pop(),
-                    if (widget.currentView != "editProfile")
-                      //{Navigator.pushNamed(context, Routes.editProfile)}
-                      {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ViewProfile(
-                                uid: "Rk7oKJd07vdXrOn4Y2Um0xnyaLF3"),
-                          ),
-                        )
-                      }
-                  }),
+                Navigator.of(context).pop(),
+                if (widget.currentView != "editProfile")
+                //{Navigator.pushNamed(context, Routes.editProfile)}
+                  {
+                    Navigator.pushNamed(context, Routes.editProfile)
+                  }
+              }),
+          _createDrawerItem(
+              icon: Icons.person_outline,
+              text: "Test View Other Profile",
+              onTap: () => {
+                Navigator.of(context).pop(),
+                //{Navigator.pushNamed(context, Routes.editProfile)}
+                  {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ViewProfile(
+                            uid: "Rk7oKJd07vdXrOn4Y2Um0xnyaLF3"),
+                      ),
+                    )
+                  }
+              }),
           Divider(
             color: Colors.grey,
           ),

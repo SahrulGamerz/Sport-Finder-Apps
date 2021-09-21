@@ -51,7 +51,7 @@ class _ViewCourtWidgetState extends State<ViewCourtWidget> {
   }
 
   Future _getCourtCount() async {
-    count=0;
+    count = 0;
     await FirebaseFirestore.instance
         .collection('booking')
         .where("court_id", isEqualTo: widget.cid)
@@ -60,25 +60,25 @@ class _ViewCourtWidgetState extends State<ViewCourtWidget> {
         .then((QuerySnapshot querySnapshot) {
       print(querySnapshot.docs.length);
       for (var i = 0; i < querySnapshot.docs.length; i++) {
-        print(querySnapshot.docs[i].data());
-        Map<String, dynamic> data = querySnapshot.docs[i].data() as Map<String, dynamic>;
-        print(data['end_date_time'].seconds * 1000);
-        print(time2.millisecondsSinceEpoch);
+        Map<String, dynamic> data =
+            querySnapshot.docs[i].data() as Map<String, dynamic>;
 
-        final int query_Start = time1.millisecondsSinceEpoch;
-        final int query_End = time2.millisecondsSinceEpoch;
-        final int start_Time = data['start_date_time'].seconds*1000;
-        final int end_Time = data['end_date_time'].seconds * 1000;
+        final int queryStart = time1.millisecondsSinceEpoch;
+        final int queryEnd = time2.millisecondsSinceEpoch;
+        final int startTime = data['start_date_time'].seconds * 1000;
+        final int endTime = data['end_date_time'].seconds * 1000;
 
-        if(query_Start >= start_Time && query_Start < end_Time && query_End >= end_Time){
+        if (queryStart >= startTime &&
+            queryStart < endTime &&
+            queryEnd >= endTime) {
           count++;
-        }else if(query_End <= end_Time && query_Start < start_Time && query_End > start_Time){
+        } else if (queryEnd <= endTime &&
+            queryStart < startTime &&
+            queryEnd > startTime) {
           count++;
-        }else if(query_Start < start_Time && query_End > end_Time){
+        } else if (queryStart < startTime && queryEnd > endTime) {
           count++;
         }
-
-
       }
 
       /*querySnapshot.docs.forEach((doc) {
@@ -242,16 +242,22 @@ class _ViewCourtWidgetState extends State<ViewCourtWidget> {
                               color: Colors.black,
                             ),
                             onChanged: (val) {
-                              now = DateTime.parse(val);
-                              timestamp = DateTime.now().millisecondsSinceEpoch;
+                              setState(() {
+                                now = DateTime.parse(val);
+                                timestamp =
+                                    DateTime.now().millisecondsSinceEpoch;
+                              });
                             },
                             validator: (val) {
                               print(val);
                               return null;
                             },
                             onSaved: (val) {
-                              now = DateTime.parse(val!);
-                              timestamp = DateTime.now().millisecondsSinceEpoch;
+                              setState(() {
+                                now = DateTime.parse(val!);
+                                timestamp =
+                                    DateTime.now().millisecondsSinceEpoch;
+                              });
                             },
                           ),
                         ),
@@ -298,10 +304,17 @@ class _ViewCourtWidgetState extends State<ViewCourtWidget> {
                                 .then((time) => setState(() {
                                       textController2.text =
                                           time!.format(context);
+                                      DateTime timeOne;
+                                      if (textController2.text.contains("AM") ||
+                                          textController2.text.contains("PM")) {
+                                        timeOne = DateFormat.jm()
+                                            .parse(textController2.text);
+                                      } else {
+                                        timeOne = DateFormat.Hm()
+                                            .parse(textController2.text);
+                                      }
                                       timestamp =
                                           DateTime.now().millisecondsSinceEpoch;
-                                      DateTime timeOne = DateFormat.jm()
-                                          .parse(textController2.text);
                                       time1 = DateTime.parse(
                                           DateFormat('yyyy-MM-dd').format(now) +
                                               ' ' +
@@ -376,8 +389,15 @@ class _ViewCourtWidgetState extends State<ViewCourtWidget> {
                                           time!.format(context);
                                       timestamp =
                                           DateTime.now().millisecondsSinceEpoch;
-                                      DateTime timeOne = DateFormat.jm()
-                                          .parse(textController3.text);
+                                      DateTime timeOne;
+                                      if (textController3.text.contains("AM") ||
+                                          textController3.text.contains("PM")) {
+                                        timeOne = DateFormat.jm()
+                                            .parse(textController3.text);
+                                      } else {
+                                        timeOne = DateFormat.Hm()
+                                            .parse(textController3.text);
+                                      }
                                       time2 = DateTime.parse(
                                           DateFormat('yyyy-MM-dd').format(now) +
                                               ' ' +
@@ -462,21 +482,23 @@ class _ViewCourtWidgetState extends State<ViewCourtWidget> {
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 175, 0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                          ),
-                          child: Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(10, 10, 9, 10),
-                            child: Text(
-                              '${widget.cc - count}/${widget.cc}',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Colors.black,
+                      Flexible(
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 175, 0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(10, 10, 9, 10),
+                              child: Text(
+                                '${widget.cc - count}/${widget.cc}',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),
