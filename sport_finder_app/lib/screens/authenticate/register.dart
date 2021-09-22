@@ -293,7 +293,7 @@ class _RegisterState extends State<Register> {
     bool hasLowercase = password.contains(new RegExp(r'[a-z]'));
     bool hasSpecialCharacters =
         password.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
-    bool hasMinLength = password.length > minLength;
+    bool hasMinLength = password.length >= minLength;
 
     return hasDigits &
         hasUppercase &
