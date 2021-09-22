@@ -37,9 +37,11 @@ class _EditProfileState extends State<EditProfile> {
   late String uid;
   int timestampBG = DateTime.now().millisecondsSinceEpoch;
   int timestampPP = DateTime.now().millisecondsSinceEpoch;
-  XFile? _imageFile;
+  XFile? _imageFileBG;
+  XFile? _imageFilePP;
   bool _buttonEnabled = true;
-  late String type1;
+  bool type0 = false;
+  bool type1 = false;
 
   @override
   void initState() {
@@ -62,8 +64,13 @@ class _EditProfileState extends State<EditProfile> {
       source: ImageSource.camera,
     );
     setState(() {
-      _imageFile = pickedFile;
-      type1 = type;
+      if(type == "BG"){
+        _imageFileBG = pickedFile;
+        type0 = true;
+      }else{
+        _imageFilePP = pickedFile;
+        type1 = true;
+      }
     });
     Navigator.pop(context);
   }
@@ -73,8 +80,13 @@ class _EditProfileState extends State<EditProfile> {
       source: ImageSource.gallery,
     );
     setState(() {
-      _imageFile = pickedFile;
-      type1 = type;
+      if(type == "BG"){
+        _imageFileBG = pickedFile;
+        type0 = true;
+      }else{
+        _imageFilePP = pickedFile;
+        type1 = true;
+      }
     });
 
     Navigator.pop(context);
@@ -129,10 +141,14 @@ class _EditProfileState extends State<EditProfile> {
 
   Future uploadImageToFirebase(BuildContext context, type) async {
     _buttonEnabled = false;
-    String fileName = path.basename(_imageFile!.path);
+    String fileName;
+    if(type == "BG"){
+      fileName = path.basename(_imageFileBG!.path);
+    }else{
+      fileName = path.basename(_imageFilePP!.path);
+    }
     String extension = path.extension(fileName);
     String newName = uid + "_" + type + extension;
-    print(_imageFile!.path);
     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
         .ref()
         .child('users')
@@ -143,26 +159,24 @@ class _EditProfileState extends State<EditProfile> {
         customMetadata: {'picked-file-path': newName});
     firebase_storage.UploadTask uploadTask;
     //late StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFile);
-    uploadTask = ref.putFile(io.File(_imageFile!.path), metadata);
 
+    if(type == "BG"){
+      uploadTask = ref.putFile(io.File(_imageFileBG!.path), metadata);
+    }else{
+      uploadTask = ref.putFile(io.File(_imageFilePP!.path), metadata);
+    }
     //firebase_storage.UploadTask task = await Future.value(uploadTask);
     await Future.value(uploadTask).then((value) async {
       if (type == "BG") {
         String downloadURL = await firebase_storage.FirebaseStorage.instance
             .ref(value.ref.fullPath)
             .getDownloadURL();
-        setState(() {
-          backgroundImage = downloadURL;
-          timestampBG = DateTime.now().millisecondsSinceEpoch;
-        });
+        backgroundImage = downloadURL;
       } else {
         String downloadURL = await firebase_storage.FirebaseStorage.instance
             .ref(value.ref.fullPath)
             .getDownloadURL();
-        setState(() {
-          profilePicture = downloadURL;
-          timestampPP = DateTime.now().millisecondsSinceEpoch;
-        });
+        profilePicture = downloadURL;
       }
       print("Upload file path ${value.ref.fullPath}");
     }).onError((error, stackTrace) {
@@ -861,11 +875,14 @@ class _EditProfileState extends State<EditProfile> {
                                       if (_buttonEnabled) {
                                         _buttonEnabled = false;
                                         startLoading();
-                                        if (_imageFile != null) {
-                                          if (type1 == "BG") {
+                                        if (_imageFileBG != null) {
+                                          if (type0) {
                                             await uploadImageToFirebase(
                                                 context, "BG");
-                                          } else {
+                                          }
+                                        }
+                                        if (_imageFilePP != null) {
+                                          if (type1) {
                                             await uploadImageToFirebase(
                                                 context, "PP");
                                           }
@@ -887,6 +904,10 @@ class _EditProfileState extends State<EditProfile> {
                                                 backgroundImage);
                                         print(result);
                                         if (result) {
+                                          setState(() {
+                                            timestampPP = DateTime.now().millisecondsSinceEpoch;
+                                            timestampBG = DateTime.now().millisecondsSinceEpoch;
+                                          });
                                           _showToastSuccess(context,
                                               "Profile updated successfully!");
                                           stopLoading();

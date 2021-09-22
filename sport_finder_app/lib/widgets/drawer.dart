@@ -275,6 +275,12 @@ class _AppDrawerState extends State<AppDrawer> {
             color: Colors.grey,
           ),
           _createDrawerItem(
+              icon: Icons.settings_outlined,
+              text: "Settings",
+              onTap: () async {
+                Navigator.of(context).pop();
+              }),
+          _createDrawerItem(
               icon: Icons.logout,
               text: "Log Out",
               onTap: () async {
