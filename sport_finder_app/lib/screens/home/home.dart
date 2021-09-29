@@ -10,6 +10,7 @@ import 'package:sport_finder_app/widgets/drawer.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+
   static const String routeName = '/home';
 
   @override
@@ -178,7 +179,7 @@ class _HomeState extends State<Home> {
               ],
             ),
           ) ??
-          false; //if showDialouge had returned null, then return false
+          false; //if showDialog had returned null, then return false
     }
 
     return WillPopScope(
@@ -447,7 +448,9 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
-        drawer: AppDrawer(currentView: 'Home'),
+        drawer: AppDrawer(
+          currentView: 'Home',
+        ),
       ),
     );
   }

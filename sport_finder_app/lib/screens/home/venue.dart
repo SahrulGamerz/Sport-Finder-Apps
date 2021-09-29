@@ -25,10 +25,10 @@ class _VenueWidgetState extends State<VenueWidget> {
             .get(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            DocumentSnapshot documentsnapshot =
+            DocumentSnapshot documentSnapshot =
                 snapshot.data as DocumentSnapshot;
             Map<String, dynamic> data =
-                documentsnapshot.data() as Map<String, dynamic>;
+                documentSnapshot.data() as Map<String, dynamic>;
             return Column(
               mainAxisSize: MainAxisSize.max,
               children: [

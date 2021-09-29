@@ -693,7 +693,6 @@ class _RegisterState extends State<Register> {
                                     ),
                                     onTap: (startLoading, stopLoading,
                                         btnState) async {
-                                      //awie kt sini gak eh function signup tngok turoaial
                                       if (buttonEnable) {
                                         final bool isEmailValid =
                                             EmailValidator.validate(email.text);

@@ -9,6 +9,7 @@ import 'package:sport_finder_app/widgets/drawer.dart';
 
 class BookingVenue extends StatefulWidget {
   const BookingVenue({Key? key}) : super(key: key);
+
   static const String routeName = '/booking_venue';
 
   @override
@@ -242,7 +243,9 @@ class _BookingVenueState extends State<BookingVenue> {
         ),
       ),
       backgroundColor: Color(0xFFEFEFEF),
-      drawer: AppDrawer(currentView: 'BookingVenue'),
+      drawer: AppDrawer(
+        currentView: 'BookingVenue',
+      ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,

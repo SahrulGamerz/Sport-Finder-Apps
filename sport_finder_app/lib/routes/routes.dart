@@ -4,7 +4,6 @@ import 'package:sport_finder_app/screens/home/booking_venue.dart';
 import 'package:sport_finder_app/screens/home/contact.dart';
 import 'package:sport_finder_app/screens/home/edit_profile.dart';
 import 'package:sport_finder_app/screens/home/home.dart';
-import 'package:sport_finder_app/screens/home/view_profile.dart';
 
 class Routes {
   static const String loading = Loading.routeName;

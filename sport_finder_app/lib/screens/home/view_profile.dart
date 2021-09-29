@@ -81,31 +81,24 @@ class _ViewProfileState extends State<ViewProfile> {
                                   backgroundImage,
                                   width: MediaQuery.of(context).size.width,
                                   height:
-                                      MediaQuery.of(context).size.height * 0.2,
+                                      MediaQuery.of(context).size.height * 0.23,
                                   fit: BoxFit.cover,
                                 ),
                                 Align(
-                                  alignment: Alignment(0, 1),
-                                  child: Icon(
-                                    Icons.circle,
-                                    color: Colors.white,
-                                    size: 145,
+                                  alignment: Alignment.bottomCenter,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    minRadius: 15,
+                                    maxRadius: 55,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      minRadius: 10,
+                                      maxRadius: 50,
+                                      backgroundImage:
+                                          NetworkImage(profilePicture),
+                                    ),
                                   ),
                                 ),
-                                Align(
-                                  alignment: Alignment(0, 0.7),
-                                  child: Container(
-                                    width: 110,
-                                    height: 110,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Image.network(
-                                      profilePicture,
-                                    ),
-                                  ),
-                                )
                               ],
                             ),
                           ),

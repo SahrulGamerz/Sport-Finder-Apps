@@ -13,6 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
+
   static const String routeName = '/profile/editProfile';
 
   @override
@@ -62,12 +63,13 @@ class _EditProfileState extends State<EditProfile> {
   void _openCamera(BuildContext context, type) async {
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
+      imageQuality: 80,
     );
     setState(() {
-      if(type == "BG"){
+      if (type == "BG") {
         _imageFileBG = pickedFile;
         type0 = true;
-      }else{
+      } else {
         _imageFilePP = pickedFile;
         type1 = true;
       }
@@ -78,12 +80,13 @@ class _EditProfileState extends State<EditProfile> {
   void _openGallery(BuildContext context, type) async {
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
+      imageQuality: 80,
     );
     setState(() {
-      if(type == "BG"){
+      if (type == "BG") {
         _imageFileBG = pickedFile;
         type0 = true;
-      }else{
+      } else {
         _imageFilePP = pickedFile;
         type1 = true;
       }
@@ -142,9 +145,9 @@ class _EditProfileState extends State<EditProfile> {
   Future uploadImageToFirebase(BuildContext context, type) async {
     _buttonEnabled = false;
     String fileName;
-    if(type == "BG"){
+    if (type == "BG") {
       fileName = path.basename(_imageFileBG!.path);
-    }else{
+    } else {
       fileName = path.basename(_imageFilePP!.path);
     }
     String extension = path.extension(fileName);
@@ -160,9 +163,9 @@ class _EditProfileState extends State<EditProfile> {
     firebase_storage.UploadTask uploadTask;
     //late StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFile);
 
-    if(type == "BG"){
+    if (type == "BG") {
       uploadTask = ref.putFile(io.File(_imageFileBG!.path), metadata);
-    }else{
+    } else {
       uploadTask = ref.putFile(io.File(_imageFilePP!.path), metadata);
     }
     //firebase_storage.UploadTask task = await Future.value(uploadTask);
@@ -465,33 +468,26 @@ class _EditProfileState extends State<EditProfile> {
                                       width: MediaQuery.of(context).size.width,
                                       height:
                                           MediaQuery.of(context).size.height *
-                                              0.2,
+                                              0.23,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                   Align(
-                                    alignment: Alignment(0, 1),
-                                    child: Icon(
-                                      Icons.circle,
-                                      color: Colors.white,
-                                      size: 145,
+                                    alignment: Alignment.bottomCenter,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      minRadius: 15,
+                                      maxRadius: 55,
+                                      child: CircleAvatar(
+                                        key: ValueKey(timestampPP),
+                                        backgroundColor: Colors.white,
+                                        minRadius: 10,
+                                        maxRadius: 50,
+                                        backgroundImage:
+                                            NetworkImage(profilePicture),
+                                      ),
                                     ),
                                   ),
-                                  Align(
-                                    alignment: Alignment(0, 0.7),
-                                    child: Container(
-                                      width: 110,
-                                      height: 110,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Image.network(
-                                        profilePicture,
-                                        key: ValueKey(timestampPP),
-                                      ),
-                                    ),
-                                  )
                                 ],
                               ),
                             ),
@@ -905,8 +901,10 @@ class _EditProfileState extends State<EditProfile> {
                                         print(result);
                                         if (result) {
                                           setState(() {
-                                            timestampPP = DateTime.now().millisecondsSinceEpoch;
-                                            timestampBG = DateTime.now().millisecondsSinceEpoch;
+                                            timestampPP = DateTime.now()
+                                                .millisecondsSinceEpoch;
+                                            timestampBG = DateTime.now()
+                                                .millisecondsSinceEpoch;
                                           });
                                           _showToastSuccess(context,
                                               "Profile updated successfully!");
@@ -1210,7 +1208,9 @@ class _EditProfileState extends State<EditProfile> {
         ],
       ),
       backgroundColor: Colors.white,
-      drawer: AppDrawer(currentView: 'editProfile'),
+      drawer: AppDrawer(
+        currentView: 'editProfile',
+      ),
       body: _editProfileStuff(context),
     );
   }

@@ -308,7 +308,6 @@ class _ForgotPassword extends State<ForgotPassword> {
                                 ),
                                 onTap: (startLoading, stopLoading,
                                     btnState) async {
-                                  //dlm ni eh sume function tuk tkn tu. refer tutorial
                                   if (buttonEnable) {
                                     final bool isEmailValid =
                                         EmailValidator.validate(email.text);

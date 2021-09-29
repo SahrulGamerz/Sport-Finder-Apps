@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 
 class Contact extends StatefulWidget {
   const Contact({Key? key}) : super(key: key);
+
   static const String routeName = '/contact';
 
   @override

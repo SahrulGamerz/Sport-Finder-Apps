@@ -39,7 +39,9 @@ class About extends StatelessWidget {
           )
         ],
       ),
-      drawer: AppDrawer(currentView: 'About'),
+      drawer: AppDrawer(
+        currentView: 'About',
+      ),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.max,

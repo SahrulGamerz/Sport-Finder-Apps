@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sport_finder_app/routes/routes.dart';
-import 'package:sport_finder_app/screens/home/view_profile.dart';
 import 'package:sport_finder_app/services/auth.dart';
+import '../models/globalVariables.dart' as userDataClass;
 
 class AppDrawer extends StatefulWidget {
   //const AppDrawer({Key? key}) : super(key: key);
@@ -177,127 +177,177 @@ class _AppDrawerState extends State<AppDrawer> {
         fontSize: 16.0);
   }
 
-/*
-  _showToastSignout() {
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: Colors.greenAccent,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.check_circle_outline),
-          SizedBox(
-            width: 12.0,
-          ),
-          Text("Logged Out!"),
-        ],
-      ),
-    );
-
-    fToast.showToast(
-      child: toast,
-      gravity: ToastGravity.BOTTOM,
-      toastDuration: Duration(seconds: 2),
-    );
-  }
-*/
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          _createHeader(context),
-          _createDrawerItem(
-              icon: Icons.home_outlined,
-              text: "Home",
-              onTap: () => {
-                    Navigator.of(context).pop(),
-                    if (widget.currentView != "Home")
-                      {Navigator.pushNamed(context, Routes.home)}
-                  }),
-          _createDrawerItem(
-              icon: Icons.location_city,
-              text: "Booking Venue",
-              onTap: () => {
-                    Navigator.of(context).pop(),
-                    if (widget.currentView != "BookingVenue")
-                      {Navigator.pushNamed(context, Routes.bookingVenue)}
-                  }),
-          _createDrawerItem(
-              icon: Icons.person_outline,
-              text: "Profile",
-              onTap: () => {
-                    Navigator.of(context).pop(),
-                    if (widget.currentView != "editProfile")
-                      //{Navigator.pushNamed(context, Routes.editProfile)}
-                      {Navigator.pushNamed(context, Routes.editProfile)}
-                  }),
-          _createDrawerItem(
-              icon: Icons.person_outline,
-              text: "Test View Other Profile",
-              onTap: () => {
-                    Navigator.of(context).pop(),
-                    //{Navigator.pushNamed(context, Routes.editProfile)}
-                    {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ViewProfile(uid: "Rk7oKJd07vdXrOn4Y2Um0xnyaLF3"),
-                        ),
-                      )
-                    }
-                  }),
-          Divider(
-            color: Colors.grey,
-          ),
-          _createDrawerItem(
-              icon: Icons.people_outline,
-              text: "About Us",
-              onTap: () => {
-                    Navigator.of(context).pop(),
-                    if (widget.currentView != "About")
-                      {Navigator.pushNamed(context, Routes.about)}
-                  }),
-          _createDrawerItem(
-              icon: Icons.call_outlined,
-              text: "Contact Us",
-              onTap: () => {
-                    Navigator.of(context).pop(),
-                    if (widget.currentView != "Contact")
-                      {Navigator.pushNamed(context, Routes.contact)}
-                  }),
-          Divider(
-            color: Colors.grey,
-          ),
-          _createDrawerItem(
-              icon: Icons.settings_outlined,
-              text: "Settings",
-              onTap: () async {
-                Navigator.of(context).pop();
-              }),
-          _createDrawerItem(
-              icon: Icons.logout,
-              text: "Log Out",
-              onTap: () async {
-                Navigator.of(context).pop();
-                //_showToastSignout();
-                await _auth.signOut();
-                _showToast("Logged Out!", Colors.greenAccent, Colors.black);
-              }),
-          Divider(
-            color: Colors.grey,
-          ),
-          ListTile(
-            title: Text('Current Sprint: 1'),
-            onTap: () {},
-          ),
-        ],
-      ),
-    );
+    print('drawer ${userDataClass.isAdmin}');
+    //admin drawer
+    if (userDataClass.isAdmin) {
+      return Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            //User Header
+            _createHeader(context),
+            //Main Drawer
+            _createDrawerItem(
+                icon: Icons.home_outlined,
+                text: "Home",
+                onTap: () => {
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "Home")
+                        {Navigator.pushNamed(context, Routes.home)}
+                    }),
+            _createDrawerItem(
+                icon: Icons.location_city,
+                text: "Booking Venue",
+                onTap: () => {
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "BookingVenue")
+                        {Navigator.pushNamed(context, Routes.bookingVenue)}
+                    }),
+            _createDrawerItem(
+                icon: Icons.person_outline,
+                text: "Profile",
+                onTap: () => {
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "editProfile")
+                        //{Navigator.pushNamed(context, Routes.editProfile)}
+                        {Navigator.pushNamed(context, Routes.editProfile)}
+                    }),
+            //Info Drawer
+            Divider(
+              color: Colors.grey,
+            ),
+            _createDrawerItem(
+                icon: Icons.people_outline,
+                text: "About Us",
+                onTap: () => {
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "About")
+                        {Navigator.pushNamed(context, Routes.about)}
+                    }),
+            _createDrawerItem(
+                icon: Icons.call_outlined,
+                text: "Contact Us",
+                onTap: () => {
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "Contact")
+                        {Navigator.pushNamed(context, Routes.contact)}
+                    }),
+            //Admin Drawer
+            Divider(
+              color: Colors.grey,
+            ),
+            _createDrawerItem(
+                icon: Icons.people_outline,
+                text: "List Users",
+                onTap: () => {
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "List Users")
+                        {
+                          /*Navigator.pushNamed(context, Routes.about)*/
+                        }
+                    }),
+            // Logout
+            Divider(
+              color: Colors.grey,
+            ),
+            _createDrawerItem(
+                icon: Icons.logout,
+                text: "Log Out",
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  await _auth.signOut();
+                  _showToast("Logged Out!", Colors.greenAccent, Colors.black);
+                }),
+            //App Ver
+            Divider(
+              color: Colors.grey,
+            ),
+            ListTile(
+              title: Text('Current Sprint: 2'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      );
+    } else {
+      //non admin drawer
+      return Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            //User Info
+            _createHeader(context),
+            //Main Drawer
+            _createDrawerItem(
+                icon: Icons.home_outlined,
+                text: "Home",
+                onTap: () => {
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "Home")
+                        {Navigator.pushNamed(context, Routes.home)}
+                    }),
+            _createDrawerItem(
+                icon: Icons.location_city,
+                text: "Booking Venue",
+                onTap: () => {
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "BookingVenue")
+                        {Navigator.pushNamed(context, Routes.bookingVenue)}
+                    }),
+            _createDrawerItem(
+                icon: Icons.person_outline,
+                text: "Profile",
+                onTap: () => {
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "editProfile")
+                        //{Navigator.pushNamed(context, Routes.editProfile)}
+                        {Navigator.pushNamed(context, Routes.editProfile)}
+                    }),
+            //Info Drawer
+            Divider(
+              color: Colors.grey,
+            ),
+            _createDrawerItem(
+                icon: Icons.people_outline,
+                text: "About Us",
+                onTap: () => {
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "About")
+                        {Navigator.pushNamed(context, Routes.about)}
+                    }),
+            _createDrawerItem(
+                icon: Icons.call_outlined,
+                text: "Contact Us",
+                onTap: () => {
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "Contact")
+                        {Navigator.pushNamed(context, Routes.contact)}
+                    }),
+            //Logout
+            Divider(
+              color: Colors.grey,
+            ),
+            _createDrawerItem(
+                icon: Icons.logout,
+                text: "Log Out",
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  await _auth.signOut();
+                  _showToast("Logged Out!", Colors.greenAccent, Colors.black);
+                }),
+            //App Ver
+            Divider(
+              color: Colors.grey,
+            ),
+            ListTile(
+              title: Text('Current Sprint: 2'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

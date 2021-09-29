@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import '../models/globalVariables.dart' as userDataClass;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sport_finder_app/models/user.dart';
@@ -20,18 +20,6 @@ class AuthService {
     return _auth.authStateChanges().map((User? user) => _user(user));
   }
 
-  //sign in anon
-  Future signInAnon() async {
-    try {
-      UserCredential userCredential = await _auth.signInAnonymously();
-      User? user = userCredential.user;
-      return _user(user);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
   //sign in email & password
   Future signInEmailPass(String email, String password) async {
     try {
@@ -48,6 +36,9 @@ class AuthService {
             })
             .then((value) => print("success"))
             .catchError((error) => print("Failed to update user: $error"));
+        DocumentSnapshot userData = await users.doc(user.uid).get();
+        Map<String, dynamic> data = userData.data() as Map<String, dynamic>;
+        userDataClass.isAdmin = data['isAdmin'];
       }
       return _user(user);
     } catch (e) {
@@ -67,7 +58,7 @@ class AuthService {
     }
   }
 
-  //register with email & password (awie wat sini eh)
+  //register with email & password
   Future registerWithEmailAndPassword(
       String username, String email, String password) async {
     try {
@@ -85,6 +76,7 @@ class AuthService {
           'bio': 'Hey there!',
           'phoneNumber': '000-000 0000',
           'playerType': 'Anything',
+          'isAdmin': false,
           'created_at': DateTime.now(),
           'last_updated_at': DateTime.now(),
           'last_login_at': DateTime.now(),
@@ -103,7 +95,7 @@ class AuthService {
     }
   }
 
-  //Forgot Password (awie wat sini eh)
+  //Forgot Password
   Future forgotPassword(email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -141,6 +133,19 @@ class AuthService {
       if (user != null) {
         await user.reload();
       }
+      if (user != null) {
+        CollectionReference users = firestore.collection('users');
+        await users
+            .doc(user.uid)
+            .update({
+              'last_seen_at': DateTime.now(),
+            })
+            .then((value) => print("success"))
+            .catchError((error) => print("Failed to update user: $error"));
+        DocumentSnapshot userData = await users.doc(user.uid).get();
+        Map<String, dynamic> data = userData.data() as Map<String, dynamic>;
+        userDataClass.isAdmin = data['isAdmin'];
+      }
       return _user(user);
     } catch (e) {
       print(e.toString());
@@ -149,14 +154,10 @@ class AuthService {
   }
 
   //get other user userData
-  //todo
   Future getOtherUserData(String uid) async {
     try {
       CollectionReference users = firestore.collection('users');
       DocumentSnapshot userData = await users.doc(uid).get();
-      if (userData == null) {
-        return null;
-      }
       Map<String, dynamic> data = userData.data() as Map<String, dynamic>;
       return data;
     } catch (e) {
@@ -173,9 +174,6 @@ class AuthService {
         try {
           CollectionReference users = firestore.collection('users');
           DocumentSnapshot userData = await users.doc(user.uid).get();
-          if (userData == null) {
-            return null;
-          }
           Map<String, dynamic> data = userData.data() as Map<String, dynamic>;
           return data;
         } catch (e) {
@@ -210,7 +208,7 @@ class AuthService {
                 'last_updated_at': DateTime.now(),
               })
               .then((value) => result = true)
-              .catchError((error) => print("Failed to update user: $error"));
+              .catchError((error) => result = false);
           return result;
         } catch (e) {
           print(e.toString());
@@ -229,7 +227,6 @@ class AuthService {
       User? user = _auth.currentUser;
       if (user != null) {
         await user.reload();
-        //user.reauthenticateWithCredential(credential);
         await user.updatePassword(password);
         return true;
       }
@@ -243,7 +240,7 @@ class AuthService {
     }
   }
 
-  //reauthenticateWithCredential
+  //ReAuthenticateWithCredential
   Future reAuthenticateUser(String email, String password) async {
     try {
       User? user = _auth.currentUser;

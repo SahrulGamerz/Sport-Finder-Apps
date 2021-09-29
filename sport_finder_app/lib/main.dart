@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,14 +49,11 @@ class _AppState extends State<App> {
               value: AuthService().user,
               initialData: null,
               child: MaterialApp(
+                title: 'Sports Finder App',
                 home: Wrapper(),
               ));
         }
-        return MaterialApp(home: Loading()); //splash screen/loading screen
-        /*MediaQuery(
-            data: new MediaQueryData(),
-            child: )
-        );*/
+        return MaterialApp(home: Loading()); //loading screen
       },
     );
   }
