@@ -39,6 +39,8 @@ class AuthService {
         DocumentSnapshot userData = await users.doc(user.uid).get();
         Map<String, dynamic> data = userData.data() as Map<String, dynamic>;
         userDataClass.isAdmin = data['isAdmin'];
+        userDataClass.uid = user.uid;
+        userDataClass.username = data['username'];
       }
       return _user(user);
     } catch (e) {
@@ -145,6 +147,8 @@ class AuthService {
         DocumentSnapshot userData = await users.doc(user.uid).get();
         Map<String, dynamic> data = userData.data() as Map<String, dynamic>;
         userDataClass.isAdmin = data['isAdmin'];
+        userDataClass.uid = user.uid;
+        userDataClass.username = data['username'];
       }
       return _user(user);
     } catch (e) {

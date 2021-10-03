@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:sport_finder_app/models/user.dart';
+import 'package:sport_finder_app/screens/home/create_game.dart';
 import 'package:sport_finder_app/services/auth.dart';
 import 'package:sport_finder_app/widgets/drawer.dart';
 
@@ -224,9 +225,13 @@ class _HomeState extends State<Home> {
           foregroundColor: Colors.white,
           mini: true,
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Add button pressed"),
-            ));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    CreateWidget(),
+              ),
+            );
           },
           child: Icon(Icons.add),
         ),
