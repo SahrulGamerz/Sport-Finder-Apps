@@ -8,6 +8,7 @@ import 'package:sport_finder_app/models/user.dart';
 import 'package:sport_finder_app/screens/home/create_game.dart';
 import 'package:sport_finder_app/services/auth.dart';
 import 'package:sport_finder_app/widgets/drawer.dart';
+import 'message_list.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -49,6 +50,117 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildGame(
+      {required BuildContext context, required Map data, required String id}) {
+    Map<String, dynamic> creator = data['creator'];
+    Map<String, dynamic> gameDetails = data['gameDetails'];
+    return new FutureBuilder(
+        future: FirebaseFirestore.instance
+            .collection('users')
+            .doc(creator["uid"])
+            .get(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            DocumentSnapshot documentSnapshot =
+                snapshot.data as DocumentSnapshot;
+            Map<String, dynamic> user =
+                documentSnapshot.data() as Map<String, dynamic>;
+
+            return Padding(
+              padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+              child: InkWell(
+                // When the user taps the button, show a snackbar.
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("Game ID: " + id),
+                  ));
+                },
+                child: Container(
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    color: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment(-0.1, -0.5),
+                                child: Text(
+                                  gameDetails["gameType"].toUpperCase(),
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Color(0xFF15212B),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment(2.64, 0.55),
+                                child: Text(
+                                  '${gameDetails["slots"]} Players, ${gameDetails["court_name"]}',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Color(0xFF8B97A2),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Align(
+                            alignment: Alignment(1, 0),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: Image.network(
+                                '${user["profile_picture"]}',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: Text(
+                            '${data["joined"].length} / ${gameDetails["slots"]}',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Color(0xFF8B97A2),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return new Text("An error occurred, Please try again!");
+          }
+          return new LinearProgressIndicator();
+        });
+  }
+
+  /*Widget _buildGame(
       {required BuildContext context, required Map data, required String id}) {
     Map<String, dynamic> creator = data['creator'];
     Map<String, dynamic> gameDetails = data['gameDetails'];
@@ -140,17 +252,8 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
-  }
+  }*/
 
-  /* todo in add game
-  List searchQueryMaker(text){
-    List<String> query = [];
-    for(var i = 1; i < text.length+1; i++){
-      query.add(text.substring(0,i));
-    }
-    return query;
-  }
-  */
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserInfoRetrieve?>(context);
@@ -206,9 +309,15 @@ class _HomeState extends State<Home> {
               padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
               child: IconButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MessageList(),
+                    ),
+                  );
+                  /*ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Message button pressed"),
-                  ));
+                  ));*/
                 },
                 icon: Icon(
                   Icons.chat_bubble_outline_rounded,
@@ -228,8 +337,7 @@ class _HomeState extends State<Home> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    CreateWidget(),
+                builder: (context) => CreateWidget(),
               ),
             );
           },

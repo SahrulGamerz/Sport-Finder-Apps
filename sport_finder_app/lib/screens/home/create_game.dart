@@ -38,6 +38,7 @@ class _CreateWidgetState extends State<CreateWidget> {
   DateTime now = new DateTime.now();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  bool btnOnce = true;
 
   @override
   void initState() {
@@ -54,13 +55,14 @@ class _CreateWidgetState extends State<CreateWidget> {
     fToast.init(context);
   }
 
-  List searchParamMaker(params){
+  List searchParamMaker(params) {
     List query = [];
-    for(int i = 1; i < params.length+1; i++){
-      query.add(params.substring(0,i));
+    for (int i = 1; i < params.length + 1; i++) {
+      query.add(params.substring(0, i));
     }
     return query;
   }
+
   _showToastSuccess() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -86,6 +88,7 @@ class _CreateWidgetState extends State<CreateWidget> {
       toastDuration: Duration(seconds: 2),
     );
   }
+
   _showToastWarning(BuildContext context, String text) {
     fToast.init(context);
     Widget toast = Container(
@@ -135,43 +138,44 @@ class _CreateWidgetState extends State<CreateWidget> {
         elevation: 4,
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
-            child: Text(
-              'Choose your Sports',
-              style: TextStyle(
-                fontFamily: 'Montserrat',
-                color: Color(0xFF8B97A2),
-                fontWeight: FontWeight.w500,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
+              child: Text(
+                'Choose your Sports',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  color: Color(0xFF8B97A2),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-            child: AwesomeDropDown(
-              isPanDown: false,
-              dropDownList: ["Badminton", "Futsal", 'Football', 'Basketball'],
-              dropDownIcon: Icon(
-                Icons.arrow_drop_down,
-                color: Colors.grey,
-                size: 23,
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
+              child: AwesomeDropDown(
+                isPanDown: false,
+                dropDownList: ["Badminton", "Futsal", 'Football', 'Basketball'],
+                dropDownIcon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.grey,
+                  size: 23,
+                ),
+                selectedItem: _selectedItem,
+                onDropDownItemClick: (selectedItem) {
+                  _selectedItem = selectedItem;
+                },
+                dropStateChanged: (isOpened) {
+                  _isDropDownOpened = isOpened;
+                  if (!isOpened) {
+                    _isBackPressedOrTouchedOutSide = false;
+                  }
+                },
               ),
-              selectedItem: _selectedItem,
-              onDropDownItemClick: (selectedItem) {
-                _selectedItem = selectedItem;
-              },
-              dropStateChanged: (isOpened) {
-                _isDropDownOpened = isOpened;
-                if (!isOpened) {
-                  _isBackPressedOrTouchedOutSide = false;
-                }
-              },
-            ),
-            /*Row(
+              /*Row(
               mainAxisSize: MainAxisSize.max,
               children: [
 
@@ -200,52 +204,52 @@ class _CreateWidgetState extends State<CreateWidget> {
                 )*/
               ],
             ),*/
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
-                  child: Text(
-                    'Location',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      color: Color(0xFF8B97A2),
-                      fontWeight: FontWeight.w500,
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
+                    child: Text(
+                      'Location',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Color(0xFF8B97A2),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
-            child: AwesomeDropDown(
-              isPanDown: false,
-              dropDownList: [
-                'Proshuttle Balakong Badminton Court',
-                'Pro One Badminton Court',
-                'Balakong Badminton Sports Center'
-              ],
-              dropDownIcon: Icon(
-                Icons.arrow_drop_down,
-                color: Colors.grey,
-                size: 23,
+                  )
+                ],
               ),
-              selectedItem: _selectedItem1,
-              onDropDownItemClick: (selectedItem) {
-                _selectedItem1 = selectedItem;
-              },
-              dropStateChanged: (isOpened) {
-                _isDropDownOpened1 = isOpened;
-                if (!isOpened) {
-                  _isBackPressedOrTouchedOutSide1 = false;
-                }
-              },
             ),
-            /*Row(
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
+              child: AwesomeDropDown(
+                isPanDown: false,
+                dropDownList: [
+                  'Proshuttle Balakong Badminton Court',
+                  'Pro One Badminton Court',
+                  'Balakong Badminton Sports Center'
+                ],
+                dropDownIcon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.grey,
+                  size: 23,
+                ),
+                selectedItem: _selectedItem1,
+                onDropDownItemClick: (selectedItem) {
+                  _selectedItem1 = selectedItem;
+                },
+                dropStateChanged: (isOpened) {
+                  _isDropDownOpened1 = isOpened;
+                  if (!isOpened) {
+                    _isBackPressedOrTouchedOutSide1 = false;
+                  }
+                },
+              ),
+              /*Row(
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
@@ -289,48 +293,52 @@ class _CreateWidgetState extends State<CreateWidget> {
                 )
               ],
             ),*/
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
-                      child: Text(
-                        'Players',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: Color(0xFF8B97A2),
-                          fontWeight: FontWeight.w500,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
+                        child: Text(
+                          'Players',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Color(0xFF8B97A2),
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
+              child: AwesomeDropDown(
+                isPanDown: false,
+                dropDownList: ['2', '3', '4'],
+                dropDownIcon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.grey,
+                  size: 23,
                 ),
-              )
-            ],
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
-            child: AwesomeDropDown(
-              isPanDown: false,
-              dropDownList: ['2', '3', '4'],
-              dropDownIcon: Icon(Icons.arrow_drop_down, color: Colors.grey, size: 23,),
-              selectedItem: _selectedItem2,
-              onDropDownItemClick: (selectedItem) {
-                _selectedItem2 = selectedItem;
-              },
-              dropStateChanged: (isOpened) {
-                _isDropDownOpened2 = isOpened;
-                if (!isOpened) {
-                  _isBackPressedOrTouchedOutSide2 = false;
-                }
-              },
-            ),/*Row(
+                selectedItem: _selectedItem2,
+                onDropDownItemClick: (selectedItem) {
+                  _selectedItem2 = selectedItem;
+                },
+                dropStateChanged: (isOpened) {
+                  _isDropDownOpened2 = isOpened;
+                  if (!isOpened) {
+                    _isBackPressedOrTouchedOutSide2 = false;
+                  }
+                },
+              ), /*Row(
               mainAxisSize: MainAxisSize.max,
               children: [
                 /*DropdownSearch<String>(
@@ -358,254 +366,46 @@ class _CreateWidgetState extends State<CreateWidget> {
                         )*/
               ],
             ),*/
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
-                      child: Text(
-                        'Date',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: Color(0xFF8B97A2),
-                          fontWeight: FontWeight.w500,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
+                        child: Text(
+                          'Date',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Color(0xFF8B97A2),
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20, 16, 200, 0),
-                  child: DateTimePicker(
-                    initialValue: now.toString(),
-                    type: DateTimePickerType.date,
-                    dateMask: 'dd MMM yyyy',
-                    firstDate: DateTime(DateTime.now().year,
-                        DateTime.now().month, DateTime.now().day),
-                    initialDate: now,
-                    lastDate: DateTime(DateTime.now().year,
-                        DateTime.now().month, DateTime.now().day + 20),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      hintText: 'Set Time ',
-                      hintStyle: TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.black,
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                          width: 1,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                          width: 1,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      contentPadding:
-                      EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
-                      prefixIcon: Icon(
-                        Icons.keyboard_arrow_down,
-                      ),
-                    ),
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      color: Colors.black,
-                    ),
-                    onChanged: (val) {
-                      setState(() {
-                        now = DateTime.parse(val);
-
-                      });
-                    },
-                    validator: (val) {
-                      print(val);
-                      return null;
-                    },
-                    onSaved: (val) {
-                      setState(() {
-                        now = DateTime.parse(val!);
-
-                      });
-                    },
+                      )
+                    ],
                   ),
-                ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
-                          child: Text(
-                            'Time',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              color: Color(0xFF8B97A2),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20, 16, 13, 0),
-                  child: InkWell(
-                    onTap: () => showCustomTimePicker(
-                        context: context,
-                        onFailValidation: (context) {
-                          _showToastWarning(
-                              context, "Unavailable Time");
-                        },
-                        initialTime: TimeOfDay(hour: 10, minute: 0),
-                        selectableTimePredicate: (time) =>
-                        time!.hour >= 10 &&
-                            time.hour <= 20 &&
-                            time.minute % 30 == 0)
-                        .then((time) => setState(() {
-                      textController2.text =
-                          time!.format(context);
-                      DateTime timeOne;
-                      if (textController2.text.contains("AM") ||
-                          textController2.text.contains("PM")) {
-                        timeOne = DateFormat.jm()
-                            .parse(textController2.text);
-                      } else {
-                        timeOne = DateFormat.Hm()
-                            .parse(textController2.text);
-                      }
-                      time1 = DateTime.parse(
-                          DateFormat('yyyy-MM-dd').format(now) +
-                              ' ' +
-                              DateFormat('HH:mm:ss')
-                                  .format(timeOne));
-                    })),
-                    child: TextFormField(
-                      controller: textController2,
-                      readOnly: true,
-                      enabled: false,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        hintText: 'From',
-                        hintStyle: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: Colors.black,
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        contentPadding:
-                        EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
-                        prefixIcon: Icon(
-                          Icons.keyboard_arrow_down,
-                        ),
-                      ),
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.black,
-                      ),
-                      keyboardType: TextInputType.datetime,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20, 16, 13, 0),
-                  child: InkWell(
-                    onTap: () => showCustomTimePicker(
-                        context: context,
-                        onFailValidation: (context) {
-                          _showToastWarning(
-                              context, "Unavailable Time");
-                        },
-                        initialTime: TimeOfDay(hour: 10, minute: 0),
-                        selectableTimePredicate: (time) =>
-                        time!.hour >= 10 &&
-                            time.hour <= 20 &&
-                            time.minute % 30 == 0)
-                        .then((time) => setState(() {
-                      textController3.text =
-                          time!.format(context);
-                      DateTime timeOne;
-                      if (textController3.text.contains("AM") ||
-                          textController3.text.contains("PM")) {
-                        timeOne = DateFormat.jm()
-                            .parse(textController3.text);
-                      } else {
-                        timeOne = DateFormat.Hm()
-                            .parse(textController3.text);
-                      }
-                      time2 = DateTime.parse(
-                          DateFormat('yyyy-MM-dd').format(now) +
-                              ' ' +
-                              DateFormat('HH:mm:ss')
-                                  .format(timeOne));
-                    })),
-                    child: TextFormField(
-                      controller: textController3,
-                      readOnly: true,
-                      enabled: false,
-                      obscureText: false,
+                )
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(20, 16, 200, 0),
+                    child: DateTimePicker(
+                      initialValue: now.toString(),
+                      type: DateTimePickerType.date,
+                      dateMask: 'dd MMM yyyy',
+                      firstDate: DateTime(DateTime.now().year,
+                          DateTime.now().month, DateTime.now().day),
+                      initialDate: now,
+                      lastDate: DateTime(DateTime.now().year,
+                          DateTime.now().month, DateTime.now().day + 20),
                       decoration: InputDecoration(
                         isDense: true,
                         hintText: 'Set Time ',
@@ -634,7 +434,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                           ),
                         ),
                         contentPadding:
-                        EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
+                            EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
                         prefixIcon: Icon(
                           Icons.keyboard_arrow_down,
                         ),
@@ -643,69 +443,287 @@ class _CreateWidgetState extends State<CreateWidget> {
                         fontFamily: 'Montserrat',
                         color: Colors.black,
                       ),
-                      keyboardType: TextInputType.datetime,
+                      onChanged: (val) {
+                        setState(() {
+                          now = DateTime.parse(val);
+                        });
+                      },
+                      validator: (val) {
+                        print(val);
+                        return null;
+                      },
+                      onSaved: (val) {
+                        setState(() {
+                          now = DateTime.parse(val!);
+                        });
+                      },
                     ),
                   ),
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 90, 0, 0),
-            child: Row(
+                )
+              ],
+            ),
+            Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ArgonButton(
-                  height: 40,
-                  width: 130,
-                  borderRadius: 12.0,
-                  roundLoadingShape: true,
-                  color: Colors.black,
-                  child: Text(
-                    "Create",
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      color: Colors.white,
-                      //fontSize: 18,
-                      //fontWeight: FontWeight.w700
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
+                            child: Text(
+                              'Time',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                color: Color(0xFF8B97A2),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(20, 16, 13, 0),
+                    child: InkWell(
+                      onTap: () => showCustomTimePicker(
+                          context: context,
+                          onFailValidation: (context) {
+                            _showToastWarning(context, "Unavailable Time");
+                          },
+                          initialTime: TimeOfDay(hour: 10, minute: 0),
+                          selectableTimePredicate: (time) =>
+                              time!.hour >= 10 &&
+                              time.hour <= 20 &&
+                              time.minute % 30 ==
+                                  0).then((time) => setState(() {
+                            textController2.text = time!.format(context);
+                            DateTime timeOne;
+                            if (textController2.text.contains("AM") ||
+                                textController2.text.contains("PM")) {
+                              timeOne =
+                                  DateFormat.jm().parse(textController2.text);
+                            } else {
+                              timeOne =
+                                  DateFormat.Hm().parse(textController2.text);
+                            }
+                            time1 = DateTime.parse(
+                                DateFormat('yyyy-MM-dd').format(now) +
+                                    ' ' +
+                                    DateFormat('HH:mm:ss').format(timeOne));
+                          })),
+                      child: TextFormField(
+                        controller: textController2,
+                        readOnly: true,
+                        enabled: false,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          hintText: 'From',
+                          hintStyle: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Colors.black,
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          contentPadding:
+                              EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
+                          prefixIcon: Icon(
+                            Icons.keyboard_arrow_down,
+                          ),
+                        ),
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.black,
+                        ),
+                        keyboardType: TextInputType.datetime,
+                      ),
                     ),
                   ),
-                  loader: Container(
-                    padding: EdgeInsets.all(10),
-                    child: SpinKitDoubleBounce(
-                      color: Colors.white,
-                    ),
-                  ),
-                  onTap: (startLoading, stopLoading, btnState) async {
-                    List param = [userDataClass.username.toLowerCase(),
-                      _selectedItem1.toLowerCase(),_selectedItem.toLowerCase()];
-                    List search_param = [];
-                    for(int i=0; i<param.length;i++){
-                     search_param = search_param + searchParamMaker(param[i]);
-                    }
-                    CollectionReference games = firestore.collection('games');
-                    await games.add({
-                      "game_finish": "false",
-                      "game_full":  "false",
-                      "joined": [userDataClass.uid],
-                      "gameDetails":{
-                        "court_name" : _selectedItem1,
-                        "date" : time1,
-                        "to" : time2,
-                        "gameType": _selectedItem,
-                        "slots": _selectedItem2,
-                      },
-                      "creator": {
-                        "uid": userDataClass.uid,
-                      },
-                      "search_param": search_param,
-                    });
-                    _showToastSuccess();
-                    Navigator.pop(context);
-                  },
                 ),
-                /*FFButtonWidget(
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(20, 16, 13, 0),
+                    child: InkWell(
+                      onTap: () => showCustomTimePicker(
+                          context: context,
+                          onFailValidation: (context) {
+                            _showToastWarning(context, "Unavailable Time");
+                          },
+                          initialTime: TimeOfDay(hour: 10, minute: 0),
+                          selectableTimePredicate: (time) =>
+                              time!.hour >= 10 &&
+                              time.hour <= 20 &&
+                              time.minute % 30 ==
+                                  0).then((time) => setState(() {
+                            textController3.text = time!.format(context);
+                            DateTime timeOne;
+                            if (textController3.text.contains("AM") ||
+                                textController3.text.contains("PM")) {
+                              timeOne =
+                                  DateFormat.jm().parse(textController3.text);
+                            } else {
+                              timeOne =
+                                  DateFormat.Hm().parse(textController3.text);
+                            }
+                            time2 = DateTime.parse(
+                                DateFormat('yyyy-MM-dd').format(now) +
+                                    ' ' +
+                                    DateFormat('HH:mm:ss').format(timeOne));
+                          })),
+                      child: TextFormField(
+                        controller: textController3,
+                        readOnly: true,
+                        enabled: false,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          hintText: 'To',
+                          hintStyle: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Colors.black,
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          contentPadding:
+                              EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
+                          prefixIcon: Icon(
+                            Icons.keyboard_arrow_down,
+                          ),
+                        ),
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.black,
+                        ),
+                        keyboardType: TextInputType.datetime,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ArgonButton(
+                    height: 40,
+                    width: 130,
+                    borderRadius: 12.0,
+                    roundLoadingShape: true,
+                    color: Colors.black,
+                    child: Text(
+                      "Create",
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.white,
+                        //fontSize: 18,
+                        //fontWeight: FontWeight.w700
+                      ),
+                    ),
+                    loader: Container(
+                      padding: EdgeInsets.all(10),
+                      child: SpinKitDoubleBounce(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: (startLoading, stopLoading, btnState) async {
+                      if(time1 == time2 || time1 == now || time2 == now){
+                        _showToastWarning(context,"Please select time!");
+                        return;
+                      }
+                      if (btnOnce) {
+                        btnOnce = !btnOnce;
+                        startLoading();
+                        List param = [
+                          userDataClass.username.toLowerCase(),
+                          _selectedItem1.toLowerCase(),
+                          _selectedItem.toLowerCase()
+                        ];
+                        List searchParam = [];
+                        for (int i = 0; i < param.length; i++) {
+                          searchParam =
+                              searchParam + searchParamMaker(param[i]);
+                        }
+                        CollectionReference games =
+                            firestore.collection('games');
+                        await games.add({
+                          "game_finish": "false",
+                          "game_full": "false",
+                          "joined": [userDataClass.uid],
+                          "gameDetails": {
+                            "court_name": _selectedItem1,
+                            "date": time1,
+                            "to": time2,
+                            "gameType": _selectedItem,
+                            "slots": _selectedItem2,
+                          },
+                          "creator": {
+                            "uid": userDataClass.uid,
+                          },
+                          "search_param": searchParam,
+                        });
+                        _showToastSuccess();
+                        stopLoading();
+                        Navigator.pop(context);
+                        return;
+                      }
+                      _showToastWarning(
+                            context, "Please wait before trying again!");
+                    },
+                  ),
+                  /*FFButtonWidget(
                   onPressed: () {
                     print('Button pressed ...');
                   },
@@ -725,10 +743,11 @@ class _CreateWidgetState extends State<CreateWidget> {
                     borderRadius: 12,
                   ),
                 )*/
-              ],
-            ),
-          )
-        ],
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

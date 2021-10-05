@@ -240,18 +240,46 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
             _createDrawerItem(
                 icon: Icons.people_outline,
-                text: "List Users",
+                text: "User List",
                 onTap: () => {
                       Navigator.of(context).pop(),
-                      if (widget.currentView != "List Users")
+                      if (widget.currentView != "User List")
                         {
                           /*Navigator.pushNamed(context, Routes.about)*/
                         }
                     }),
+            _createDrawerItem(
+                icon: Icons.library_books,
+                text: "Booking List",
+                onTap: () => {
+                  Navigator.of(context).pop(),
+                  if (widget.currentView != "Booking List")
+                    {
+                      /*Navigator.pushNamed(context, Routes.about)*/
+                    }
+                }),
+            _createDrawerItem(
+                icon: Icons.menu_book,
+                text: "Create Booking Form",
+                onTap: () => {
+                  Navigator.of(context).pop(),
+                  if (widget.currentView != "Create Booking Form")
+                    {
+                      /*Navigator.pushNamed(context, Routes.about)*/
+                    }
+                }),
             // Logout
             Divider(
               color: Colors.grey,
             ),
+            _createDrawerItem(
+                icon: Icons.receipt,
+                text: "Payment History",
+                onTap: () => {
+                  Navigator.of(context).pop(),
+                  if (widget.currentView != "Contact")
+                    {/*Navigator.pushNamed(context, Routes.contact)*/}
+                }),
             _createDrawerItem(
                 icon: Icons.logout,
                 text: "Log Out",
@@ -265,7 +293,7 @@ class _AppDrawerState extends State<AppDrawer> {
               color: Colors.grey,
             ),
             ListTile(
-              title: Text('Current Sprint: 2'),
+              title: Text('Current Sprint: 2 - Admin'),
               onTap: () {},
             ),
           ],
@@ -329,6 +357,14 @@ class _AppDrawerState extends State<AppDrawer> {
             Divider(
               color: Colors.grey,
             ),
+            _createDrawerItem(
+                icon: Icons.receipt,
+                text: "Payment History",
+                onTap: () => {
+                  Navigator.of(context).pop(),
+                  if (widget.currentView != "Contact")
+                    {/*Navigator.pushNamed(context, Routes.contact)*/}
+                }),
             _createDrawerItem(
                 icon: Icons.logout,
                 text: "Log Out",
