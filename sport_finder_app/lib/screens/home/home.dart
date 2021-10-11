@@ -6,6 +6,8 @@ import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:sport_finder_app/models/user.dart';
 import 'package:sport_finder_app/screens/home/create_game.dart';
+import 'package:sport_finder_app/screens/home/join_game.dart';
+import 'package:sport_finder_app/screens/home/your_game.dart';
 import 'package:sport_finder_app/services/auth.dart';
 import 'package:sport_finder_app/widgets/drawer.dart';
 import 'message/message_list.dart';
@@ -50,7 +52,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildGame(
-      {required BuildContext context, required Map data, required String id}) {
+      {required BuildContext context, required Map data, required String id, required int type}) {
     Map<String, dynamic> creator = data['creator'];
     Map<String, dynamic> gameDetails = data['gameDetails'];
     return new FutureBuilder(
@@ -70,6 +72,23 @@ class _HomeState extends State<Home> {
               child: InkWell(
                 // When the user taps the button, show a snackbar.
                 onTap: () {
+                  if(type == 0){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => YourGameWidget(ID:id, data: data,),
+                        ));
+                  }
+                  else {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => JoinGameWidget(ID:id, data:data),
+
+                        ));
+                  }
+
+
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Game ID: " + id),
                   ));
@@ -467,7 +486,7 @@ class _HomeState extends State<Home> {
                       return _buildGame(
                           context: context,
                           data: data,
-                          id: documentSnapshot.id);
+                          id: documentSnapshot.id, type: 0);
                     } else {
                       print(data);
                       return Text(
@@ -527,7 +546,7 @@ class _HomeState extends State<Home> {
                       return _buildGame(
                           context: context,
                           data: data,
-                          id: documentSnapshot.id);
+                          id: documentSnapshot.id, type: 1);
                     } else {
                       return Text(
                         "No game(s) available",
