@@ -7,7 +7,7 @@ import 'package:sport_finder_app/screens/authenticate/authenticate.dart';
 import 'home/about.dart';
 import 'home/booking_venue.dart';
 import 'home/contact.dart';
-import 'home/edit_profile.dart';
+import 'home/profile/edit_profile.dart';
 import 'home/home.dart';
 
 class Wrapper extends StatelessWidget {

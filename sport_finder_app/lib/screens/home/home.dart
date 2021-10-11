@@ -8,7 +8,7 @@ import 'package:sport_finder_app/models/user.dart';
 import 'package:sport_finder_app/screens/home/create_game.dart';
 import 'package:sport_finder_app/services/auth.dart';
 import 'package:sport_finder_app/widgets/drawer.dart';
-import 'message_list.dart';
+import 'message/message_list.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);

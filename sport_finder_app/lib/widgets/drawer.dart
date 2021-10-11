@@ -179,7 +179,6 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    print('drawer ${userDataClass.isAdmin}');
     //admin drawer
     if (userDataClass.isAdmin) {
       return Drawer(
@@ -252,22 +251,22 @@ class _AppDrawerState extends State<AppDrawer> {
                 icon: Icons.library_books,
                 text: "Booking List",
                 onTap: () => {
-                  Navigator.of(context).pop(),
-                  if (widget.currentView != "Booking List")
-                    {
-                      /*Navigator.pushNamed(context, Routes.about)*/
-                    }
-                }),
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "Booking List")
+                        {
+                          /*Navigator.pushNamed(context, Routes.about)*/
+                        }
+                    }),
             _createDrawerItem(
                 icon: Icons.menu_book,
                 text: "Create Booking Form",
                 onTap: () => {
-                  Navigator.of(context).pop(),
-                  if (widget.currentView != "Create Booking Form")
-                    {
-                      /*Navigator.pushNamed(context, Routes.about)*/
-                    }
-                }),
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "Create Booking Form")
+                        {
+                          /*Navigator.pushNamed(context, Routes.about)*/
+                        }
+                    }),
             // Logout
             Divider(
               color: Colors.grey,
@@ -276,10 +275,12 @@ class _AppDrawerState extends State<AppDrawer> {
                 icon: Icons.receipt,
                 text: "Payment History",
                 onTap: () => {
-                  Navigator.of(context).pop(),
-                  if (widget.currentView != "Contact")
-                    {/*Navigator.pushNamed(context, Routes.contact)*/}
-                }),
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "Contact")
+                        {
+                          /*Navigator.pushNamed(context, Routes.contact)*/
+                        }
+                    }),
             _createDrawerItem(
                 icon: Icons.logout,
                 text: "Log Out",
@@ -361,10 +362,12 @@ class _AppDrawerState extends State<AppDrawer> {
                 icon: Icons.receipt,
                 text: "Payment History",
                 onTap: () => {
-                  Navigator.of(context).pop(),
-                  if (widget.currentView != "Contact")
-                    {/*Navigator.pushNamed(context, Routes.contact)*/}
-                }),
+                      Navigator.of(context).pop(),
+                      if (widget.currentView != "Contact")
+                        {
+                          /*Navigator.pushNamed(context, Routes.contact)*/
+                        }
+                    }),
             _createDrawerItem(
                 icon: Icons.logout,
                 text: "Log Out",

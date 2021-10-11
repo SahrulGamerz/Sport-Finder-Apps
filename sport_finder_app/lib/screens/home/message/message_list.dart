@@ -8,6 +8,8 @@ import 'message.dart';
 class MessageList extends StatefulWidget {
   const MessageList({Key? key}) : super(key: key);
 
+  static const String routeName = '/messages';
+
   @override
   _MessageListState createState() => _MessageListState();
 }
@@ -39,6 +41,11 @@ class _MessageListState extends State<MessageList> {
           if (data['chat_name'] == "") {
             chatName = user['username'];
           }
+          String pattern =
+              r'(https://firebasestorage.googleapis.com\/v0\/b\/sport-finder-app.appspot.com)';
+          RegExp regExp = new RegExp(pattern);
+          String msg = data['last_message'];
+          if (regExp.hasMatch(data['last_message'])) msg = "📷 Image";
           return Padding(
             padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
             child: Container(
@@ -113,7 +120,7 @@ class _MessageListState extends State<MessageList> {
                               Align(
                                 alignment: AlignmentDirectional(-0.93, 0.55),
                                 child: Text(
-                                  data['last_message'],
+                                  msg,
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     fontFamily: 'Montserrat',

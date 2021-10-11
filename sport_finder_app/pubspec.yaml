@@ -53,7 +53,7 @@ dependencies:
   date_time_picker: ^2.1.0
   time_picker_widget: ^1.0.0+10
   awesome_dropdown: ^0.0.4
-
+  emoji_picker_flutter: ^1.0.7
 
 dev_dependencies:
   flutter_native_splash: ^1.2.1
