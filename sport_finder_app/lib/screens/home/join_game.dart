@@ -7,7 +7,9 @@ import 'package:intl/intl.dart';
 class JoinGameWidget extends StatefulWidget {
   final String id;
   final Map data;
- const JoinGameWidget({Key? key,required this.id, required this.data}) : super(key: key);
+
+  const JoinGameWidget({Key? key, required this.id, required this.data})
+      : super(key: key);
 
   @override
   _JoinGameWidgetState createState() => _JoinGameWidgetState();
@@ -16,7 +18,7 @@ class JoinGameWidget extends StatefulWidget {
 class _JoinGameWidgetState extends State<JoinGameWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Widget _buildJoinGame(BuildContext context){
+  Widget _buildJoinGame(BuildContext context) {
     Map<String, dynamic> creator = widget.data['creator'];
     Map<String, dynamic> gameDetails = widget.data['gameDetails'];
     DateTime date1 = gameDetails['date'].toDate();
@@ -30,9 +32,9 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             DocumentSnapshot documentSnapshot =
-            snapshot.data as DocumentSnapshot;
+                snapshot.data as DocumentSnapshot;
             Map<String, dynamic> user =
-            documentSnapshot.data() as Map<String, dynamic>;
+                documentSnapshot.data() as Map<String, dynamic>;
             return Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -55,62 +57,76 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(20, 16, 20, 120),
+                    padding: EdgeInsetsDirectional.fromSTEB(20, 16, 20, 70),
                     child: Card(
                       clipBehavior: Clip.antiAliasWithSaveLayer,
                       color: Color(0xFFF5F5F5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Stack(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
                         children: [
                           Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(20, 20, 40, 40),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.2,
-                              height: MediaQuery.of(context).size.width * 0.2,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.network(
-                                user['profile_picture'],
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(130, 45, 0, 0),
-                            child: Text(
-                              user['username'],
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                              ),
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      20, 0, 0, 0),
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.2,
+                                    height:
+                                        MediaQuery.of(context).size.width * 0.2,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Image.network(
+                                      user['profile_picture'],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      20, 0, 0, 0),
+                                  child: Text(
+                                    user['username'],
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                           Align(
                             alignment: AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 250),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 40, 0, 2),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            20, 0, 0, 0),
-                                        child: Text(
-                                          'Your Game',
-                                          style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            color: Color(0xFF8B97A2),
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      )
-                                    ],
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 0, 0),
+                                    child: Text(
+                                      'Your Game',
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Color(0xFF8B97A2),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                   )
                                 ],
                               ),
@@ -119,13 +135,14 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                           Align(
                             alignment: AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 200),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 2, 0, 2),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Padding(
-                                    padding:
-                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 0, 0),
                                     child: Text(
                                       gameDetails['gameType'],
                                       style: TextStyle(
@@ -142,13 +159,14 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                           Align(
                             alignment: AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 120),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 20, 0, 2),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Padding(
-                                    padding:
-                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 0, 0),
                                     child: Text(
                                       'Location',
                                       style: TextStyle(
@@ -165,13 +183,14 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                           Align(
                             alignment: AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 70),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 2, 0, 2),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Padding(
-                                    padding:
-                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 0, 0),
                                     child: Text(
                                       gameDetails['court_name'],
                                       style: TextStyle(
@@ -188,15 +207,16 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                           Align(
                             alignment: AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 20, 0, 2),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Padding(
-                                    padding:
-                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 0, 0),
                                     child: Text(
-                                      "Players",
+                                      'Players',
                                       style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: Color(0xFF8B97A2),
@@ -211,16 +231,19 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                           Align(
                             alignment: AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 60, 0, 0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 2, 0, 2),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Padding(
-                                    padding:
-                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 0, 0),
                                     child: Text(
-                                      widget.data['joined'].length.toString() + "/" +
-                                          gameDetails['slots']+ " Players",
+                                      widget.data['joined'].length.toString() +
+                                          "/" +
+                                          gameDetails['slots'] +
+                                          " Players",
                                       style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: Colors.black,
@@ -235,13 +258,14 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                           Align(
                             alignment: AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 140, 0, 0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 20, 0, 2),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Padding(
-                                    padding:
-                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 0, 0),
                                     child: Text(
                                       'Date',
                                       style: TextStyle(
@@ -258,13 +282,14 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                           Align(
                             alignment: AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 190, 0, 0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 2, 0, 2),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Padding(
-                                    padding:
-                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 0, 0),
                                     child: Text(
                                       DateFormat('dd/MM/yyyy').format(date1),
                                       style: TextStyle(
@@ -281,13 +306,14 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                           Align(
                             alignment: AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 270, 0, 0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 20, 0, 2),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Padding(
-                                    padding:
-                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 0, 0),
                                     child: Text(
                                       'Time',
                                       style: TextStyle(
@@ -304,13 +330,14 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                           Align(
                             alignment: AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 320, 0, 0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 2, 0, 2),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Padding(
-                                    padding:
-                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        20, 0, 0, 0),
                                     child: Text(
                                       '${DateFormat.jm().format(date1)} - ${DateFormat.jm().format(date2)}',
                                       style: TextStyle(
@@ -327,9 +354,9 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                           Align(
                             alignment: AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(0, 470, 0, 0),
-                              child:
-                              ArgonButton(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
+                              child: ArgonButton(
                                 height: 40,
                                 width: 130,
                                 borderRadius: 12.0,
@@ -350,30 +377,9 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                                     color: Colors.white,
                                   ),
                                 ),
-                                onTap:
-                                    (startLoading, stopLoading, btnState) async {},
+                                onTap: (startLoading, stopLoading,
+                                    btnState) async {},
                               ),
-                              /*FFButtonWidget(
-                          onPressed: () {
-                            print('Button pressed ...');
-                          },
-                          text: 'Join',
-                          options: FFButtonOptions(
-                            width: 130,
-                            height: 40,
-                            color: Colors.black,
-                            textStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              color: Colors.white,
-                            ),
-                            borderSide: BorderSide(
-                              color: Colors.black,
-                              width: 1,
-                            ),
-                            borderRadius: 12,
-                          ),
-                          loading: _loadingButton,
-                        ),*/
                             ),
                           )
                         ],
@@ -396,7 +402,9 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
       key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        brightness: Brightness.dark,
         iconTheme: IconThemeData(color: Colors.white),
+        centerTitle: true,
         automaticallyImplyLeading: true,
         title: Text(
           'Join Game',
@@ -408,7 +416,6 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
           ),
         ),
         actions: [],
-        centerTitle: true,
         elevation: 4,
       ),
       backgroundColor: Colors.white,

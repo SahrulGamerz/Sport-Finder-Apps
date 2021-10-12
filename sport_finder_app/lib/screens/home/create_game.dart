@@ -122,7 +122,9 @@ class _CreateWidgetState extends State<CreateWidget> {
       key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        brightness: Brightness.dark,
         iconTheme: IconThemeData(color: Colors.white),
+        centerTitle: true,
         automaticallyImplyLeading: true,
         title: Text(
           'Create Game',
@@ -134,7 +136,6 @@ class _CreateWidgetState extends State<CreateWidget> {
           ),
         ),
         actions: [],
-        centerTitle: true,
         elevation: 4,
       ),
       backgroundColor: Colors.white,
