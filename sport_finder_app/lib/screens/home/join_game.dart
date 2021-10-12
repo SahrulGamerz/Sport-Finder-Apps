@@ -2,24 +2,26 @@ import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class JoinGameWidget extends StatefulWidget {
-  final String ID;
+  final String id;
   final Map data;
- const JoinGameWidget({Key? key,required this.ID, required this.data}) : super(key: key);
+ const JoinGameWidget({Key? key,required this.id, required this.data}) : super(key: key);
 
   @override
   _JoinGameWidgetState createState() => _JoinGameWidgetState();
 }
 
 class _JoinGameWidgetState extends State<JoinGameWidget> {
-  bool _loadingButton = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Widget _buildJoinGame(BuildContext context){
     Map<String, dynamic> creator = widget.data['creator'];
     Map<String, dynamic> gameDetails = widget.data['gameDetails'];
+    DateTime date1 = gameDetails['date'].toDate();
+    DateTime date2 = gameDetails['to'].toDate();
+
     return new FutureBuilder(
         future: FirebaseFirestore.instance
             .collection('users')
@@ -31,7 +33,6 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
             snapshot.data as DocumentSnapshot;
             Map<String, dynamic> user =
             documentSnapshot.data() as Map<String, dynamic>;
-            print(user);
             return Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -265,7 +266,7 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                                     padding:
                                     EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
                                     child: Text(
-                                      '23/10/2021',
+                                      DateFormat('dd/MM/yyyy').format(date1),
                                       style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: Colors.black,
@@ -311,7 +312,7 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                                     padding:
                                     EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
                                     child: Text(
-                                      '12.00 p.m - 1.00p.m',
+                                      '${DateFormat.jm().format(date1)} - ${DateFormat.jm().format(date2)}',
                                       style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: Colors.black,

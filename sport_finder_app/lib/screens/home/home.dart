@@ -72,26 +72,27 @@ class _HomeState extends State<Home> {
               child: InkWell(
                 // When the user taps the button, show a snackbar.
                 onTap: () {
+                  if(data['joined'].contains(uid)){
+                    type = 0;
+                  }
                   if(type == 0){
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => YourGameWidget(ID:id, data: data,),
+                          builder: (context) => YourGameWidget(id:id, data: data,),
                         ));
                   }
                   else {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => JoinGameWidget(ID:id, data:data),
+                          builder: (context) => JoinGameWidget(id:id, data:data),
 
                         ));
                   }
-
-
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  /*ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Game ID: " + id),
-                  ));
+                  ));*/
                 },
                 child: Container(
                   height: 80,
