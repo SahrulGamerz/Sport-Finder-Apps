@@ -21,8 +21,8 @@ class _MessageListState extends State<MessageList> {
   Widget _buildListMessage(
       {required BuildContext context, required Map data, required String id}) {
     String chatOwnerId, chatName = "";
-    if (data['chat_name'] != "") {
-      chatName = data['chat_name'];
+    if (data['chatName'] != "") {
+      chatName = data['chatName'];
       chatOwnerId = data['users'][0];
     } else {
       if (data['users'][0] != uid) {
@@ -38,7 +38,7 @@ class _MessageListState extends State<MessageList> {
           DocumentSnapshot documentSnapshot = snapshot.data as DocumentSnapshot;
           Map<String, dynamic> user =
               documentSnapshot.data() as Map<String, dynamic>;
-          if (data['chat_name'] == "") {
+          if (data['chatName'] == "") {
             chatName = user['username'];
           }
           String pattern =

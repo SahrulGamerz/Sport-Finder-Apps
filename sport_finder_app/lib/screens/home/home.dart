@@ -29,7 +29,10 @@ class _HomeState extends State<Home> {
   late String uid;
   late Query query;
   late String key;
-
+  DateTime _startDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 10, 0, 0);
+  DateTime _lastStartDate = DateTime(2099, 12, 31, 19, 0, 0);
+  late int _startDateSecond;
+  late int _lastStartDateSecond;
   @override
   void initState() {
     fToast = FToast();
@@ -37,8 +40,12 @@ class _HomeState extends State<Home> {
     searchFieldController = TextEditingController();
     refreshUser();
     key = "";
+    _startDateSecond = _startDate.millisecondsSinceEpoch ~/ 1000;
+    _lastStartDateSecond = _lastStartDate.millisecondsSinceEpoch ~/ 1000;
     query = firestore
         .collection("games")
+        .where("gameDetails.date", isGreaterThanOrEqualTo: Timestamp(_startDateSecond, 0))
+        .where("gameDetails.date", isLessThanOrEqualTo: Timestamp(_lastStartDateSecond, 0))
         .where("game_full", isEqualTo: "false")
         .where("game_finish", isEqualTo: "false")
         .orderBy("gameDetails.date");
@@ -381,6 +388,8 @@ class _HomeState extends State<Home> {
                                 .collection("games")
                                 .where("game_full", isEqualTo: "false")
                                 .where("game_finish", isEqualTo: "false")
+                                .where("gameDetails.date", isGreaterThanOrEqualTo: Timestamp(_startDateSecond, 0))
+                                .where("gameDetails.date", isLessThanOrEqualTo: Timestamp(_lastStartDateSecond, 0))
                                 .orderBy("gameDetails.date");
                           } else {
                             key = searchFieldController.text;
@@ -391,6 +400,8 @@ class _HomeState extends State<Home> {
                                         .toLowerCase())
                                 .where("game_full", isEqualTo: "false")
                                 .where("game_finish", isEqualTo: "false")
+                                .where("gameDetails.date", isGreaterThanOrEqualTo: Timestamp(_startDateSecond, 0))
+                                .where("gameDetails.date", isLessThanOrEqualTo: Timestamp(_lastStartDateSecond, 0))
                                 .orderBy("gameDetails.date");
                           }
                         }),
@@ -441,6 +452,8 @@ class _HomeState extends State<Home> {
                                               isEqualTo: "false")
                                           .where("game_finish",
                                               isEqualTo: "false")
+                                          .where("gameDetails.date", isGreaterThanOrEqualTo: Timestamp(_startDateSecond, 0))
+                                          .where("gameDetails.date", isLessThanOrEqualTo: Timestamp(_lastStartDateSecond, 0))
                                           .orderBy("gameDetails.date");
                                     });
                                   },
@@ -505,6 +518,8 @@ class _HomeState extends State<Home> {
                       .collection("games")
                       .where("joined", arrayContains: uid)
                       .where("game_finish", isEqualTo: "false")
+                      .where("gameDetails.date", isGreaterThanOrEqualTo: Timestamp(_startDateSecond, 0))
+                      .where("gameDetails.date", isLessThanOrEqualTo: Timestamp(_lastStartDateSecond, 0))
                       .orderBy("gameDetails.date"),
                   //Change types accordingly
                   itemBuilderType: PaginateBuilderType.listView,

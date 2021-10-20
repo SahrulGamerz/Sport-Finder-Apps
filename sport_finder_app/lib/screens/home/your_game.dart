@@ -2,7 +2,9 @@ import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:sport_finder_app/models/globalVariables.dart';
 
 class YourGameWidget extends StatefulWidget {
   final String id;
@@ -17,6 +19,87 @@ class YourGameWidget extends StatefulWidget {
 
 class _YourGameWidgetState extends State<YourGameWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  bool _btnOnce = true;
+  late FToast fToast;
+
+  void initState(){
+    super.initState();
+    fToast = FToast();
+    fToast.init(context);
+  }
+
+  Future<void> cancelGame({required Map creator}) async{
+    // Leave games
+    DocumentReference games = firestore.collection('games').doc(widget.id);
+    await games.update({"joined": FieldValue.arrayRemove([uid])});
+
+    // Leave group chat
+    DocumentReference msgRef = firestore
+        .collection('messages')
+        .doc(widget.id);
+    await msgRef.update({"users": FieldValue.arrayRemove([uid])});
+
+    // Send leaving message
+    CollectionReference msgSRef = firestore
+        .collection('messages')
+        .doc(widget.id)
+        .collection("messages");
+    await msgSRef
+        .doc()
+        .set({
+      'uid': uid,
+      "timestamp": DateTime.now(),
+      "msg": "$username left the game!",
+    })
+        .then(
+            (value) =>{print("Message sent")})
+        .catchError((error) {
+      print("Failed to send msg: $error");
+    });
+
+    // Update message
+    CollectionReference msgIRef = firestore.collection('messages');
+    await msgIRef
+        .doc(widget.id)
+        .update({
+      "last_updated": DateTime.now(),
+      "last_message": "$username left the game!",
+    })
+        .then((value) => {print("Message Update")})
+        .catchError((error) {
+      print("Failed to update msg: $error");
+    });
+
+    return;
+  }
+
+  _showToastWarning(BuildContext context, String text) {
+    fToast.init(context);
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.orangeAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.error_outline),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text(text),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
 
   Widget _buildYourGame(BuildContext context) {
     Map<String, dynamic> creator = widget.data['creator'];
@@ -379,7 +462,17 @@ class _YourGameWidgetState extends State<YourGameWidget> {
                                   ),
                                 ),
                                 onTap: (startLoading, stopLoading,
-                                    btnState) async {},
+                                    btnState) async {
+                                      if(_btnOnce){
+                                        startLoading();
+                                        await cancelGame(creator: creator);
+                                        stopLoading();
+                                        Navigator.pop(context);
+                                        return;
+                                      }
+                                      _showToastWarning(
+                                          context, "Please wait before trying again!");
+                                },
                               ),
                             ),
                           )

@@ -159,7 +159,7 @@ class _CreateWidgetState extends State<CreateWidget> {
               padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
               child: AwesomeDropDown(
                 isPanDown: false,
-                dropDownList: ["Badminton", "Futsal", 'Football', 'Basketball'],
+                dropDownList: ["Badminton"],
                 dropDownIcon: Icon(
                   Icons.arrow_drop_down,
                   color: Colors.grey,
@@ -230,9 +230,7 @@ class _CreateWidgetState extends State<CreateWidget> {
               child: AwesomeDropDown(
                 isPanDown: false,
                 dropDownList: [
-                  'Proshuttle Balakong Badminton Court',
-                  'Pro One Badminton Court',
-                  'Balakong Badminton Sports Center'
+                  'Proshuttle Balakong Badminton Court'
                 ],
                 dropDownIcon: Icon(
                   Icons.arrow_drop_down,
@@ -508,7 +506,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                           initialTime: TimeOfDay(hour: 10, minute: 0),
                           selectableTimePredicate: (time) =>
                               time!.hour >= 10 &&
-                              time.hour <= 20 &&
+                              time.hour <= 19 &&
                               time.minute % 30 ==
                                   0).then((time) => setState(() {
                             textController2.text = time!.format(context);
@@ -582,9 +580,9 @@ class _CreateWidgetState extends State<CreateWidget> {
                           onFailValidation: (context) {
                             _showToastWarning(context, "Unavailable Time");
                           },
-                          initialTime: TimeOfDay(hour: 10, minute: 0),
+                          initialTime: TimeOfDay(hour: 11, minute: 0),
                           selectableTimePredicate: (time) =>
-                              time!.hour >= 10 &&
+                              time!.hour >= 11 &&
                               time.hour <= 20 &&
                               time.minute % 30 ==
                                   0).then((time) => setState(() {
@@ -680,7 +678,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                       ),
                     ),
                     onTap: (startLoading, stopLoading, btnState) async {
-                      if(time1 == time2 || time1 == now || time2 == now){
+                      if(time1 == time2 || time1 == now || time2 == now || time1.isAfter(time2)){
                         _showToastWarning(context,"Please select time!");
                         return;
                       }
@@ -697,9 +695,10 @@ class _CreateWidgetState extends State<CreateWidget> {
                           searchParam =
                               searchParam + searchParamMaker(param[i]);
                         }
+                        // Create game
                         CollectionReference games =
                             firestore.collection('games');
-                        await games.add({
+                        final gameId = await games.add({
                           "game_finish": "false",
                           "game_full": "false",
                           "joined": [userDataClass.uid],
@@ -714,6 +713,23 @@ class _CreateWidgetState extends State<CreateWidget> {
                             "uid": userDataClass.uid,
                           },
                           "search_param": searchParam,
+                        });
+                        // Create message
+                        DocumentReference msgRef =
+                        firestore.collection('messages').doc(gameId.id);
+                        await msgRef.set({
+                          "chatName": "${userDataClass.username} games",
+                          "last_message": "${userDataClass.username} created the game!",
+                          "last_updated": DateTime.now(),
+                          "users": [userDataClass.uid]
+                        });
+                        // Create sub message
+                        CollectionReference msgRef1 =
+                        firestore.collection('messages').doc(gameId.id).collection('messages');
+                        await msgRef1.doc().set({
+                          'uid': userDataClass.uid,
+                          "timestamp": DateTime.now(),
+                          "msg": "${userDataClass.username} created the game!",
                         });
                         _showToastSuccess();
                         stopLoading();
