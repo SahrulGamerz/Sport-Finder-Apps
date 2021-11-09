@@ -2,7 +2,7 @@ import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
-import 'package:sport_finder_app/screens/home/view_court.dart';
+import 'package:sport_finder_app/screens/home/venue/view_court.dart';
 
 class VenueWidget extends StatefulWidget {
   //VenueWidget({Key key}) : super(key: key);
@@ -226,18 +226,17 @@ class _VenueWidgetState extends State<VenueWidget> {
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ViewCourtWidget(
-                                                                  cid: widget
-                                                                      .cid,
-                                                                  pph: int.parse(
-                                                                      data[
-                                                                          'price_per_hour']),
-                                                                  cc: int.parse(
-                                                                      data[
-                                                                          'court_num']),
-                                                                  img: data[
-                                                                      'image']),
+                                                          builder: (context) => ViewCourtWidget(
+                                                              cid: widget.cid,
+                                                              pph: int.parse(data[
+                                                                  'price_per_hour']),
+                                                              cc: int.parse(data[
+                                                                  'court_num']),
+                                                              img:
+                                                                  data['image'],
+                                                              cn: data[
+                                                                  'court_name'],
+                                                              gameType: data['gameType']),
                                                         ),
                                                       );
                                                     },

@@ -273,12 +273,12 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
             _createDrawerItem(
                 icon: Icons.receipt,
-                text: "Payment History",
+                text: "Settings",
                 onTap: () => {
                       Navigator.of(context).pop(),
                       if (widget.currentView != "Contact")
                         {
-                          /*Navigator.pushNamed(context, Routes.contact)*/
+                          Navigator.pushNamed(context, Routes.paymentHistory)
                         }
                     }),
             _createDrawerItem(
@@ -360,7 +360,7 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
             _createDrawerItem(
                 icon: Icons.receipt,
-                text: "Payment History",
+                text: "Settings",
                 onTap: () => {
                       Navigator.of(context).pop(),
                       if (widget.currentView != "Contact")

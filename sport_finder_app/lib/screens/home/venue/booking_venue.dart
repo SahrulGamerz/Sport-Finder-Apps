@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:latlng/latlng.dart';
 import 'package:map/map.dart';
-import 'package:sport_finder_app/screens/home/venue.dart';
+import 'package:sport_finder_app/screens/home/venue/venue.dart';
 import 'package:sport_finder_app/widgets/drawer.dart';
 
 class BookingVenue extends StatefulWidget {

@@ -5,9 +5,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:sport_finder_app/models/user.dart';
-import 'package:sport_finder_app/screens/home/create_game.dart';
-import 'package:sport_finder_app/screens/home/join_game.dart';
-import 'package:sport_finder_app/screens/home/your_game.dart';
+import 'package:sport_finder_app/screens/home/game/create_game.dart';
+import 'package:sport_finder_app/screens/home/game/join_game.dart';
+import 'package:sport_finder_app/screens/home/game/your_game.dart';
 import 'package:sport_finder_app/services/auth.dart';
 import 'package:sport_finder_app/widgets/drawer.dart';
 import 'message/message_list.dart';
@@ -29,10 +29,12 @@ class _HomeState extends State<Home> {
   late String uid;
   late Query query;
   late String key;
-  DateTime _startDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 10, 0, 0);
+  DateTime _startDate = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 10, 0, 0);
   DateTime _lastStartDate = DateTime(2099, 12, 31, 19, 0, 0);
   late int _startDateSecond;
   late int _lastStartDateSecond;
+
   @override
   void initState() {
     fToast = FToast();
@@ -44,8 +46,10 @@ class _HomeState extends State<Home> {
     _lastStartDateSecond = _lastStartDate.millisecondsSinceEpoch ~/ 1000;
     query = firestore
         .collection("games")
-        .where("gameDetails.date", isGreaterThanOrEqualTo: Timestamp(_startDateSecond, 0))
-        .where("gameDetails.date", isLessThanOrEqualTo: Timestamp(_lastStartDateSecond, 0))
+        .where("gameDetails.date",
+            isGreaterThanOrEqualTo: Timestamp(_startDateSecond, 0))
+        .where("gameDetails.date",
+            isLessThanOrEqualTo: Timestamp(_lastStartDateSecond, 0))
         .where("game_full", isEqualTo: "false")
         .where("game_finish", isEqualTo: "false")
         .orderBy("gameDetails.date");
@@ -59,7 +63,10 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildGame(
-      {required BuildContext context, required Map data, required String id, required int type}) {
+      {required BuildContext context,
+      required Map data,
+      required String id,
+      required int type}) {
     Map<String, dynamic> creator = data['creator'];
     Map<String, dynamic> gameDetails = data['gameDetails'];
     return new FutureBuilder(
@@ -79,22 +86,24 @@ class _HomeState extends State<Home> {
               child: InkWell(
                 // When the user taps the button, show a snackbar.
                 onTap: () {
-                  if(data['joined'].contains(uid)){
+                  if (data['joined'].contains(uid)) {
                     type = 0;
                   }
-                  if(type == 0){
+                  if (type == 0) {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => YourGameWidget(id:id, data: data,),
+                          builder: (context) => YourGameWidget(
+                            id: id,
+                            data: data,
+                          ),
                         ));
-                  }
-                  else {
+                  } else {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => JoinGameWidget(id:id, data:data),
-
+                          builder: (context) =>
+                              JoinGameWidget(id: id, data: data),
                         ));
                   }
                   /*ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -388,8 +397,12 @@ class _HomeState extends State<Home> {
                                 .collection("games")
                                 .where("game_full", isEqualTo: "false")
                                 .where("game_finish", isEqualTo: "false")
-                                .where("gameDetails.date", isGreaterThanOrEqualTo: Timestamp(_startDateSecond, 0))
-                                .where("gameDetails.date", isLessThanOrEqualTo: Timestamp(_lastStartDateSecond, 0))
+                                .where("gameDetails.date",
+                                    isGreaterThanOrEqualTo:
+                                        Timestamp(_startDateSecond, 0))
+                                .where("gameDetails.date",
+                                    isLessThanOrEqualTo:
+                                        Timestamp(_lastStartDateSecond, 0))
                                 .orderBy("gameDetails.date");
                           } else {
                             key = searchFieldController.text;
@@ -400,8 +413,12 @@ class _HomeState extends State<Home> {
                                         .toLowerCase())
                                 .where("game_full", isEqualTo: "false")
                                 .where("game_finish", isEqualTo: "false")
-                                .where("gameDetails.date", isGreaterThanOrEqualTo: Timestamp(_startDateSecond, 0))
-                                .where("gameDetails.date", isLessThanOrEqualTo: Timestamp(_lastStartDateSecond, 0))
+                                .where("gameDetails.date",
+                                    isGreaterThanOrEqualTo:
+                                        Timestamp(_startDateSecond, 0))
+                                .where("gameDetails.date",
+                                    isLessThanOrEqualTo:
+                                        Timestamp(_lastStartDateSecond, 0))
                                 .orderBy("gameDetails.date");
                           }
                         }),
@@ -452,8 +469,12 @@ class _HomeState extends State<Home> {
                                               isEqualTo: "false")
                                           .where("game_finish",
                                               isEqualTo: "false")
-                                          .where("gameDetails.date", isGreaterThanOrEqualTo: Timestamp(_startDateSecond, 0))
-                                          .where("gameDetails.date", isLessThanOrEqualTo: Timestamp(_lastStartDateSecond, 0))
+                                          .where("gameDetails.date",
+                                              isGreaterThanOrEqualTo: Timestamp(
+                                                  _startDateSecond, 0))
+                                          .where("gameDetails.date",
+                                              isLessThanOrEqualTo: Timestamp(
+                                                  _lastStartDateSecond, 0))
                                           .orderBy("gameDetails.date");
                                     });
                                   },
@@ -500,7 +521,8 @@ class _HomeState extends State<Home> {
                       return _buildGame(
                           context: context,
                           data: data,
-                          id: documentSnapshot.id, type: 0);
+                          id: documentSnapshot.id,
+                          type: 0);
                     } else {
                       print(data);
                       return Text(
@@ -518,8 +540,12 @@ class _HomeState extends State<Home> {
                       .collection("games")
                       .where("joined", arrayContains: uid)
                       .where("game_finish", isEqualTo: "false")
-                      .where("gameDetails.date", isGreaterThanOrEqualTo: Timestamp(_startDateSecond, 0))
-                      .where("gameDetails.date", isLessThanOrEqualTo: Timestamp(_lastStartDateSecond, 0))
+                      .where("gameDetails.date",
+                          isGreaterThanOrEqualTo:
+                              Timestamp(_startDateSecond, 0))
+                      .where("gameDetails.date",
+                          isLessThanOrEqualTo:
+                              Timestamp(_lastStartDateSecond, 0))
                       .orderBy("gameDetails.date"),
                   //Change types accordingly
                   itemBuilderType: PaginateBuilderType.listView,
@@ -562,7 +588,8 @@ class _HomeState extends State<Home> {
                       return _buildGame(
                           context: context,
                           data: data,
-                          id: documentSnapshot.id, type: 1);
+                          id: documentSnapshot.id,
+                          type: 1);
                     } else {
                       return Text(
                         "No game(s) available",

@@ -7,7 +7,7 @@ import 'package:awesome_dropdown/awesome_dropdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:time_picker_widget/time_picker_widget.dart';
-import '../../models/globalVariables.dart' as userDataClass;
+import '../../../models/globalVariables.dart' as userDataClass;
 
 class CreateWidget extends StatefulWidget {
   const CreateWidget({Key? key}) : super(key: key);
@@ -229,9 +229,7 @@ class _CreateWidgetState extends State<CreateWidget> {
               padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
               child: AwesomeDropDown(
                 isPanDown: false,
-                dropDownList: [
-                  'Proshuttle Balakong Badminton Court'
-                ],
+                dropDownList: ['Proshuttle Balakong Badminton Court'],
                 dropDownIcon: Icon(
                   Icons.arrow_drop_down,
                   color: Colors.grey,
@@ -678,8 +676,11 @@ class _CreateWidgetState extends State<CreateWidget> {
                       ),
                     ),
                     onTap: (startLoading, stopLoading, btnState) async {
-                      if(time1 == time2 || time1 == now || time2 == now || time1.isAfter(time2)){
-                        _showToastWarning(context,"Please select time!");
+                      if (time1 == time2 ||
+                          time1 == now ||
+                          time2 == now ||
+                          time1.isAfter(time2)) {
+                        _showToastWarning(context, "Please select time!");
                         return;
                       }
                       if (btnOnce) {
@@ -701,6 +702,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                         final gameId = await games.add({
                           "game_finish": "false",
                           "game_full": "false",
+                          'booked': false,
                           "joined": [userDataClass.uid],
                           "gameDetails": {
                             "court_name": _selectedItem1,
@@ -716,16 +718,19 @@ class _CreateWidgetState extends State<CreateWidget> {
                         });
                         // Create message
                         DocumentReference msgRef =
-                        firestore.collection('messages').doc(gameId.id);
+                            firestore.collection('messages').doc(gameId.id);
                         await msgRef.set({
                           "chatName": "${userDataClass.username} games",
-                          "last_message": "${userDataClass.username} created the game!",
+                          "last_message":
+                              "${userDataClass.username} created the game!",
                           "last_updated": DateTime.now(),
                           "users": [userDataClass.uid]
                         });
                         // Create sub message
-                        CollectionReference msgRef1 =
-                        firestore.collection('messages').doc(gameId.id).collection('messages');
+                        CollectionReference msgRef1 = firestore
+                            .collection('messages')
+                            .doc(gameId.id)
+                            .collection('messages');
                         await msgRef1.doc().set({
                           'uid': userDataClass.uid,
                           "timestamp": DateTime.now(),
@@ -737,7 +742,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                         return;
                       }
                       _showToastWarning(
-                            context, "Please wait before trying again!");
+                          context, "Please wait before trying again!");
                     },
                   ),
                   /*FFButtonWidget(

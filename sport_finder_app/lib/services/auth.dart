@@ -41,6 +41,16 @@ class AuthService {
         userDataClass.isAdmin = data['isAdmin'];
         userDataClass.uid = user.uid;
         userDataClass.username = data['username'];
+        Map<String, dynamic> paymentInfo =
+            data['payment_information'] as Map<String, dynamic>;
+        userDataClass.firstName = paymentInfo['firstName'];
+        userDataClass.lastName = paymentInfo['lastName'];
+        userDataClass.addressCity = paymentInfo['addressCity'];
+        userDataClass.addressStreet = paymentInfo['addressStreet'];
+        userDataClass.addressZipCode = paymentInfo['addressZipCode'];
+        userDataClass.addressCountry = paymentInfo['addressCountry'];
+        userDataClass.addressState = paymentInfo['addressState'];
+        userDataClass.addressPhoneNumber = paymentInfo['addressPhoneNumber'];
       }
       return _user(user);
     } catch (e) {
@@ -82,6 +92,16 @@ class AuthService {
           'created_at': DateTime.now(),
           'last_updated_at': DateTime.now(),
           'last_login_at': DateTime.now(),
+          'payment_information': {
+            'firstName': '',
+            'lastName': '',
+            'addressPhoneNumber': '',
+            'addressCity': '',
+            'addressStreet': '',
+            'addressState': '',
+            'addressZipCode': '',
+            'addressCountry': '',
+          },
         });
       }
       return _user(user);
@@ -149,6 +169,16 @@ class AuthService {
         userDataClass.isAdmin = data['isAdmin'];
         userDataClass.uid = user.uid;
         userDataClass.username = data['username'];
+        Map<String, dynamic> paymentInfo =
+            data['payment_information'] as Map<String, dynamic>;
+        userDataClass.firstName = paymentInfo['firstName'];
+        userDataClass.lastName = paymentInfo['lastName'];
+        userDataClass.addressCity = paymentInfo['addressCity'];
+        userDataClass.addressStreet = paymentInfo['addressStreet'];
+        userDataClass.addressZipCode = paymentInfo['addressZipCode'];
+        userDataClass.addressCountry = paymentInfo['addressCountry'];
+        userDataClass.addressState = paymentInfo['addressState'];
+        userDataClass.addressPhoneNumber = paymentInfo['addressPhoneNumber'];
       }
       return _user(user);
     } catch (e) {

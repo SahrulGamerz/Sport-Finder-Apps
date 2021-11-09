@@ -5,7 +5,8 @@ import 'package:sport_finder_app/routes/routes.dart';
 import 'package:sport_finder_app/screens/authenticate/authenticate.dart';
 
 import 'home/about.dart';
-import 'home/booking_venue.dart';
+import 'home/settings/payment/payment_history.dart';
+import 'home/venue/booking_venue.dart';
 import 'home/contact.dart';
 import 'home/profile/edit_profile.dart';
 import 'home/home.dart';
@@ -33,6 +34,7 @@ class Wrapper extends StatelessWidget {
             Routes.editProfile: (context) => EditProfile(),
             Routes.about: (context) => About(),
             Routes.contact: (context) => Contact(),
+            Routes.paymentHistory: (context) => PaymentHistory(),
           });
     }
   }

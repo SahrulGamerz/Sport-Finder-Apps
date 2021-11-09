@@ -6,70 +6,69 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:sport_finder_app/models/globalVariables.dart';
 
-class YourGameWidget extends StatefulWidget {
+class JoinGameWidget extends StatefulWidget {
   final String id;
   final Map data;
 
-  const YourGameWidget({Key? key, required this.id, required this.data})
+  const JoinGameWidget({Key? key, required this.id, required this.data})
       : super(key: key);
 
   @override
-  _YourGameWidgetState createState() => _YourGameWidgetState();
+  _JoinGameWidgetState createState() => _JoinGameWidgetState();
 }
 
-class _YourGameWidgetState extends State<YourGameWidget> {
+class _JoinGameWidgetState extends State<JoinGameWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   bool _btnOnce = true;
   late FToast fToast;
 
-  void initState(){
+  void initState() {
     super.initState();
     fToast = FToast();
     fToast.init(context);
   }
 
-  Future<void> cancelGame({required Map creator}) async{
-    // Leave games
+  Future<void> joinGame() async {
+    // Join games
     DocumentReference games = firestore.collection('games').doc(widget.id);
-    await games.update({"joined": FieldValue.arrayRemove([uid])});
+    await games.update({
+      "joined": FieldValue.arrayUnion([uid]),
+    });
 
-    // Leave group chat
-    DocumentReference msgRef = firestore
-        .collection('messages')
-        .doc(widget.id);
-    await msgRef.update({"users": FieldValue.arrayRemove([uid])});
+    // Join group chat
+    DocumentReference msgRef = firestore.collection('messages').doc(widget.id);
+    await msgRef.update({
+      "users": FieldValue.arrayUnion([uid]),
+    });
 
-    // Send leaving message
-    CollectionReference msgSRef = firestore
-        .collection('messages')
-        .doc(widget.id)
-        .collection("messages");
+    // Send message
+    CollectionReference msgSRef =
+        firestore.collection('messages').doc(widget.id).collection("messages");
     await msgSRef
         .doc()
         .set({
-      'uid': uid,
-      "timestamp": DateTime.now(),
-      "msg": "$username left the game!",
-    })
-        .then(
-            (value) =>{print("Message sent")})
+          'uid': uid,
+          "timestamp": DateTime.now(),
+          "msg": "$username joined the game!",
+        })
+        .then((value) => {print("Message sent")})
         .catchError((error) {
-      print("Failed to send msg: $error");
-    });
+          print("Failed to send msg: $error");
+        });
 
-    // Update message
+    //update message
     CollectionReference msgIRef = firestore.collection('messages');
     await msgIRef
         .doc(widget.id)
         .update({
-      "last_updated": DateTime.now(),
-      "last_message": "$username left the game!",
-    })
+          "last_updated": DateTime.now(),
+          "last_message": "$username joined the game!",
+        })
         .then((value) => {print("Message Update")})
         .catchError((error) {
-      print("Failed to update msg: $error");
-    });
+          print("Failed to update msg: $error");
+        });
 
     return;
   }
@@ -101,11 +100,12 @@ class _YourGameWidgetState extends State<YourGameWidget> {
     );
   }
 
-  Widget _buildYourGame(BuildContext context) {
+  Widget _buildJoinGame(BuildContext context) {
     Map<String, dynamic> creator = widget.data['creator'];
     Map<String, dynamic> gameDetails = widget.data['gameDetails'];
     DateTime date1 = gameDetails['date'].toDate();
     DateTime date2 = gameDetails['to'].toDate();
+
     return new FutureBuilder(
         future: FirebaseFirestore.instance
             .collection('users')
@@ -442,15 +442,13 @@ class _YourGameWidgetState extends State<YourGameWidget> {
                                 height: 40,
                                 width: 130,
                                 borderRadius: 12.0,
-                                borderSide:
-                                    BorderSide(color: Colors.black, width: 1),
                                 roundLoadingShape: true,
-                                color: Colors.white,
+                                color: Colors.black,
                                 child: Text(
-                                  "Cancel",
+                                  "Join",
                                   style: TextStyle(
                                     fontFamily: 'Montserrat',
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     //fontSize: 18,
                                     //fontWeight: FontWeight.w700
                                   ),
@@ -463,15 +461,15 @@ class _YourGameWidgetState extends State<YourGameWidget> {
                                 ),
                                 onTap: (startLoading, stopLoading,
                                     btnState) async {
-                                      if(_btnOnce){
-                                        startLoading();
-                                        await cancelGame(creator: creator);
-                                        stopLoading();
-                                        Navigator.pop(context);
-                                        return;
-                                      }
-                                      _showToastWarning(
-                                          context, "Please wait before trying again!");
+                                  if (_btnOnce) {
+                                    startLoading();
+                                    await joinGame();
+                                    stopLoading();
+                                    Navigator.pop(context);
+                                    return;
+                                  }
+                                  _showToastWarning(context,
+                                      "Please wait before trying again!");
                                 },
                               ),
                             ),
@@ -493,26 +491,27 @@ class _YourGameWidgetState extends State<YourGameWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          brightness: Brightness.dark,
-          iconTheme: IconThemeData(color: Colors.white),
-          centerTitle: true,
-          automaticallyImplyLeading: true,
-          title: Text(
-            'Your Game',
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              fontFamily: 'Ubuntu',
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+      key: scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        brightness: Brightness.dark,
+        iconTheme: IconThemeData(color: Colors.white),
+        centerTitle: true,
+        automaticallyImplyLeading: true,
+        title: Text(
+          'Join Game',
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontFamily: 'Ubuntu',
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
-          actions: [],
-          elevation: 4,
         ),
-        backgroundColor: Colors.white,
-        body: _buildYourGame(context));
+        actions: [],
+        elevation: 4,
+      ),
+      backgroundColor: Colors.white,
+      body: _buildJoinGame(context),
+    );
   }
 }
