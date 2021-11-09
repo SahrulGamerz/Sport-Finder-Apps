@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
+import 'package:sport_finder_app/screens/home/settings/payment/payment_details.dart';
 import '../../../../models/globalVariables.dart' as globalVariables;
 
 class PaymentHistory extends StatefulWidget {
@@ -14,9 +16,184 @@ class PaymentHistory extends StatefulWidget {
 class _PaymentHistoryState extends State<PaymentHistory> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  /*Widget _buildPaymentHistory(context){
-    return
-  }*/
+  Widget _buildPaymentHistory(BuildContext context, Map<String, dynamic> data, int index){
+    Map<String, dynamic> dataMap = data['payment_history'][index] as Map<String, dynamic>;
+    if(dataMap['game_id'] != "") {
+      return new FutureBuilder(
+          future: FirebaseFirestore.instance
+              .collection('games')
+              .doc(dataMap["game_id"])
+              .get(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              DocumentSnapshot documentSnapshot =
+              snapshot.data as DocumentSnapshot;
+              Map<String, dynamic> game =
+              documentSnapshot.data() as Map<String, dynamic>;
+              Map<String, dynamic> gameDetails =
+              game['gameDetails'] as Map<String, dynamic>;
+              DateTime date = dataMap['date'].toDate();
+              return new Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
+                  child: InkWell(
+                    onTap: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PaymentDetailsWidget(),
+                          ));
+                    },
+                    child: Container(
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        color: Colors.white,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Padding(
+                              padding:
+                              EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: AlignmentDirectional(-0.1, -0.5),
+                                    child: Text(
+                                      dataMap['gameType'].toUpperCase(),
+                                      style:
+                                      TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Color(0xFF15212B),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional(2.64, 0.55),
+                                    child: Text(
+                                      '${gameDetails['slots']} players, ${dataMap['court_name']}',
+                                      style:
+                                      TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Color(0xFF8B97A2),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                              EdgeInsetsDirectional.fromSTEB(30, 29, 0, 0),
+                              child: Text(
+                                '${DateFormat('dd/MM/yyyy').format(date)}',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Color(0xFF8B97A2),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+              );
+            } else if (snapshot.hasError) {
+              return new Text("An error occurred, Please try again!");
+            }
+            return new LinearProgressIndicator();
+          });
+    }else{
+      DateTime date = dataMap['date'].toDate();
+      return new Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
+          child: InkWell(
+            onTap: () async {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PaymentDetailsWidget(),
+                  ));
+            },
+            child: Container(
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Card(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                color: Colors.white,
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding:
+                      EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: AlignmentDirectional(-0.1, -0.5),
+                            child: Text(
+                              dataMap['gameType'].toUpperCase(),
+                              style:
+                              TextStyle(
+                                fontFamily: 'Montserrat',
+                                color: Color(0xFF15212B),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(2.64, 0.55),
+                            child: Text(
+                              '${dataMap['court_name']}',
+                              style:
+                              TextStyle(
+                                fontFamily: 'Montserrat',
+                                color: Color(0xFF8B97A2),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                      EdgeInsetsDirectional.fromSTEB(30, 29, 0, 0),
+                      child: Text(
+                        '${DateFormat('dd/MM/yyyy').format(date)}',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Color(0xFF8B97A2),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,73 +264,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
                     return new ListView.builder(
                       itemCount: data['payment_history'].length,
                       itemBuilder: (BuildContext context, int  index){
-                        return new Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
-                          child: Container(
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Card(
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              color: Colors.white,
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Padding(
-                                    padding:
-                                    EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
-                                    child: Stack(
-                                      children: [
-                                        Align(
-                                          alignment: AlignmentDirectional(-0.1, -0.5),
-                                          child: Text(
-                                            'BADMINTON',
-                                            style:
-                                            TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              color: Color(0xFF15212B),
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: AlignmentDirectional(2.64, 0.55),
-                                          child: Text(
-                                            '2 Players, Proshuttle Balakong',
-                                            style:
-                                            TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              color: Color(0xFF8B97A2),
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                    EdgeInsetsDirectional.fromSTEB(30, 29, 0, 0),
-                                    child: Text(
-                                      ' 20/10/2021',
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Color(0xFF8B97A2),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
+                        return _buildPaymentHistory(context, data, index);
                       }
                     );
                   }else if (snapshot.hasError) {

@@ -276,9 +276,9 @@ class _AppDrawerState extends State<AppDrawer> {
                 text: "Settings",
                 onTap: () => {
                       Navigator.of(context).pop(),
-                      if (widget.currentView != "Contact")
+                      if (widget.currentView != "Settings")
                         {
-                          Navigator.pushNamed(context, Routes.paymentHistory)
+                          Navigator.pushNamed(context, Routes.settings)
                         }
                     }),
             _createDrawerItem(
@@ -363,9 +363,9 @@ class _AppDrawerState extends State<AppDrawer> {
                 text: "Settings",
                 onTap: () => {
                       Navigator.of(context).pop(),
-                      if (widget.currentView != "Contact")
+                      if (widget.currentView != "Settings")
                         {
-                          /*Navigator.pushNamed(context, Routes.contact)*/
+                          Navigator.pushNamed(context, Routes.settings)
                         }
                     }),
             _createDrawerItem(
