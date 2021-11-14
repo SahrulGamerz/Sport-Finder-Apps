@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sport_finder_app/models/user.dart';
 import 'package:sport_finder_app/routes/routes.dart';
+import 'package:sport_finder_app/screens/admin/list_users.dart';
 import 'package:sport_finder_app/screens/authenticate/authenticate.dart';
 
 import 'home/about.dart';
@@ -37,6 +38,7 @@ class Wrapper extends StatelessWidget {
             Routes.contact: (context) => Contact(),
             Routes.paymentHistory: (context) => PaymentHistory(),
             Routes.settings: (context) => SettingsWidget(),
+            Routes.listofuser: (context) => ListOfUserWidget(),
           });
     }
   }

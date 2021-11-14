@@ -244,7 +244,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.of(context).pop(),
                       if (widget.currentView != "User List")
                         {
-                          /*Navigator.pushNamed(context, Routes.about)*/
+                          Navigator.pushNamed(context, Routes.listofuser)
                         }
                     }),
             _createDrawerItem(
