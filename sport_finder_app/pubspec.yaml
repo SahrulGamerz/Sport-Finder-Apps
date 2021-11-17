@@ -56,6 +56,7 @@ dependencies:
   emoji_picker_flutter: ^1.0.7
   http_auth: ^1.0.1
   webview_flutter: ^2.1.2
+  flowder: ^0.2.0
 
 dev_dependencies:
   flutter_native_splash: ^1.2.1

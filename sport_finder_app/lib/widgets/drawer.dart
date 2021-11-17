@@ -254,7 +254,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.of(context).pop(),
                       if (widget.currentView != "Booking List")
                         {
-                          /*Navigator.pushNamed(context, Routes.about)*/
+                          Navigator.pushNamed(context, Routes.bookingList)
                         }
                     }),
             _createDrawerItem(
@@ -264,9 +264,19 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.of(context).pop(),
                       if (widget.currentView != "Create Booking Form")
                         {
-                          /*Navigator.pushNamed(context, Routes.about)*/
+                          Navigator.pushNamed(context, Routes.createBooking)
                         }
                     }),
+            _createDrawerItem(
+                icon: Icons.summarize,
+                text: "Generate Report",
+                onTap: () => {
+                  Navigator.of(context).pop(),
+                  if (widget.currentView != "Generate Report Form")
+                    {
+                      Navigator.pushNamed(context, Routes.generateReport)
+                    }
+                }),
             // Logout
             Divider(
               color: Colors.grey,
@@ -294,7 +304,7 @@ class _AppDrawerState extends State<AppDrawer> {
               color: Colors.grey,
             ),
             ListTile(
-              title: Text('Current Sprint: 2 - Admin'),
+              title: Text('Current Sprint: 3 - Admin'),
               onTap: () {},
             ),
           ],
@@ -381,7 +391,7 @@ class _AppDrawerState extends State<AppDrawer> {
               color: Colors.grey,
             ),
             ListTile(
-              title: Text('Current Sprint: 2'),
+              title: Text('Current Sprint: 3'),
               onTap: () {},
             ),
           ],

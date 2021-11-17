@@ -127,7 +127,7 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
                       child: Text(
-                        'Your Game',
+                        'Game Details',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           color: Color(0xFF8B97A2),
@@ -202,7 +202,7 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         20, 0, 0, 0),
                                     child: Text(
-                                      'Your Game',
+                                      'Game Type',
                                       style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: Color(0xFF8B97A2),

@@ -1,44 +1,40 @@
+import 'dart:core';
+
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
+import 'package:awesome_dropdown/awesome_dropdown.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:awesome_dropdown/awesome_dropdown.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:time_picker_widget/time_picker_widget.dart';
-import '../../../models/globalVariables.dart' as userDataClass;
+import 'package:sport_finder_app/models/globalVariables.dart' as globalVariables;
 
-class CreateWidget extends StatefulWidget {
-  const CreateWidget({Key? key}) : super(key: key);
+class CreateBookingWidget extends StatefulWidget {
+  CreateBookingWidget({Key? key}) : super(key: key);
+  static const routeName = "/admin/booking/create";
 
   @override
-  _CreateWidgetState createState() => _CreateWidgetState();
+  _CreateBookingWidgetState createState() => _CreateBookingWidgetState();
 }
 
-class _CreateWidgetState extends State<CreateWidget> {
-  late String dropDownValue1;
-  late String dropDownValue2;
-  late String dropDownValue3;
-  late String _selectedItem;
-  late String _selectedItem1;
-  late String _selectedItem2;
+class _CreateBookingWidgetState extends State<CreateBookingWidget> {
   late TextEditingController textController1;
   late TextEditingController textController2;
   late TextEditingController textController3;
   late bool _isDropDownOpened;
   late bool _isDropDownOpened1;
-  late bool _isDropDownOpened2;
   late bool _isBackPressedOrTouchedOutSide;
   late bool _isBackPressedOrTouchedOutSide1;
-  late bool _isBackPressedOrTouchedOutSide2;
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   late FToast fToast;
   late DateTime time1;
   late DateTime time2;
   DateTime now = new DateTime.now();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
   bool btnOnce = true;
+  late String _selectedItem;
+  late String _selectedItem1;
 
   @override
   void initState() {
@@ -48,22 +44,14 @@ class _CreateWidgetState extends State<CreateWidget> {
     textController3 = TextEditingController();
     _selectedItem = "Badminton";
     _selectedItem1 = 'Proshuttle Balakong Badminton Court';
-    _selectedItem2 = "2";
     time1 = now;
     time2 = now;
     fToast = FToast();
     fToast.init(context);
   }
 
-  List searchParamMaker(params) {
-    List query = [];
-    for (int i = 1; i < params.length + 1; i++) {
-      query.add(params.substring(0, i));
-    }
-    return query;
-  }
-
-  _showToastSuccess() {
+  _showToastSuccess(BuildContext context) {
+    fToast.init(context);
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
@@ -77,7 +65,7 @@ class _CreateWidgetState extends State<CreateWidget> {
           SizedBox(
             width: 12.0,
           ),
-          Text("Game created successfully!"),
+          Text("Booking created successfully!"),
         ],
       ),
     );
@@ -127,7 +115,7 @@ class _CreateWidgetState extends State<CreateWidget> {
         centerTitle: true,
         automaticallyImplyLeading: true,
         title: Text(
-          'Create Game',
+          'CREATE BOOKING',
           textAlign: TextAlign.start,
           style: TextStyle(
             fontFamily: 'Ubuntu',
@@ -229,52 +217,6 @@ class _CreateWidgetState extends State<CreateWidget> {
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
                         child: Text(
-                          'Players',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            color: Color(0xFF8B97A2),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
-              child: AwesomeDropDown(
-                isPanDown: false,
-                dropDownList: ['2', '3', '4'],
-                dropDownIcon: Icon(
-                  Icons.arrow_drop_down,
-                  color: Colors.grey,
-                  size: 23,
-                ),
-                selectedItem: _selectedItem2,
-                onDropDownItemClick: (selectedItem) {
-                  _selectedItem2 = selectedItem;
-                },
-                dropStateChanged: (isOpened) {
-                  _isDropDownOpened2 = isOpened;
-                  if (!isOpened) {
-                    _isBackPressedOrTouchedOutSide2 = false;
-                  }
-                },
-              ),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
-                        child: Text(
                           'Date',
                           style: TextStyle(
                             fontFamily: 'Montserrat',
@@ -331,7 +273,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                           ),
                         ),
                         contentPadding:
-                            EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
+                        EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
                         prefixIcon: Icon(
                           Icons.keyboard_arrow_down,
                         ),
@@ -371,8 +313,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
+                            padding: EdgeInsetsDirectional.fromSTEB(20, 16, 0, 0),
                             child: Text(
                               'Time',
                               style: TextStyle(
@@ -403,25 +344,25 @@ class _CreateWidgetState extends State<CreateWidget> {
                           },
                           initialTime: TimeOfDay(hour: 10, minute: 0),
                           selectableTimePredicate: (time) =>
-                              time!.hour >= 10 &&
+                          time!.hour >= 10 &&
                               time.hour <= 19 &&
                               time.minute % 30 ==
                                   0).then((time) => setState(() {
-                            textController2.text = time!.format(context);
-                            DateTime timeOne;
-                            if (textController2.text.contains("AM") ||
-                                textController2.text.contains("PM")) {
-                              timeOne =
-                                  DateFormat.jm().parse(textController2.text);
-                            } else {
-                              timeOne =
-                                  DateFormat.Hm().parse(textController2.text);
-                            }
-                            time1 = DateTime.parse(
-                                DateFormat('yyyy-MM-dd').format(now) +
-                                    ' ' +
-                                    DateFormat('HH:mm:ss').format(timeOne));
-                          })),
+                        textController2.text = time!.format(context);
+                        DateTime timeOne;
+                        if (textController2.text.contains("AM") ||
+                            textController2.text.contains("PM")) {
+                          timeOne =
+                              DateFormat.jm().parse(textController2.text);
+                        } else {
+                          timeOne =
+                              DateFormat.Hm().parse(textController2.text);
+                        }
+                        time1 = DateTime.parse(
+                            DateFormat('yyyy-MM-dd').format(now) +
+                                ' ' +
+                                DateFormat('HH:mm:ss').format(timeOne));
+                      })),
                       child: TextFormField(
                         controller: textController2,
                         readOnly: true,
@@ -455,7 +396,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                             ),
                           ),
                           contentPadding:
-                              EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
+                          EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
                           prefixIcon: Icon(
                             Icons.keyboard_arrow_down,
                           ),
@@ -481,25 +422,25 @@ class _CreateWidgetState extends State<CreateWidget> {
                           },
                           initialTime: TimeOfDay(hour: 11, minute: 0),
                           selectableTimePredicate: (time) =>
-                              time!.hour >= 11 &&
+                          time!.hour >= 11 &&
                               time.hour <= 20 &&
                               time.minute % 30 ==
                                   0).then((time) => setState(() {
-                            textController3.text = time!.format(context);
-                            DateTime timeOne;
-                            if (textController3.text.contains("AM") ||
-                                textController3.text.contains("PM")) {
-                              timeOne =
-                                  DateFormat.jm().parse(textController3.text);
-                            } else {
-                              timeOne =
-                                  DateFormat.Hm().parse(textController3.text);
-                            }
-                            time2 = DateTime.parse(
-                                DateFormat('yyyy-MM-dd').format(now) +
-                                    ' ' +
-                                    DateFormat('HH:mm:ss').format(timeOne));
-                          })),
+                        textController3.text = time!.format(context);
+                        DateTime timeOne;
+                        if (textController3.text.contains("AM") ||
+                            textController3.text.contains("PM")) {
+                          timeOne =
+                              DateFormat.jm().parse(textController3.text);
+                        } else {
+                          timeOne =
+                              DateFormat.Hm().parse(textController3.text);
+                        }
+                        time2 = DateTime.parse(
+                            DateFormat('yyyy-MM-dd').format(now) +
+                                ' ' +
+                                DateFormat('HH:mm:ss').format(timeOne));
+                      })),
                       child: TextFormField(
                         controller: textController3,
                         readOnly: true,
@@ -533,7 +474,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                             ),
                           ),
                           contentPadding:
-                              EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
+                          EdgeInsetsDirectional.fromSTEB(0, 14, 0, 0),
                           prefixIcon: Icon(
                             Icons.keyboard_arrow_down,
                           ),
@@ -550,7 +491,7 @@ class _CreateWidgetState extends State<CreateWidget> {
               ],
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
+              padding: EdgeInsetsDirectional.fromSTEB(0, 90, 0, 0),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -586,60 +527,82 @@ class _CreateWidgetState extends State<CreateWidget> {
                       }
                       if (btnOnce) {
                         btnOnce = !btnOnce;
+                        QuerySnapshot court = await FirebaseFirestore.instance.collection('locations').where('court_name', isEqualTo: _selectedItem1).get();
+                        int pph = 0;
+                        String cid = "";
+                        print(court.docs);
+                        court.docs.forEach((doc){
+                          Map<String, dynamic> court = doc.data() as Map<String, dynamic>;
+                          pph = int.parse(court['price_per_hour']);
+                          cid = doc.id;
+                          print(cid);
+                          print(pph);
+                        });
+                        final hours = time2.difference(time1).inHours;
+                        final tp = hours * pph;
                         startLoading();
-                        List param = [
-                          userDataClass.username.toLowerCase(),
-                          _selectedItem1.toLowerCase(),
-                          _selectedItem.toLowerCase()
-                        ];
-                        List searchParam = [];
-                        for (int i = 0; i < param.length; i++) {
-                          searchParam =
-                              searchParam + searchParamMaker(param[i]);
+
+                        // Create Booking
+                        CollectionReference booking =
+                        FirebaseFirestore.instance.collection('booking');
+                        final bookID = await booking.add({
+                          "court_id": cid,
+                          "date": DateTime.now(),
+                          "end_date_time": time2,
+                          "gameType": _selectedItem,
+                          "game_id": "",
+                          "payment_id": "Cash",
+                          "start_date_time": time1,
+                          "status": "booked",
+                          "total_price": tp,
+                          "uid": globalVariables.uid,
+                        });
+                        if(bookID.id != ""){
+                          CollectionReference sales =
+                          FirebaseFirestore.instance.collection('sales');
+                          await sales
+                              .doc(cid)
+                              .update({
+                            'sales.${time1.year}.${time1.month}':
+                            FieldValue.arrayUnion([
+                              {
+                                'date': DateTime.now(),
+                                'total_price': tp.toString(),
+                              },
+                            ]),
+                          }).then((value){
+                            print("Update Success");
+                          }).catchError((error) async {
+                            print("Failed to update sales: $error");
+                            await sales
+                                .doc(cid)
+                                .set({
+                              'sales': {
+                                '${time1.year}': {
+                                  '${time1.month}':
+                                  [
+                                    {
+                                      'date': DateTime.now(),
+                                      'total_price':
+                                      tp.toString(),
+                                    },
+                                  ]
+                                }
+                              },
+                            }).then((value) => print(
+                                "Update Success")
+                            ).catchError((error) =>
+                                print("Failed to update sales: $error")
+                            );
+                          });
+                          _showToastSuccess(context);
+                          stopLoading();
+                          Navigator.pop(context);
+                        }else{
+                          _showToastWarning(
+                              context, "Failed to create booking!");
+                          stopLoading();
                         }
-                        // Create game
-                        CollectionReference games =
-                            firestore.collection('games');
-                        final gameId = await games.add({
-                          "game_finish": "false",
-                          "game_full": "false",
-                          'booked': false,
-                          "joined": [userDataClass.uid],
-                          "gameDetails": {
-                            "court_name": _selectedItem1,
-                            "date": time1,
-                            "to": time2,
-                            "gameType": _selectedItem,
-                            "slots": _selectedItem2,
-                          },
-                          "creator": {
-                            "uid": userDataClass.uid,
-                          },
-                          "search_param": searchParam,
-                        });
-                        // Create message
-                        DocumentReference msgRef =
-                            firestore.collection('messages').doc(gameId.id);
-                        await msgRef.set({
-                          "chatName": "${userDataClass.username} games",
-                          "last_message":
-                              "${userDataClass.username} created the game!",
-                          "last_updated": DateTime.now(),
-                          "users": [userDataClass.uid]
-                        });
-                        // Create sub message
-                        CollectionReference msgRef1 = firestore
-                            .collection('messages')
-                            .doc(gameId.id)
-                            .collection('messages');
-                        await msgRef1.doc().set({
-                          'uid': userDataClass.uid,
-                          "timestamp": DateTime.now(),
-                          "msg": "${userDataClass.username} created the game!",
-                        });
-                        _showToastSuccess();
-                        stopLoading();
-                        Navigator.pop(context);
                         return;
                       }
                       _showToastWarning(

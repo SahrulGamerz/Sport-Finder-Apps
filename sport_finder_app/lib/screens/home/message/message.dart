@@ -320,6 +320,7 @@ class _MessageState extends State<Message> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
+                width: MediaQuery.of(context).size.width * 0.6,
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(20),
@@ -329,7 +330,6 @@ class _MessageState extends State<Message> {
                   padding: EdgeInsetsDirectional.fromSTEB(10, 5, 10, 5),
                   child: Text(
                     data['msg'],
-                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Poppins',
@@ -388,6 +388,7 @@ class _MessageState extends State<Message> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Container(
+                width: MediaQuery.of(context).size.width * 0.6,
                 decoration: BoxDecoration(
                   color: Color(0xFF404040),
                   borderRadius: BorderRadius.circular(20),
@@ -397,7 +398,6 @@ class _MessageState extends State<Message> {
                   padding: EdgeInsetsDirectional.fromSTEB(10, 5, 10, 5),
                   child: Text(
                     data['msg'],
-                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Poppins',

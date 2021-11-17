@@ -40,7 +40,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PaymentDetailsWidget(),
+                            builder: (context) => PaymentDetailsWidget(dataMap: dataMap),
                           ));
                     },
                     child: Container(
@@ -123,7 +123,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PaymentDetailsWidget(),
+                    builder: (context) => PaymentDetailsWidget(dataMap: dataMap),
                   ));
             },
             child: Container(
@@ -163,7 +163,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
                           Align(
                             alignment: AlignmentDirectional(2.64, 0.55),
                             child: Text(
-                              '${dataMap['court_name']}',
+                              '1 players, ${dataMap['court_name']}',
                               style:
                               TextStyle(
                                 fontFamily: 'Montserrat',
@@ -246,6 +246,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
                     }
                     Map<String, dynamic> data =
                     documentSnapshot.data() as Map<String, dynamic>;
+                    data['payment_history'] = data['payment_history'].reversed.toList();
                     if(data['payment_history'].length < 1 ) {
                       return Center(
                         child: Container(

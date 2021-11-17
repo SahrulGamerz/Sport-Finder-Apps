@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sport_finder_app/models/globalVariables.dart' as globalVariables;
 
-class PaymentDetailsWidget extends StatefulWidget {
+class BookingDetailsWidget extends StatefulWidget {
   final Map<String, dynamic> dataMap;
-  PaymentDetailsWidget({Key? key, required this.dataMap}) : super(key: key);
-  static const String routeName = '/settings/payment/history/details';
+  BookingDetailsWidget({Key? key, required this.dataMap}) : super(key: key);
+  static const String routeName = '/admin/booking/details';
 
   @override
-  _PaymentDetailsWidgetState createState() => _PaymentDetailsWidgetState();
+  _BookingDetailsWidgetState createState() => _BookingDetailsWidgetState();
 }
 
-class _PaymentDetailsWidgetState extends State<PaymentDetailsWidget> {
+class _BookingDetailsWidgetState extends State<BookingDetailsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Widget _buildPaymentDetails(BuildContext context){
+  Widget _buildBookingDetails(BuildContext context){
     if(widget.dataMap['game_id'] != ""){
       return new FutureBuilder(
           future: FirebaseFirestore.instance
@@ -371,18 +371,18 @@ class _PaymentDetailsWidgetState extends State<PaymentDetailsWidget> {
     }else{
       return new FutureBuilder(
           future: FirebaseFirestore.instance
-              .collection('booking')
-              .doc(widget.dataMap["bookID"])
+              .collection('locations')
+              .doc(widget.dataMap["court_id"])
               .get(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               DocumentSnapshot documentSnapshot =
               snapshot.data as DocumentSnapshot;
               try{
-                Map<String, dynamic> book =
+                Map<String, dynamic> court =
                 documentSnapshot.data() as Map<String, dynamic>;
-                DateTime date = book['start_date_time'].toDate();
-                DateTime date2 = book['end_date_time'].toDate();
+                DateTime date = widget.dataMap['start_date_time'].toDate();
+                DateTime date2 = widget.dataMap['end_date_time'].toDate();
                 return new FutureBuilder(
                     future: FirebaseFirestore.instance
                         .collection('users')
@@ -552,7 +552,7 @@ class _PaymentDetailsWidgetState extends State<PaymentDetailsWidget> {
                                                 padding:
                                                 EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
                                                 child: Text(
-                                                  '${widget.dataMap['court_name']}',
+                                                  '${court['court_name']}',
                                                   style: TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     color: Colors.black,
@@ -728,27 +728,27 @@ class _PaymentDetailsWidgetState extends State<PaymentDetailsWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        brightness: Brightness.dark,
-        iconTheme: IconThemeData(color: Colors.white),
-        centerTitle: true,
-        automaticallyImplyLeading: true,
-        title: Text(
-          'PAYMENT DETAIL',
-          textAlign: TextAlign.start,
-          style: TextStyle(
-            fontFamily: 'Ubuntu',
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+        key: scaffoldKey,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          brightness: Brightness.dark,
+          iconTheme: IconThemeData(color: Colors.white),
+          centerTitle: true,
+          automaticallyImplyLeading: true,
+          title: Text(
+            'BOOKING DETAIL',
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontFamily: 'Ubuntu',
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          actions: [],
+          elevation: 4,
         ),
-        actions: [],
-        elevation: 4,
-      ),
-      backgroundColor: Colors.white,
-      body: _buildPaymentDetails(context)
+        backgroundColor: Colors.white,
+        body: _buildBookingDetails(context)
     );
   }
 }

@@ -1,4 +1,7 @@
-import 'package:sport_finder_app/screens/admin/list_users.dart';
+import 'package:sport_finder_app/screens/admin/booking/create_booking_form.dart';
+import 'package:sport_finder_app/screens/admin/booking/list_booking.dart';
+import 'package:sport_finder_app/screens/admin/manageUsers/list_users.dart';
+import 'package:sport_finder_app/screens/admin/report/generateReport.dart';
 import 'package:sport_finder_app/screens/errors/loading.dart';
 import 'package:sport_finder_app/screens/home/about.dart';
 import 'package:sport_finder_app/screens/home/settings/payment/payment_history.dart';
@@ -20,4 +23,7 @@ class Routes {
   static const String paymentHistory = PaymentHistory.routeName;
   static const String settings = SettingsWidget.routeName;
   static const String listofuser = ListOfUserWidget.routeName;
+  static const String bookingList = ViewBookingWidget.routeName;
+  static const String createBooking = CreateBookingWidget.routeName;
+  static const String generateReport = GenerateReportWidget.routeName;
 }

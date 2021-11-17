@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io' as io;
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sport_finder_app/services/auth.dart';
 import 'package:sport_finder_app/widgets/drawer.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:http/http.dart' as http;
 
 class EditUser extends StatefulWidget {
   final Map<String, dynamic> userdata;
@@ -48,6 +51,8 @@ class _EditProfileState extends State<EditUser> {
   @override
   void initState() {
     super.initState();
+    backgroundImage = widget.userdata['background_image'];
+    profilePicture = widget.userdata['profile_picture'];
     username = TextEditingController();
     username.text = widget.userdata['username'];
     email = TextEditingController();
@@ -293,6 +298,26 @@ class _EditProfileState extends State<EditUser> {
     hasLowercase &
     hasSpecialCharacters &
     hasMinLength;
+  }
+
+  Future updatePassword(String password) async{
+    final resp = await http.post(
+      Uri.parse('https://accmngt.sfa.yewonkim.tk/admin/accmngt/changePassword'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'uid': widget.userdata['uid'],
+        'newPassword': password,
+      }),
+    );
+    Map<String, dynamic> status = jsonDecode(resp.body);
+    print(status['status']);
+    if(status['status'] == "Success"){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   Widget _editProfileStuff(BuildContext context) {
@@ -749,14 +774,26 @@ class _EditProfileState extends State<EditUser> {
                                         _buttonEnabled = true;
                                       }
                                     });
-                                bool result =
-                                await _auth.updateUserData(
-                                    username.text,
-                                    bio.text,
-                                    phoneNumber.text,
-                                    playerType.text,
-                                    profilePicture,
-                                    backgroundImage);
+                                bool result = false;
+                                try {
+                                    CollectionReference users = FirebaseFirestore.instance.collection('users');
+                                    await users
+                                        .doc(widget.userdata['uid'])
+                                        .update({
+                                      'username': username.text,
+                                      'profile_picture': profilePicture,
+                                      'background_image': backgroundImage,
+                                      'bio': bio.text,
+                                      'phoneNumber': phoneNumber.text,
+                                      'playerType': playerType.text,
+                                      'last_updated_at': DateTime.now(),
+                                    })
+                                        .then((value) => result = true)
+                                        .catchError((error) => result = false);
+                                } catch (e) {
+                                  print(e.toString());
+                                  return null;
+                                }
                                 print(result);
                                 if (result) {
                                   setState(() {
@@ -989,14 +1026,9 @@ class _EditProfileState extends State<EditUser> {
                                           _buttonEnabled = true;
                                         }
                                       });
-                                  dynamic result = await _auth
-                                      .changePassword(password.text);
+                                  dynamic result = await updatePassword(password.text);
                                   //print(result);
-                                  if (result == "ReLog") {
-                                    _showToastWarning(context,
-                                        "Please enter your credential and try again!");
-                                    stopLoading();
-                                  } else if (result) {
+                                  if (result) {
                                     _showToastSuccess(context,
                                         "Password changed successfully!");
                                     stopLoading();
@@ -1043,27 +1075,9 @@ class _EditProfileState extends State<EditUser> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-            child: IconButton(
-              onPressed: () {
-                print('IconButton pressed ...');
-              },
-              icon: Icon(
-                Icons.chat_bubble_outline_rounded,
-                color: Colors.white,
-                size: 25,
-              ),
-              iconSize: 25,
-            ),
-          )
-        ],
+        actions: [],
       ),
       backgroundColor: Colors.white,
-      drawer: AppDrawer(
-        currentView: 'editProfile',
-      ),
       body: _editProfileStuff(context),
     );
   }

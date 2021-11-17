@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sport_finder_app/models/user.dart';
 import 'package:sport_finder_app/routes/routes.dart';
-import 'package:sport_finder_app/screens/admin/list_users.dart';
+import 'package:sport_finder_app/screens/admin/manageUsers/list_users.dart';
 import 'package:sport_finder_app/screens/authenticate/authenticate.dart';
 
+import 'admin/booking/create_booking_form.dart';
+import 'admin/booking/list_booking.dart';
+import 'admin/report/generateReport.dart';
 import 'home/about.dart';
 import 'home/settings/payment/payment_history.dart';
 import 'home/settings/settings.dart';
@@ -39,6 +42,9 @@ class Wrapper extends StatelessWidget {
             Routes.paymentHistory: (context) => PaymentHistory(),
             Routes.settings: (context) => SettingsWidget(),
             Routes.listofuser: (context) => ListOfUserWidget(),
+            Routes.bookingList: (context) => ViewBookingWidget(),
+            Routes.createBooking: (context) => CreateBookingWidget(),
+            Routes.generateReport: (context) => GenerateReportWidget(),
           });
     }
   }

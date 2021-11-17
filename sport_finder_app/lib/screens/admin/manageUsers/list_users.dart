@@ -1,10 +1,11 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
-import 'package:sport_finder_app/screens/admin/edit_user.dart';
+import 'package:sport_finder_app/screens/admin/manageUsers/edit_user.dart';
+import 'package:http/http.dart' as http;
 
 class ListOfUserWidget extends StatefulWidget {
   ListOfUserWidget({Key? key}) : super(key: key);
@@ -18,12 +19,70 @@ class ListOfUserWidget extends StatefulWidget {
 class _ListOfUserWidgetState extends State<ListOfUserWidget> {
   late TextEditingController searchFieldController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late FToast fToast;
 
   @override
   void initState() {
     super.initState();
     searchFieldController = TextEditingController();
+    fToast = FToast();
+    fToast.init(context);
   }
+
+  _showToastSuccess(BuildContext context, String text) {
+    fToast.init(context);
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.greenAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check_circle_outline),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text(text),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+
+  _showToastError(BuildContext context, String text) {
+    fToast.init(context);
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check_circle_outline),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text(text),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+
   Future<void> _showChoiceDialog(BuildContext context, data) {
     return showDialog(
         context: context,
@@ -50,7 +109,7 @@ class _ListOfUserWidgetState extends State<ListOfUserWidget> {
                     },
                     title: Text("Edit"),
                     leading: Icon(
-                      Icons.account_box,
+                      Icons.edit,
                       color: Colors.blue,
                     ),
                   ),
@@ -59,12 +118,39 @@ class _ListOfUserWidgetState extends State<ListOfUserWidget> {
                     color: Colors.blue,
                   ),
                   ListTile(
-                    onTap: () {
-                     
+                    onTap: () async {
+                        final resp = await http.post(
+                          Uri.parse('https://accmngt.sfa.yewonkim.tk/admin/accmngt/delete'),
+                          headers: <String, String>{
+                            'Content-Type': 'application/json; charset=UTF-8',
+                          },
+                          body: jsonEncode(<String, String>{
+                            'uid': data['uid'],
+                          }),
+                        );
+                        Map<String, dynamic> status = jsonDecode(resp.body);
+                        print(status['status']);
+                        if(status['status'] == "Success"){
+                          CollectionReference users = FirebaseFirestore.instance.collection('users');
+                            users
+                            .doc(data['uid'])
+                            .delete()
+                            .then((value){
+                              print("User Deleted");
+                              _showToastSuccess(context, "User deleted successfully");
+                            })
+                            .catchError((error){
+                              print("Failed to delete user: $error");
+                              _showToastError(context, "Failed to delete userdata in Database");
+                            });
+                        }else{
+                          _showToastError(context, "Failed to delete user");
+                        }
+                        Navigator.pop(context);
                     },
                     title: Text("Delete"),
                     leading: Icon(
-                      Icons.camera,
+                      Icons.delete,
                       color: Colors.blue,
                     ),
                   ),
@@ -81,7 +167,7 @@ class _ListOfUserWidgetState extends State<ListOfUserWidget> {
     await _showChoiceDialog(context, data);
   },
       child: Padding(
-    padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
+    padding: EdgeInsetsDirectional.fromSTEB(8, 4, 8, 4),
     child: Container(
       height: 80,
       decoration: BoxDecoration(
@@ -118,7 +204,7 @@ class _ListOfUserWidgetState extends State<ListOfUserWidget> {
                   Align(
                     alignment: AlignmentDirectional(2.64, 0.55),
                     child: Text(
-                      '${DateFormat('dd/MM/yyyy').format(date)}',
+                      'Created At: ${DateFormat('dd/MM/yyyy').format(date)}',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Color(0xFF8B97A2),
@@ -135,7 +221,7 @@ class _ListOfUserWidgetState extends State<ListOfUserWidget> {
                 alignment: AlignmentDirectional(1, 0),
                 child: Padding(
                   padding:
-                  EdgeInsetsDirectional.fromSTEB(0, 0, 38, 0),
+                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                   child: Container(
                     width: 40,
                     height: 40,
@@ -166,7 +252,7 @@ class _ListOfUserWidgetState extends State<ListOfUserWidget> {
           iconTheme: IconThemeData(color: Colors.white),
           automaticallyImplyLeading: true,
           title: Text(
-            'VIEW LIST',
+            'USER LIST',
             textAlign: TextAlign.start,
             style: TextStyle(
               fontFamily: 'Ubuntu',
@@ -174,16 +260,7 @@ class _ListOfUserWidgetState extends State<ListOfUserWidget> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 14, 20, 0),
-              child: FaIcon(
-                FontAwesomeIcons.ellipsisV,
-                color: Colors.white,
-                size: 24,
-              ),
-            )
-          ],
+          actions: [],
           centerTitle: true,
           elevation: 4,
         ),
@@ -193,69 +270,6 @@ class _ListOfUserWidgetState extends State<ListOfUserWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(20, 10, 20, 0),
-                        child: TextFormField(
-                          onChanged: (_) => setState(() {}),
-                          controller: searchFieldController,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            labelText: 'Account Name',
-                            labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              color: Color(0xFF8B97A2),
-                              fontWeight: FontWeight.w500,
-                            ),
-                            hintText: 'Search by name, location etc...',
-                            hintStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              color: Color(0xFF8B97A2),
-                              fontWeight: FontWeight.w500,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            suffixIcon: searchFieldController.text.isNotEmpty
-                                ? InkWell(
-                              onTap: () =>
-                                  setState(
-                                        () => searchFieldController.clear(),
-                                  ),
-                              child: Icon(
-                                Icons.clear,
-                                color: Color(0xFF8B97A2),
-                                size: 22,
-                              ),
-                            )
-                                : null,
-                          ),
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            color: Color(0xFF8B97A2),
-                            fontWeight: FontWeight.w500,
-                          ),
-                          keyboardType: TextInputType.name,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -272,47 +286,48 @@ class _ListOfUserWidgetState extends State<ListOfUserWidget> {
                     )
                   ],
                 ),
-                Flexible(child:PaginateFirestore(
-                  //item builder type is compulsory.
-                  itemBuilder: (index, context, documentSnapshot) {
-                    final data = documentSnapshot.data() as Map<String, dynamic>;
-                    if (data != null) {
-                      return build_ListOfUser(
-                          context: context,
-                          data: data,
-                          id: documentSnapshot.id,);
-                    } else {
-                      print(data);
-                      return Text(
-                        "You didn't have any user",
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: Color(0xFF8B97A2),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      );
-                    }
-                  },
-                  // orderBy is compulsory to enable pagination
-                  query: FirebaseFirestore.instance
-                      .collection("users")
-                      .orderBy("created_at"),
-                  //Change types accordingly
-                  itemBuilderType: PaginateBuilderType.listView,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  emptyDisplay: Text(
-                    "You didn't have any user",
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      color: Color(0xFF8B97A2),
-                      fontWeight: FontWeight.w500,
+                Flexible(
+                  child:PaginateFirestore(
+                    //item builder type is compulsory.
+                    itemBuilder: (index, context, documentSnapshot) {
+                      final data = documentSnapshot.data() as Map<String, dynamic>;
+                      if (data != null) {
+                        return build_ListOfUser(
+                            context: context,
+                            data: data,
+                            id: documentSnapshot.id,);
+                      } else {
+                        print(data);
+                        return Text(
+                          "You didn't have any user",
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Color(0xFF8B97A2),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        );
+                      }
+                    },
+                    // orderBy is compulsory to enable pagination
+                    query: FirebaseFirestore.instance
+                        .collection("users")
+                        .orderBy("created_at", descending: true),
+                    //Change types accordingly
+                    itemBuilderType: PaginateBuilderType.listView,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    emptyDisplay: Text(
+                      "You didn't have any user",
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Color(0xFF8B97A2),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
+                    // to fetch real-time data
+                    isLive: true,
                   ),
-                  // to fetch real-time data
-                  isLive: true,
-                ),
-                    )
+                )
               ],
             ),
           ),

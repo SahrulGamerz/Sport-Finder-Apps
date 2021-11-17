@@ -121,6 +121,7 @@ class _MessageListState extends State<MessageList> {
                                 alignment: AlignmentDirectional(-0.93, 0.55),
                                 child: Text(
                                   msg,
+                                  overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     fontFamily: 'Montserrat',

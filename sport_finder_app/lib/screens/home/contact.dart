@@ -138,22 +138,7 @@ class _ContactState extends State<Contact> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-            child: IconButton(
-              onPressed: () {
-                print('IconButton pressed ...');
-              },
-              icon: Icon(
-                Icons.chat_bubble_outline_rounded,
-                color: Colors.white,
-                size: 25,
-              ),
-              iconSize: 25,
-            ),
-          )
-        ],
+        actions: [],
       ),
       drawer: AppDrawer(currentView: 'Contact'),
       body: SafeArea(
