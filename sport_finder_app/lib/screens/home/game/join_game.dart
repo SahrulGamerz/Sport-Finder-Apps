@@ -70,6 +70,21 @@ class _JoinGameWidgetState extends State<JoinGameWidget> {
           print("Failed to update msg: $error");
         });
 
+    //check slots
+    DocumentSnapshot game = await firestore.collection('games').doc(widget.id).get();
+    Map<String, dynamic> gameData = game.data() as Map<String, dynamic>;
+    Map<String, dynamic> gameDetails = gameData['gameDetails'] as Map<String, dynamic>;
+    if(gameData['joined'].length.toString() == gameDetails['slots'].toString()) {
+      DocumentReference games = firestore.collection('games').doc(widget.id);
+      await games.update({
+        "game_full": "true",
+      });
+    }else{
+      DocumentReference games = firestore.collection('games').doc(widget.id);
+      await games.update({
+        "game_full": "false",
+      });
+    }
     return;
   }
 

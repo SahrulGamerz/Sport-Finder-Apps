@@ -35,7 +35,7 @@ class _BookingDetailsWidgetState extends State<BookingDetailsWidget> {
               return new FutureBuilder(
                   future: FirebaseFirestore.instance
                       .collection('users')
-                      .doc(globalVariables.uid)
+                      .doc(widget.dataMap['uid'])
                       .get(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
@@ -386,7 +386,7 @@ class _BookingDetailsWidgetState extends State<BookingDetailsWidget> {
                 return new FutureBuilder(
                     future: FirebaseFirestore.instance
                         .collection('users')
-                        .doc(globalVariables.uid)
+                        .doc(widget.dataMap["uid"])
                         .get(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {

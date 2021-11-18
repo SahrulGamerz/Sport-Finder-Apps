@@ -78,117 +78,223 @@ class _HomeState extends State<Home> {
           if (snapshot.hasData) {
             DocumentSnapshot documentSnapshot =
                 snapshot.data as DocumentSnapshot;
-            Map<String, dynamic> user =
-                documentSnapshot.data() as Map<String, dynamic>;
+            try{
+              Map<String, dynamic> user =
+              documentSnapshot.data() as Map<String, dynamic>;
 
-            return Padding(
-              padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
-              child: InkWell(
-                // When the user taps the button, show a snackbar.
-                onTap: () {
-                  if (data['joined'].contains(uid)) {
-                    type = 0;
-                  }
-                  if (type == 0) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => YourGameWidget(
-                            id: id,
-                            data: data,
-                          ),
-                        ));
-                  } else {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              JoinGameWidget(id: id, data: data),
-                        ));
-                  }
-                  /*ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              return Padding(
+                padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                child: InkWell(
+                  // When the user taps the button, show a snackbar.
+                  onTap: () {
+                    if (data['joined'].contains(uid)) {
+                      type = 0;
+                    }
+                    if (type == 0) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => YourGameWidget(
+                              id: id,
+                              data: data,
+                            ),
+                          ));
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                JoinGameWidget(id: id, data: data),
+                          ));
+                    }
+                    /*ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Game ID: " + id),
                   ));*/
-                },
-                child: Container(
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    color: Colors.white,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
+                  },
+                  child: Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment(-0.1, -0.5),
-                                child: Text(
-                                  gameDetails["gameType"].toUpperCase(),
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Color(0xFF15212B),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
+                    child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      color: Colors.white,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                            child: Stack(
+                              children: [
+                                Align(
+                                  alignment: Alignment(-0.1, -0.5),
+                                  child: Text(
+                                    gameDetails["gameType"].toUpperCase(),
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      color: Color(0xFF15212B),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Align(
-                                alignment: Alignment(2.64, 0.55),
-                                child: Text(
-                                  '${gameDetails["slots"]} Players, ${gameDetails["court_name"]}',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Color(0xFF8B97A2),
-                                    fontWeight: FontWeight.w500,
+                                Align(
+                                  alignment: Alignment(2.64, 0.55),
+                                  child: Text(
+                                    '${gameDetails["slots"]} Players, ${gameDetails["court_name"]}',
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      color: Color(0xFF8B97A2),
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Align(
-                            alignment: Alignment(1, 0),
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.network(
-                                '${user["profile_picture"]}',
+                          Expanded(
+                            flex: 2,
+                            child: Align(
+                              alignment: Alignment(1, 0),
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Image.network(
+                                  '${user["profile_picture"]}',
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                          child: Text(
-                            '${data["joined"].length} / ${gameDetails["slots"]}',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              color: Color(0xFF8B97A2),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: Text(
+                              '${data["joined"].length} / ${gameDetails["slots"]}',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                color: Color(0xFF8B97A2),
+                              ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
+              );
+            }catch (e) {
+              return Padding(
+                padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                child: InkWell(
+                  // When the user taps the button, show a snackbar.
+                  onTap: () {
+                    if (data['joined'].contains(uid)) {
+                      type = 0;
+                    }
+                    if (type == 0) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => YourGameWidget(
+                              id: id,
+                              data: data,
+                            ),
+                          ));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: Game creator has been deleted!")));
+                    }
+                    /*ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("Game ID: " + id),
+                  ));*/
+                  },
+                  child: Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      color: Colors.white,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                            child: Stack(
+                              children: [
+                                Align(
+                                  alignment: Alignment(-0.1, -0.5),
+                                  child: Text(
+                                    gameDetails["gameType"].toUpperCase(),
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      color: Color(0xFF15212B),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment(2.64, 0.55),
+                                  child: Text(
+                                    '${gameDetails["slots"]} Players, ${gameDetails["court_name"]}',
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      color: Color(0xFF8B97A2),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Align(
+                              alignment: Alignment(1, 0),
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Image.network(
+                                  'https://www.globalsign.com/application/files/9516/0389/3750/What_Is_an_SSL_Common_Name_Mismatch_Error_-_Blog_Image.jpg',
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: Text(
+                              '${data["joined"].length} / ${gameDetails["slots"]}',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                color: Color(0xFF8B97A2),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
           } else if (snapshot.hasError) {
             return new Text("An error occurred, Please try again!");
           }

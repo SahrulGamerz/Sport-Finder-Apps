@@ -55,7 +55,7 @@ dependencies:
   awesome_dropdown: ^0.0.4
   emoji_picker_flutter: ^1.0.7
   http_auth: ^1.0.1
-  webview_flutter: ^2.1.2
+  webview_flutter: ^2.3.1
   flowder: ^0.2.0
 
 dev_dependencies:

@@ -26,7 +26,7 @@ class _GenerateReportWidgetState extends State<GenerateReportWidget> {
   DateTime date = DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
   bool _btnOnce = false;
-  String status = "Status: Ready";
+  String status = "Status: Please click generate button";
   String fileName = "";
   String remotePDFpath = "";
   late DownloaderUtils options;
@@ -296,7 +296,7 @@ class _GenerateReportWidgetState extends State<GenerateReportWidget> {
                               _btnOnce = false;
                               if(fileName != ""){
                                 setState(() {
-                                  status = "Status: File Ready!";
+                                  status = "Status: File Ready To Download!";
                                 });
                               }else{
                                 setState(() {

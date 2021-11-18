@@ -797,10 +797,8 @@ class _EditProfileState extends State<EditUser> {
                                 print(result);
                                 if (result) {
                                   setState(() {
-                                    timestampPP = DateTime.now()
-                                        .millisecondsSinceEpoch;
-                                    timestampBG = DateTime.now()
-                                        .millisecondsSinceEpoch;
+                                    timestampPP = DateTime.now().millisecondsSinceEpoch;
+                                    timestampBG = DateTime.now().millisecondsSinceEpoch;
                                   });
                                   _showToastSuccess(context,
                                       "Profile updated successfully!");

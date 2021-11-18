@@ -628,6 +628,7 @@ class _ViewCourtWidgetState extends State<ViewCourtWidget> {
                           if (paymentId != '')
                             _showToastSuccess(context,
                                 'Payment has been received!\nPayment ID: $paymentId');
+                          Navigator.pop(context);
                         });
                         stopLoading();
                       },

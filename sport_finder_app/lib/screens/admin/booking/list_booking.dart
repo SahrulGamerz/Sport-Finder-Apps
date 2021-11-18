@@ -252,6 +252,126 @@ class _ViewBookingWidgetState extends State<ViewBookingWidget> {
         });
   }
 
+  Future<void> _showChoiceDialogDeletedUser(BuildContext context, data, bookID) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "Choose option",
+              style: TextStyle(color: Colors.blue),
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  ListTile(
+                    onTap: () async {
+                      CollectionReference booking = FirebaseFirestore.instance.collection('booking');
+                      booking
+                          .doc(bookID)
+                          .delete()
+                          .then((value){
+                        print("Booking Deleted");
+                      })
+                          .catchError((error){
+                        print("Failed to delete booking: $error");
+                        _showToastError(context, "Failed to delete booking in Database");
+                      });
+                      if(data['game_id'] != ""){
+                        // Send message
+                        CollectionReference msgSRef = FirebaseFirestore.instance
+                            .collection(
+                            'messages')
+                            .doc(data['game_id'])
+                            .collection(
+                            "messages");
+                        await msgSRef
+                            .doc()
+                            .set({
+                          'uid': globalVariables
+                              .uid,
+                          "timestamp":
+                          DateTime
+                              .now(),
+                          "msg":
+                          "Administrator has deleted the booking!",
+                        })
+                            .then(
+                                (value) =>
+                            {
+                              print("Message sent")
+                            })
+                            .catchError(
+                                (error) {
+                              print(
+                                  "Failed to send msg: $error");
+                            });
+
+                        //update message
+                        CollectionReference
+                        msgIRef =
+                        FirebaseFirestore.instance
+                            .collection(
+                            'messages');
+                        await msgIRef
+                            .doc(data['game_id'])
+                            .update({
+                          "last_updated":
+                          DateTime
+                              .now(),
+                          "last_message":
+                          "Administrator has deleted the booking!",
+                        })
+                            .then(
+                                (value) =>
+                            {
+                              print("Message Update")
+                            })
+                            .catchError(
+                                (error) {
+                              print(
+                                  "Failed to update msg: $error");
+                            });
+
+                        //update game details
+                        DocumentReference
+                        games =
+                        FirebaseFirestore.instance
+                            .collection(
+                            'games')
+                            .doc(data['game_id']);
+                        await games
+                            .update({
+                          'booked':
+                          false,
+                        })
+                            .then(
+                                (value) =>
+                            {
+                              print("Games Update")
+                            })
+                            .catchError(
+                                (error) {
+                              print(
+                                  "Failed to update msg: $error");
+                            });
+                      }
+                      _showToastSuccess(context, "Booking deleted successfully");
+                      Navigator.pop(context);
+                    },
+                    title: Text("Delete"),
+                    leading: Icon(
+                      Icons.delete,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   Widget _buildBookingList(
       {required BuildContext context,
       required Map<String, dynamic> data,
@@ -266,110 +386,216 @@ class _ViewBookingWidgetState extends State<ViewBookingWidget> {
             if (snapshot.hasData) {
               DocumentSnapshot documentSnapshot =
                   snapshot.data as DocumentSnapshot;
-              Map<String, dynamic> user =
-                  documentSnapshot.data() as Map<String, dynamic>;
-              DateTime date = data['start_date_time'].toDate();
-              DateTime date2 = data['end_date_time'].toDate();
-              return new FutureBuilder(
-                  future: FirebaseFirestore.instance
-                      .collection('games')
-                      .doc(data["game_id"])
-                      .get(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      DocumentSnapshot documentSnapshot =
-                          snapshot.data as DocumentSnapshot;
-                      Map<String, dynamic> game =
-                          documentSnapshot.data() as Map<String, dynamic>;
-                      Map<String, dynamic> gameDetails =
-                          game['gameDetails'] as Map<String, dynamic>;
-                      return InkWell(
-                          onTap: () async {
-                            await _showChoiceDialog(context, data, id);
-                          },
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(8, 4, 8, 4),
-                            child: Container(
-                              height: 80,
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Card(
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                color: Colors.white,
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
+              try{
+                Map<String, dynamic> user =
+                documentSnapshot.data() as Map<String, dynamic>;
+                DateTime date = data['start_date_time'].toDate();
+                DateTime date2 = data['end_date_time'].toDate();
+                return new FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection('games')
+                        .doc(data["game_id"])
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        DocumentSnapshot documentSnapshot =
+                        snapshot.data as DocumentSnapshot;
+                        Map<String, dynamic> game =
+                        documentSnapshot.data() as Map<String, dynamic>;
+                        Map<String, dynamic> gameDetails =
+                        game['gameDetails'] as Map<String, dynamic>;
+                        return InkWell(
+                            onTap: () async {
+                              await _showChoiceDialog(context, data, id);
+                            },
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(8, 4, 8, 4),
+                              child: Container(
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
                                   borderRadius: BorderRadius.circular(16),
                                 ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          16, 0, 0, 0),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: AlignmentDirectional(
-                                                -0.1, -0.5),
-                                            child: Text(
-                                              '${user['username']}',
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                color: Color(0xFF15212B),
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500,
+                                child: Card(
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  color: Colors.white,
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            16, 0, 0, 0),
+                                        child: Stack(
+                                          children: [
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  -0.1, -0.5),
+                                              child: Text(
+                                                '${user['username']}',
+                                                style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  color: Color(0xFF15212B),
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Align(
-                                            alignment: AlignmentDirectional(
-                                                2.64, 0.55),
-                                            child: Text(
-                                              '${gameDetails['slots']} Players, ${DateFormat.jm().format(date)} - ${DateFormat.jm().format(date2)}',
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                color: Color(0xFF8B97A2),
-                                                fontWeight: FontWeight.w500,
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  2.64, 0.55),
+                                              child: Text(
+                                                '${gameDetails['slots']} Players, ${DateFormat.jm().format(date)} - ${DateFormat.jm().format(date2)}',
+                                                style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  color: Color(0xFF8B97A2),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        ],
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Align(
-                                        alignment: AlignmentDirectional(1, 0),
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 0, 38, 0),
-                                          child: Container(
-                                            width: 40,
-                                            height: 40,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Image.network(
-                                              '${user['profile_picture']}',
+                                      Expanded(
+                                        flex: 2,
+                                        child: Align(
+                                          alignment: AlignmentDirectional(1, 0),
+                                          child: Padding(
+                                            padding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0, 0, 38, 0),
+                                            child: Container(
+                                              width: 40,
+                                              height: 40,
+                                              clipBehavior: Clip.antiAlias,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Image.network(
+                                                '${user['profile_picture']}',
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ));
-                    } else if (snapshot.hasError) {
-                      return new Text("An error occurred, Please try again!");
-                    }
-                    return new LinearProgressIndicator();
-                  });
+                            ));
+                      } else if (snapshot.hasError) {
+                        return new Text("An error occurred, Please try again!");
+                      }
+                      return new LinearProgressIndicator();
+                    });
+              }catch (e){
+                DateTime date = data['start_date_time'].toDate();
+                DateTime date2 = data['end_date_time'].toDate();
+                return new FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection('games')
+                        .doc(data["game_id"])
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        DocumentSnapshot documentSnapshot =
+                        snapshot.data as DocumentSnapshot;
+                        Map<String, dynamic> game =
+                        documentSnapshot.data() as Map<String, dynamic>;
+                        Map<String, dynamic> gameDetails =
+                        game['gameDetails'] as Map<String, dynamic>;
+                        return InkWell(
+                            onTap: () async {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: Booking creator has been deleted!")));
+                              _showChoiceDialogDeletedUser(context, data, id);
+                            },
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(8, 4, 8, 4),
+                              child: Container(
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Card(
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  color: Colors.white,
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            16, 0, 0, 0),
+                                        child: Stack(
+                                          children: [
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  -0.1, -0.5),
+                                              child: Text(
+                                                'Deleted User',
+                                                style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  color: Color(0xFF15212B),
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  2.64, 0.55),
+                                              child: Text(
+                                                '${gameDetails['slots']} Players, ${DateFormat.jm().format(date)} - ${DateFormat.jm().format(date2)}',
+                                                style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  color: Color(0xFF8B97A2),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Align(
+                                          alignment: AlignmentDirectional(1, 0),
+                                          child: Padding(
+                                            padding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0, 0, 38, 0),
+                                            child: Container(
+                                              width: 40,
+                                              height: 40,
+                                              clipBehavior: Clip.antiAlias,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Image.network(
+                                                'https://www.globalsign.com/application/files/9516/0389/3750/What_Is_an_SSL_Common_Name_Mismatch_Error_-_Blog_Image.jpg',
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ));
+                      } else if (snapshot.hasError) {
+                        return new Text("An error occurred, Please try again!");
+                      }
+                      return new LinearProgressIndicator();
+                    });
+              }
             } else if (snapshot.hasError) {
               return new Text("An error occurred, Please try again!");
             }
@@ -385,92 +611,180 @@ class _ViewBookingWidgetState extends State<ViewBookingWidget> {
             if (snapshot.hasData) {
               DocumentSnapshot documentSnapshot =
                   snapshot.data as DocumentSnapshot;
-              Map<String, dynamic> user =
-                  documentSnapshot.data() as Map<String, dynamic>;
-              DateTime date = data['start_date_time'].toDate();
-              DateTime date2 = data['end_date_time'].toDate();
-              return InkWell(
-                  onTap: () async {
-                    await _showChoiceDialog(context, data, id);
-                  },
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(8, 4, 8, 4),
-                    child: Container(
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        color: Colors.white,
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
+              try{
+                Map<String, dynamic> user =
+                documentSnapshot.data() as Map<String, dynamic>;
+                DateTime date = data['start_date_time'].toDate();
+                DateTime date2 = data['end_date_time'].toDate();
+                return InkWell(
+                    onTap: () async {
+                      await _showChoiceDialog(context, data, id);
+                    },
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(8, 4, 8, 4),
+                      child: Container(
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16, 0, 0, 0),
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: AlignmentDirectional(
-                                        -0.1, -0.5),
-                                    child: Text(
-                                      '${user['username']}',
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Color(0xFF15212B),
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
+                        child: Card(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          color: Colors.white,
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16, 0, 0, 0),
+                                child: Stack(
+                                  children: [
+                                    Align(
+                                      alignment: AlignmentDirectional(
+                                          -0.1, -0.5),
+                                      child: Text(
+                                        '${user['username']}',
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Color(0xFF15212B),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Align(
-                                    alignment: AlignmentDirectional(
-                                        2.64, 0.55),
-                                    child: Text(
-                                      '1 Players, ${DateFormat.jm().format(date)} - ${DateFormat.jm().format(date2)}',
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Color(0xFF8B97A2),
-                                        fontWeight: FontWeight.w500,
+                                    Align(
+                                      alignment: AlignmentDirectional(
+                                          2.64, 0.55),
+                                      child: Text(
+                                        '1 Players, ${DateFormat.jm().format(date)} - ${DateFormat.jm().format(date2)}',
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Color(0xFF8B97A2),
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Align(
-                                alignment: AlignmentDirectional(1, 0),
-                                child: Padding(
-                                  padding:
-                                  EdgeInsetsDirectional.fromSTEB(
-                                      0, 0, 38, 0),
-                                  child: Container(
-                                    width: 40,
-                                    height: 40,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Image.network(
-                                      '${user['profile_picture']}',
+                              Expanded(
+                                flex: 2,
+                                child: Align(
+                                  alignment: AlignmentDirectional(1, 0),
+                                  child: Padding(
+                                    padding:
+                                    EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 38, 0),
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Image.network(
+                                        '${user['profile_picture']}',
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ));
+                    ));
+              }catch(e){
+                DateTime date = data['start_date_time'].toDate();
+                DateTime date2 = data['end_date_time'].toDate();
+                return InkWell(
+                    onTap: () async {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: Booking creator has been deleted!")));
+                      _showChoiceDialogDeletedUser(context, data, id);
+                    },
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(8, 4, 8, 4),
+                      child: Container(
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Card(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          color: Colors.white,
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16, 0, 0, 0),
+                                child: Stack(
+                                  children: [
+                                    Align(
+                                      alignment: AlignmentDirectional(
+                                          -0.1, -0.5),
+                                      child: Text(
+                                        'Deleted User',
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Color(0xFF15212B),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: AlignmentDirectional(
+                                          2.64, 0.55),
+                                      child: Text(
+                                        '1 Players, ${DateFormat.jm().format(date)} - ${DateFormat.jm().format(date2)}',
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Color(0xFF8B97A2),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Align(
+                                  alignment: AlignmentDirectional(1, 0),
+                                  child: Padding(
+                                    padding:
+                                    EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 38, 0),
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Image.network(
+                                        'https://www.globalsign.com/application/files/9516/0389/3750/What_Is_an_SSL_Common_Name_Mismatch_Error_-_Blog_Image.jpg',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ));
+              }
             } else if (snapshot.hasError) {
               return new Text("An error occurred, Please try again!");
             }

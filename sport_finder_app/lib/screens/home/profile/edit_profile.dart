@@ -283,25 +283,6 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  bool isPasswordCompliant(String password, [int minLength = 8]) {
-    if (password.isEmpty) {
-      return false;
-    }
-
-    bool hasUppercase = password.contains(new RegExp(r'[A-Z]'));
-    bool hasDigits = password.contains(new RegExp(r'[0-9]'));
-    bool hasLowercase = password.contains(new RegExp(r'[a-z]'));
-    bool hasSpecialCharacters =
-        password.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
-    bool hasMinLength = password.length >= minLength;
-
-    return hasDigits &
-        hasUppercase &
-        hasLowercase &
-        hasSpecialCharacters &
-        hasMinLength;
-  }
-
   Widget _editProfileStuff(BuildContext context) {
     return new FutureBuilder(
         future: getUserData(),
@@ -410,49 +391,49 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                                 Expanded(
                                     child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
-                                  child: TextFormField(
-                                    controller: username,
-                                    obscureText: false,
-                                    maxLength: 16,
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      labelStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.black,
-                                        fontSize: 17,
+                                      padding: EdgeInsets.fromLTRB(0, 18, 0, 0),
+                                      child: TextFormField(
+                                        controller: username,
+                                        obscureText: false,
+                                        maxLength: 16,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          labelStyle: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            color: Colors.black,
+                                            fontSize: 17,
+                                          ),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0x00000000),
+                                              width: 1,
+                                            ),
+                                            borderRadius: const BorderRadius.only(
+                                              topLeft: Radius.circular(4.0),
+                                              topRight: Radius.circular(4.0),
+                                            ),
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0x00000000),
+                                              width: 1,
+                                            ),
+                                            borderRadius: const BorderRadius.only(
+                                              topLeft: Radius.circular(4.0),
+                                              topRight: Radius.circular(4.0),
+                                            ),
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                        ),
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.black,
+                                          fontSize: 17,
+                                        ),
+                                        keyboardType: TextInputType.name,
                                       ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    ),
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                    ),
-                                    keyboardType: TextInputType.name,
-                                  ),
-                                )),
+                                    )),
                               ],
                             ),
                           ),

@@ -8,6 +8,7 @@ import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:io' as io;
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:sport_finder_app/screens/home/profile/view_profile.dart';
 
 import 'message_view_picture.dart';
 
@@ -272,145 +273,392 @@ class _MessageState extends State<Message> {
     String pattern =
         r'(https://firebasestorage.googleapis.com\/v0\/b\/sport-finder-app.appspot.com)';
     RegExp regExp = new RegExp(pattern);
-    if (data['uid'] == uid) {
-      if (regExp.hasMatch(data['msg'])) {
-        return Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 5, 5, 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(20),
-                    shape: BoxShape.rectangle,
-                  ),
-                  child: InkWell(
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            data['msg'],
-                            alignment: Alignment.center,
-                            width: MediaQuery.of(context).size.width * 0.35,
-                            height: MediaQuery.of(context).size.height * 0.25,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                MessageViewPicture(url: data['msg']),
-                          ),
-                        );
-                      })),
-            ],
-          ),
-        );
-      } else {
-        return Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 5, 5, 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.6,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(20),
-                  shape: BoxShape.rectangle,
-                ),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 5, 10, 5),
-                  child: Text(
-                    data['msg'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
+
+    return new FutureBuilder(
+        future: FirebaseFirestore.instance
+        .collection('users')
+        .doc(data["uid"])
+        .get(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            DocumentSnapshot documentSnapshot =
+            snapshot.data as DocumentSnapshot;
+            try{
+              Map<String, dynamic> user =
+              documentSnapshot.data() as Map<String, dynamic>;
+              // Return templateID
+              if (data['uid'] == uid) {
+                if (regExp.hasMatch(data['msg'])) {
+                  return Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 5, 5, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(20),
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: Column(
+                                children: <Widget>[
+                                  InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          child: Image.network(
+                                            data['msg'],
+                                            alignment: Alignment.center,
+                                            width: MediaQuery.of(context).size.width * 0.35,
+                                            height: MediaQuery.of(context).size.height * 0.25,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                MessageViewPicture(url: data['msg']),
+                                          ),
+                                        );
+                                      })
+                                ]
+                            )),
+                      ],
                     ),
+                  );
+                } else {
+                  return Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 5, 5, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(20),
+                            shape: BoxShape.rectangle,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(10, 5, 10, 5),
+                            child: Text(
+                              data['msg'],
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }
+              } else {
+                if (regExp.hasMatch(data['msg'])) {
+                  return Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xFF404040),
+                              borderRadius: BorderRadius.circular(20),
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          child: Center(child: Text(
+                                            user['username'],
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontFamily: 'Poppins',
+                                              color: Colors.white,
+                                            ),
+                                          )),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewProfile(uid: data['uid'],),
+                                          ),
+                                        );
+                                      }),
+                                  InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          child: Image.network(
+                                            data['msg'],
+                                            alignment: Alignment.center,
+                                            width: MediaQuery.of(context).size.width * 0.35,
+                                            height: MediaQuery.of(context).size.height * 0.25,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                MessageViewPicture(url: data['msg']),
+                                          ),
+                                        );
+                                      })
+                                ]
+                            )),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF404040),
+                            borderRadius: BorderRadius.circular(20),
+                            shape: BoxShape.rectangle,
+                          ),
+                          child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(10, 5, 10, 5),
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: <Widget>[
+                                    InkWell(
+                                        child: Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(8.0),
+                                            child: Center(child: Text(
+                                              user['username'],
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: 'Poppins',
+                                                color: Colors.white,
+                                              ),
+                                            )),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ViewProfile(uid: data['uid'],),
+                                            ),
+                                          );
+                                        }),
+                                    Divider(
+                                      color: Colors.grey,
+                                    ),
+                                    Text(
+                                      data['msg'],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontFamily: 'Poppins',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ]
+                              )
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }
+              }
+            }catch(e){
+              if (regExp.hasMatch(data['msg'])) {
+                return Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xFF404040),
+                            borderRadius: BorderRadius.circular(20),
+                            shape: BoxShape.rectangle,
+                          ),
+                          child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                InkWell(
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        child: Center(child: Text(
+                                          "Deleted User",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'Poppins',
+                                            color: Colors.white,
+                                          ),
+                                        )),
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ViewProfile(uid: data['uid'],),
+                                        ),
+                                      );
+                                    }),
+                                InkWell(
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          data['msg'],
+                                          alignment: Alignment.center,
+                                          width: MediaQuery.of(context).size.width * 0.35,
+                                          height: MediaQuery.of(context).size.height * 0.25,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              MessageViewPicture(url: data['msg']),
+                                        ),
+                                      );
+                                    })
+                              ]
+                          )),
+                    ],
                   ),
-                ),
-              )
-            ],
-          ),
-        );
-      }
-    } else {
-      if (regExp.hasMatch(data['msg'])) {
-        return Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
+                );
+              } else {
+                return Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF404040),
+                          borderRadius: BorderRadius.circular(20),
+                          shape: BoxShape.rectangle,
+                        ),
+                        child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(10, 5, 10, 5),
+                            child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          child: Center(child: Text(
+                                            "Deleted User",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontFamily: 'Poppins',
+                                              color: Colors.white,
+                                            ),
+                                          )),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewProfile(uid: data['uid'],),
+                                          ),
+                                        );
+                                      }),
+                                  Divider(
+                                    color: Colors.grey,
+                                  ),
+                                  Text(
+                                    data['msg'],
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: 'Poppins',
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ]
+                            )
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }
+            }
+          } else if (snapshot.hasError) {
+            return new Center(child: Text("An error occurred, Please try again!"));
+          }
+          return Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.6,
                   decoration: BoxDecoration(
                     color: Color(0xFF404040),
                     borderRadius: BorderRadius.circular(20),
                     shape: BoxShape.rectangle,
                   ),
-                  child: InkWell(
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            data['msg'],
-                            alignment: Alignment.center,
-                            width: MediaQuery.of(context).size.width * 0.35,
-                            height: MediaQuery.of(context).size.height * 0.25,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                MessageViewPicture(url: data['msg']),
-                          ),
-                        );
-                      })),
-            ],
-          ),
-        );
-      } else {
-        return Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.6,
-                decoration: BoxDecoration(
-                  color: Color(0xFF404040),
-                  borderRadius: BorderRadius.circular(20),
-                  shape: BoxShape.rectangle,
-                ),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 5, 10, 5),
-                  child: Text(
-                    data['msg'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
-                    ),
+                  child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(10, 5, 10, 5),
+                      child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            LinearProgressIndicator(),
+                          ]
+                      )
                   ),
-                ),
-              )
-            ],
-          ),
-        );
-      }
-    }
+                )
+              ],
+            ),
+          );
+        }
+    );
   }
 
   @override
@@ -606,7 +854,7 @@ class _MessageState extends State<Message> {
                       ),
                       onTap: () async {
                         if (!btnState) return;
-                        if (textController.text.length > 0) {
+                        if (textController.text.trim().length > 0) {
                           btnState = false;
                           bool status =
                               await sendMessage(msg: textController.text);

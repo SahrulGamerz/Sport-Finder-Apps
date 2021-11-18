@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:sport_finder_app/models/globalVariables.dart'
-    as globalVariables;
+import 'package:sport_finder_app/models/globalVariables.dart' as globalVariables;
 import 'package:sport_finder_app/widgets/PaypalPayment.dart';
 
 class YourGameWidget extends StatefulWidget {
@@ -95,6 +94,21 @@ class _YourGameWidgetState extends State<YourGameWidget> {
             .forEach((doc) async => {await doc.reference.delete()});
       });
       await msgIRef.doc(widget.id).delete();
+    }
+
+    //check slots
+    DocumentSnapshot game = await firestore.collection('games').doc(widget.id).get();
+    Map<String, dynamic> gameDetails = data['gameDetails'] as Map<String, dynamic>;
+    if(data['joined'].length.toString() == gameDetails['slots'].toString()) {
+      DocumentReference games = firestore.collection('games').doc(widget.id);
+      await games.update({
+        "game_full": "true",
+      });
+    }else{
+      DocumentReference games = firestore.collection('games').doc(widget.id);
+      await games.update({
+        "game_full": "false",
+      });
     }
 
     return;
@@ -556,107 +570,232 @@ class _YourGameWidgetState extends State<YourGameWidget> {
                                       });
                                       FirebaseFirestore firestore =
                                           FirebaseFirestore.instance;
-                                      CollectionReference booking =
-                                      firestore.collection('booking');
+                                      // Create booking
+                                      CollectionReference
+                                      booking =
+                                      firestore
+                                          .collection(
+                                          'booking');
                                       await booking
                                           .doc()
                                           .set({
-                                        'court_id': cid,
-                                        'game_id': '',
+                                        'court_id':
+                                        cid,
+                                        'end_date_time':
+                                        date2,
+                                        'game_id':
+                                        widget
+                                            .id,
                                         'gameType': gameType,
-                                        'end_date_time': date2,
-                                        'payment_id': number,
-                                        'date': DateTime.now(),
-                                        'total_price': totalPrice,
-                                        'start_date_time': date1,
-                                        'status': 'booked',
-                                        'uid': globalVariables.uid,
+                                        'payment_id':
+                                        number,
+                                        'date': DateTime
+                                            .now(),
+                                        'total_price':
+                                        totalPrice.toString(),
+                                        'start_date_time':
+                                        date1,
+                                        'status':
+                                        'booked',
+                                        'uid': globalVariables
+                                            .uid,
                                       })
-                                          .then(
-                                              (value) => print("Update Success"))
-                                          .catchError((error) => print(
-                                          "Failed to update booking: $error"));
-                                      CollectionReference history =
-                                      firestore.collection('history');
+                                          .then((value) =>
+                                          print(
+                                              "Update Success"))
+                                          .catchError(
+                                              (error) =>
+                                              print("Failed to update booking: $error"));
+
+                                      // Update history
+                                      CollectionReference
+                                      history =
+                                      firestore
+                                          .collection(
+                                          'history');
                                       await history
-                                          .doc(globalVariables.uid)
+                                          .doc(globalVariables
+                                          .uid)
                                           .update({
                                         'payment_history':
-                                        FieldValue.arrayUnion([
+                                        FieldValue
+                                            .arrayUnion([
                                           {
-                                            'code': 'success',
-                                            'court_name': cn,
-                                            'game_id': '',
+                                            'code':
+                                            'success',
+                                            'court_name':
+                                            cn,
+                                            'game_id':
+                                            widget.id,
                                             'gameType': gameType,
-                                            'date': DateTime.now(),
-                                            'payment_id': number,
-                                            'total_price': totalPrice,
+                                            'date':
+                                            DateTime.now(),
+                                            'payment_id':
+                                            number,
+                                            'total_price':
+                                            totalPrice.toString(),
                                           },
                                         ]),
                                       })
-                                          .then(
-                                              (value) => print("Update Success"))
-                                          .catchError((error) async {
-                                        print(
-                                            "Failed to update history: $error");
-                                        await history
-                                            .doc(globalVariables.uid)
-                                            .set({
-                                          'payment_history': [
-                                            {
-                                              'code': 'success',
-                                              'court_name': cn,
-                                              'game_id': '',
-                                              'gameType': gameType,
-                                              'date': DateTime.now(),
-                                              'payment_id': number,
-                                              'total_price': totalPrice,
-                                            },
-                                          ],
-                                        })
-                                            .then((value) =>
-                                            print("Update Success"))
-                                            .catchError((error) => print(
-                                            "Failed to update history: $error"));
-                                      });
-                                      CollectionReference sales =
-                                      firestore.collection('sales');
+                                          .then((value) =>
+                                          print(
+                                              "Update Success"))
+                                          .catchError(
+                                              (error) async {
+                                            print(
+                                                "Failed to update history: $error");
+                                            await history
+                                                .doc(globalVariables
+                                                .uid)
+                                                .set({
+                                              'payment_history':
+                                              [
+                                                {
+                                                  'code': 'success',
+                                                  'court_name': cn,
+                                                  'game_id': widget.id,
+                                                  'gameType': gameType,
+                                                  'date': DateTime.now(),
+                                                  'payment_id': number,
+                                                  'total_price': totalPrice.toString(),
+                                                },
+                                              ],
+                                            })
+                                                .then((value) => print(
+                                                "Update Success"))
+                                                .catchError((error) =>
+                                                print("Failed to update history: $error"));
+                                          });
+
+                                      // Update Sales
+                                      CollectionReference
+                                      sales =
+                                      firestore
+                                          .collection(
+                                          'sales');
                                       await sales
                                           .doc(cid)
                                           .update({
                                         'sales.${date1.year}.${date1.month}': FieldValue.arrayUnion([
                                           {
                                             'date': DateTime.now(),
-                                            'total_price': totalPrice,
+                                            'total_price': totalPrice.toString(),
                                           },
                                         ]),
                                       })
+                                          .then((value) =>
+                                          print(
+                                              "Update Success"))
+                                          .catchError(
+                                              (error) async {
+                                            print(
+                                                "Failed to update sales: $error");
+                                            await sales
+                                                .doc(
+                                                cid)
+                                                .set({
+                                              'sales':
+                                              {
+                                                '${date1.year}': {
+                                                  '${date1.month}': [
+                                                    {
+                                                      'date': DateTime.now(),
+                                                      'total_price': totalPrice.toString(),
+                                                    },
+                                                  ]
+                                                }
+                                              },
+                                            })
+                                                .then((value) => print(
+                                                "Update Success"))
+                                                .catchError((error) =>
+                                                print("Failed to update sales: $error"));
+                                          });
+
+                                      // Send message
+                                      CollectionReference msgSRef = firestore
+                                          .collection(
+                                          'messages')
+                                          .doc(widget
+                                          .id)
+                                          .collection(
+                                          "messages");
+                                      await msgSRef
+                                          .doc()
+                                          .set({
+                                        'uid': globalVariables
+                                            .uid,
+                                        "timestamp":
+                                        DateTime
+                                            .now(),
+                                        "msg":
+                                        "${globalVariables.username} has booked the court!",
+                                      })
                                           .then(
-                                              (value) => print("Update Success"))
-                                          .catchError((error) async {
-                                        print(
-                                            "Failed to update sales: $error");
-                                        await sales
-                                            .doc(cid)
-                                            .set({
-                                          'sales': {
-                                            '${date1.year}': {
-                                              '${date1.month}': [
-                                                {
-                                                  'date': DateTime.now(),
-                                                  'total_price':
-                                                  totalPrice,
-                                                },
-                                              ]
-                                            }
-                                          },
-                                        })
-                                            .then((value) =>
-                                            print("Update Success"))
-                                            .catchError((error) => print(
-                                            "Failed to update sales: $error"));
-                                      });
-                                      print('Order ID: ' + number);
+                                              (value) =>
+                                          {
+                                            print("Message sent")
+                                          })
+                                          .catchError(
+                                              (error) {
+                                            print(
+                                                "Failed to send msg: $error");
+                                          });
+
+                                      //update message
+                                      CollectionReference
+                                      msgIRef =
+                                      firestore
+                                          .collection(
+                                          'messages');
+                                      await msgIRef
+                                          .doc(widget
+                                          .id)
+                                          .update({
+                                        "last_updated":
+                                        DateTime
+                                            .now(),
+                                        "last_message":
+                                        "${globalVariables.username} has booked the court!",
+                                      })
+                                          .then(
+                                              (value) =>
+                                          {
+                                            print("Message Update")
+                                          })
+                                          .catchError(
+                                              (error) {
+                                            print(
+                                                "Failed to update msg: $error");
+                                          });
+
+                                      //update game details
+                                      DocumentReference
+                                      games =
+                                      firestore
+                                          .collection(
+                                          'games')
+                                          .doc(widget
+                                          .id);
+                                      await games
+                                          .update({
+                                        'booked':
+                                        true,
+                                      })
+                                          .then(
+                                              (value) =>
+                                          {
+                                            print("Games Update")
+                                          })
+                                          .catchError(
+                                              (error) {
+                                            print(
+                                                "Failed to update msg: $error");
+                                          });
+                                      print(
+                                          'Order ID: ' +
+                                              number);
+                                      stopLoading();
                                     }
                                   },
                                   itemName: '$cn Booking',
@@ -667,6 +806,7 @@ class _YourGameWidgetState extends State<YourGameWidget> {
                           if (paymentId != '')
                             _showToastSuccess(context,
                                 'Payment has been received!\nPayment ID: $paymentId');
+                          Navigator.pop(context);
                         });
                         stopLoading();
                       },
@@ -1033,7 +1173,7 @@ class _YourGameWidgetState extends State<YourGameWidget> {
                                       roundLoadingShape: true,
                                       color: Colors.white,
                                       child: Text(
-                                        "Cancel",
+                                        "Cancel Game",
                                         style: TextStyle(
                                           fontFamily: 'Montserrat',
                                           color: Colors.black,
@@ -1769,7 +1909,7 @@ class _YourGameWidgetState extends State<YourGameWidget> {
                                   roundLoadingShape: true,
                                   color: Colors.white,
                                   child: Text(
-                                    "Cancel",
+                                    "Leave Game",
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',
                                       color: Colors.black,
